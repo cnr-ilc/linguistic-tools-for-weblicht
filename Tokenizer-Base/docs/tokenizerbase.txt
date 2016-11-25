@@ -1,0 +1,6 @@
+
+First commit on 25/11/16
+TODO
+1 - TCF
+2 - VERIFY
+3 - PRETTYFORMAT 
