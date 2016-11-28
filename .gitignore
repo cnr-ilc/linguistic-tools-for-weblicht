@@ -12,3 +12,4 @@
 hs_err_pid*
 /Tokenizer-Base/target/
 /Tokenizer-Base/nbactions.xml
+/Tokenizer-Base-Service/target/
