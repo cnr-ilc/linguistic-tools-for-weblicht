@@ -1,3 +1,5 @@
+TO USE THE ARCHETYPE FOR IL WEB SERVICES
+
 weblicht-nentities-ws-archetype
 
 Created using WebLicht NamedEntities Webservice Dropwizard Archetype.
