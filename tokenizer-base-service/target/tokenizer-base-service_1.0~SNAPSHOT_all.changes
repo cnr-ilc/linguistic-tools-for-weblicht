@@ -1,0 +1,20 @@
+Format: 1.8
+Date: Mon, 28 Nov 2016 17:17:24 +0100
+Source: tokenizer-base-service
+Binary: tokenizer-base-service
+Architecture: all
+Version: 1.0~SNAPSHOT
+Distribution: unknown
+Urgency: low
+Maintainer: Put maintainer information here
+Changed-By: Put maintainer information here
+Description:
+ tokenizer-base-service - Put your desciption here
+Changes:
+ tokenizer-base-service (1.0~SNAPSHOT) unknown; urgency=low
+Checksums-Sha1:
+ a27f6f252fed9d6cff04ee9167ad599ff26317c6 18900796 tokenizer-base-service_1.0~SNAPSHOT_all.deb
+Checksums-Sha256:
+ e2e20e5787b242790a2957180f5897df6753ee43598b0b5d8db05cddd9b39612 18900796 tokenizer-base-service_1.0~SNAPSHOT_all.deb
+Files:
+ 354f78ef21c9f4d87695cb16c8342407 18900796 misc optional tokenizer-base-service_1.0~SNAPSHOT_all.deb

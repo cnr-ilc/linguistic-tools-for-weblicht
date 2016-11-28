@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<D-Spin xmlns="http://www.dspin.de/data" version="0.4">
+  <MetaData xmlns="http://www.dspin.de/data/metadata">
+  </MetaData>
+  <TextCorpus xmlns="http://www.dspin.de/data/textcorpus" lang="de">
+    <text>Karin fliegt nach Paris. Sie will dort Urlaub machen. Essen ist nicht ein attraktiver Urlaubsort für Karin, aber nach der Urlaub fliegt Karin nach Essen zurück.</text>
+  </TextCorpus>
+</D-Spin>
