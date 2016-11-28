@@ -29,16 +29,31 @@ public class Main {
     private String oFile = "";
     private String format = "";
 
-    public static void main(String[] args) {
+    public TokenizerCli tokenizerCli = new TokenizerCli();
+
+    /**
+     * ADD A JAVADOC
+     */
+     public static void main(String[] args) {
         //System.out.println("eccomi " + args.toString());
 
         //run("it");
         boolean goahead = true;
 
         Main m = new Main();
+
+        if (m.checkArgsForHelp(args)) {
+            m.printTheHelp();
+            System.exit(0);
+        }
         goahead = m.checkArgs(args);
+
         m.init(goahead);
 
+    }
+
+    public void printTheHelp() {
+        tokenizerCli.printHelp();
     }
 
     public void init(boolean goahead) {
@@ -47,6 +62,7 @@ public class Main {
         boolean str = true;
         String input = "";
         String message = "";
+
         if (goahead) {
             if (getiFile().isEmpty()) {
                 try {
@@ -61,9 +77,12 @@ public class Main {
                     }
 
                 } catch (IOException e) {
-
+                    //tokenizerCli.printHelp();
                     message = "IOException in reading the stream " + e.getMessage();
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, message);
+                    Logger
+                            .getLogger(Main.class
+                                    .getName()).log(Level.SEVERE, message);
+
                     System.exit(-1);
 
                 } finally {
@@ -71,9 +90,13 @@ public class Main {
                         try {
                             br.close();
                         } catch (IOException e) {
+                           // tokenizerCli.printHelp();
 
                             message = "IOException in closing the stream " + e.getMessage();
-                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, message);
+                            Logger
+                                    .getLogger(Main.class
+                                            .getName()).log(Level.SEVERE, message);
+
                             System.exit(-1);
 
                         }
@@ -81,10 +104,15 @@ public class Main {
                 }
 
             } else {// read the input file
-                input = Utilities.readFileContent(getiFile());
+                try {
+                    input = Utilities.readFileContent(getiFile());
+                } catch (IOException e) {
+                    //tokenizerCli.printHelp();
+                    System.exit(-1);
+                }
 
             }
-            TokenizerCli tokenizerCli = new TokenizerCli();
+
             Result r = tokenizerCli.run(lang, input);
             // check output stream
             if (!getoFile().isEmpty()) {
@@ -100,7 +128,7 @@ public class Main {
             }
         } else {
 
-            //printhelp()
+            tokenizerCli.printHelp();
             //System.err.println("EXIT");
             System.exit(0);
         }
@@ -138,6 +166,22 @@ public class Main {
         }
 
         return true;
+    }
+
+    private boolean checkArgsForHelp(String[] args) {
+
+        for (String arg : args) {
+            switch (arg) {
+                case "-h":
+
+                    return true;
+
+            }
+            //System.err.println("arg at " + i + "-" + arg + "-");
+
+        }
+
+        return false;
     }
 
     private boolean checkLanguages(String lang) {
