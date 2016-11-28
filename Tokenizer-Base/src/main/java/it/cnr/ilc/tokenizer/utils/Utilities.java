@@ -19,7 +19,7 @@ import org.apache.commons.io.IOUtils;
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class Utilities {
-    public static String readFileContent(String filepath) {
+    public static String readFileContent(String filepath) throws IOException {
         String message = "";
         File initialFile;
         InputStream targetStream = null;
@@ -31,9 +31,9 @@ public class Utilities {
             theString=IOUtils.toString(targetStream, "UTF-8");
         } catch (IOException e) {
 
-            message = "IOException in reading the stream for " + filepath + " " + e.getMessage();
+            message = "IOaaException in reading the stream for " + filepath + " " + e.getMessage();
             Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, message);
-            System.exit(-1);
+            //System.exit(-1);
         } finally {
             if (targetStream != null) {
                 try {
@@ -41,7 +41,7 @@ public class Utilities {
                 } catch (IOException e) {
                     message = "IOException in closing the stream for " + filepath + " " + e.getMessage();
                     Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, message);
-                    System.exit(-1);
+                    //System.exit(-1);
                 }
 
             }

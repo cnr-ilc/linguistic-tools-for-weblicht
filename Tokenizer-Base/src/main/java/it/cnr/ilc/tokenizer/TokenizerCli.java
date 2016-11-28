@@ -11,9 +11,6 @@ import it.cnr.ilc.tokenizer.types.Sentence;
 import it.cnr.ilc.tokenizer.types.Token;
 import it.cnr.ilc.tokenizer.utils.RegexUtils;
 import it.cnr.ilc.tokenizer.utils.Vars;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,8 +30,6 @@ public class TokenizerCli {
     private static String SUBSTITUTE = "####";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Timestamp timestamp;// = new Timestamp(System.currentTimeMillis());
-
-   
 
     public Result run(String lang, String text) {
         /*
@@ -59,7 +54,7 @@ public class TokenizerCli {
         String[] tokens;
         int wfid = 1;
         LinguisticProcessor lp = new LinguisticProcessor();
-        String ts="";
+        String ts = "";
         lp.setLayer("text");
 //        String text = "Mi chiamo Riccardo. Abito a cascina. Art.1 - â Ã  -// Ã* â€¦ Ã Ã± -";
 //        text = "“bla bla F1R.”F1R bla “bla bla SR.”  A.B “bla bla TR.”";
@@ -110,7 +105,7 @@ public class TokenizerCli {
                 Logger.getLogger(TokenizerCli.class.getName()).log(Level.INFO, message);
             }
             timestamp = new Timestamp(System.currentTimeMillis());
-            ts=SentenceSplitter.class.getName()+"-"+lang+"#"+timestamp.toString().replaceAll(" ", "T")+"Z";
+            ts = SentenceSplitter.class.getName() + "-" + lang + "#" + timestamp.toString().replaceAll(" ", "T") + "Z";
             SentenceSplitter sentenceSplitter = new SentenceSplitter(lang, loadprefixes.getNONBREAKING_PREFIX());
             lp.getLps().add(ts);
 
@@ -122,8 +117,8 @@ public class TokenizerCli {
 
             sentences = sentenceSplitter.splitSentences(fixedText);
             timestamp = new Timestamp(System.currentTimeMillis());
-            ts=Tokenizer.class.getName()+"-"+lang+"#"+timestamp.toString().replaceAll(" ", "T")+"Z";
-            
+            ts = Tokenizer.class.getName() + "-" + lang + "#" + timestamp.toString().replaceAll(" ", "T") + "Z";
+
             lp.getLps().add(ts);
 
             //
@@ -315,7 +310,7 @@ public class TokenizerCli {
                 j++;
                 sent++;
                 theSentences.add(theSentence);
-                
+
             } // rof sentences
             if (fixedText.length() == 0) {
                 charcount = charcount + 1;
@@ -329,6 +324,29 @@ public class TokenizerCli {
 
         //textFixer.fixEncoding("- â Ã  -// Ã* â€¦ Ã Ã± -");
         return obj;
+    }
+
+    /**
+     *
+     * ADD A JAVADOC
+     */
+    public void printHelp() {
+        System.out.println("The tokenizer can be used in two ways");
+        System.out.println("1) Usage echo \"text_to_tokenize\" | java -jar <code>.jar -l <it|en|es|fr|de|nl> [-o output_file] [-f <kaf|tcf>]");
+        System.out.println("\twhere:");
+        System.out.println("\t\t the -l parameter is mandatory and MUST be one out of <it|en|es|fr|de|nl>");
+        System.out.println("\t\t the -o parameter is optional  and tells the program to write the output in file");
+        System.out.println("\t\t the -f parameter is optional  and tells the program to write the output in the format. If no format is provided a tab output is rendered");
+
+        System.out.println("2) Usage java -jar <code>.jar -l <it|en|es|fr|de|nl> -i input_file [-o output_file] [-f <kaf|tcf>]");
+        System.out.println("\twhere:");
+        System.out.println("\t\t the -l parameter is mandatory and MUST be one out of <it|en|es|fr|de|nl>");
+        System.out.println("\t\t the -i parameter is mandatory and tells the program to read from input file");
+        System.out.println("\t\t the -o parameter is optional  and tells the program to write the output in file");
+        System.out.println("\t\t the -f parameter is optional  and tells the program to write the output in the format. If no format is provided a tab output is rendered");
+
+        System.out.println("\n\n In case of 2) if no input_file is provided, the program waits for human input from keyboard");
+
     }
 
 }
