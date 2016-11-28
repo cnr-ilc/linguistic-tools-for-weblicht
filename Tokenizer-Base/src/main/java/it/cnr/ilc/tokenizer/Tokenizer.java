@@ -85,6 +85,7 @@ public class Tokenizer {
             text = text.replaceAll("DOTMULTI\\.([^\\.])", "DOTDOTMULTI $1");
             text = text.replaceAll("DOTMULTI\\.", "DOTDOTMULTI");
         }
+        //System.err.println("ORIG_TEXT 2 "+text);
         /*
         # seperate out "," except if within numbers (5,300)
 	$text =~ s/([^\p{IsN}])[,]([^\p{IsN}])/$1 , $2/g;
@@ -129,13 +130,40 @@ public class Tokenizer {
 		$text =~ s/\'/ \' /g;
 	}
          */
-        if (lang.equalsIgnoreCase(Vars.IT)) {
+        if (lang.equalsIgnoreCase(Vars.EN)) {
+            /*
+            $text =~ s/([^\p{IsAlpha}])(['|’])([^\p{IsAlpha}])/$1 $2 $3/g;
+		$text =~ s/([^\p{IsAlpha}\p{IsN}])(['|’])([\p{IsAlpha}])/$1 $2 $3/g;
+		$text =~ s/([\p{IsAlpha}])(['|’])([^\p{IsAlpha}])/$1 $2 $3/g;
+		$text =~ s/([\p{IsAlpha}])(['|’])([\p{IsAlpha}])/$1 $2$3/g;
+		#special case for "1990's"
+		$text =~ s/([\p{IsN}])(['|’])([s])/$1 $2$3/g;
+             */
+            text = text.replaceAll("([^\\p{IsAlpha}])(['|’])([^\\p{IsAlpha}])", "$1 $2 $3");
+            text = text.replaceAll("([^\\p{IsAlpha}\\p{IsN}])(['|’])([\\p{IsAlpha}])", "$1 $2 $3");
+            text = text.replaceAll("([\\p{IsAlpha}])(['|’])([^\\p{IsAlpha}])", "$1 $2 $3");
+            text = text.replaceAll("([\\p{IsAlpha}])(['|’])([\\p{IsAlpha}])", "$1 $2$3");
+            // special case for "1990's"
+            text = text.replaceAll("([\\p{IsN}])(['|’])([s])", "$1 $2$3");
+        } else if (lang.equalsIgnoreCase(Vars.IT)) {
             text = text.replaceAll("([^\\p{IsAlpha}])(['|’])([^\\p{IsAlpha}])", "$1 $2 $3");
             text = text.replaceAll("([^\\p{IsAlpha}])(['|’])([\\p{IsAlpha}])", "$1 $2 $3");
             text = text.replaceAll("([\\p{IsAlpha}])(['|’])([^\\p{IsAlpha}])", "$1 $2 $3");
             text = text.replaceAll("([\\p{IsAlpha}])(['|’])([\\p{IsAlpha}])", "$1$2 $3");
             text = text.replaceAll("([^\\p{IsAlpha}\\p{IsN}]po) (['|’])([^\\p{IsAlpha}])", "$1$2 $3"); // rule for po'
 
+        } else if (lang.equalsIgnoreCase(Vars.FR)) {
+            /*
+            #split contractions left
+		$text =~ s/([^\p{IsAlpha}])(['|’])([^\p{IsAlpha}])/$1 $2 $3/g;
+		$text =~ s/([^\p{IsAlpha}])(['|’])([\p{IsAlpha}])/$1 $2 $3/g;
+		$text =~ s/([\p{IsAlpha}])(['|’])([^\p{IsAlpha}])/$1 $2 $3/g;
+		$text =~ s/([\p{IsAlpha}])(['|’])([\p{IsAlpha}])/$1$2 $3/g;
+             */
+            text = text.replaceAll("([^\\p{IsAlpha}])(['|’])([^\\p{IsAlpha}])","$1 $2 $3");
+            text = text.replaceAll("([^\\p{IsAlpha}])(['|’])([\\p{IsAlpha}])","$1 $2 $3");
+            text = text.replaceAll("([\\p{IsAlpha}])(['|’])([^\\p{IsAlpha}])","$1 $2 $3");
+            text = text.replaceAll("([\\p{IsAlpha}])(['|’])([\\p{IsAlpha}])","$1$2 $3");
         } else {
             text = text.replaceAll("/\\'", " \\' ");
         }
