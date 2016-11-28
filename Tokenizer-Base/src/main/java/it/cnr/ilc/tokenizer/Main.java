@@ -31,7 +31,10 @@ public class Main {
 
     public TokenizerCli tokenizerCli = new TokenizerCli();
 
-    public static void main(String[] args) {
+    /**
+     * ADD A JAVADOC
+     */
+     public static void main(String[] args) {
         //System.out.println("eccomi " + args.toString());
 
         //run("it");
