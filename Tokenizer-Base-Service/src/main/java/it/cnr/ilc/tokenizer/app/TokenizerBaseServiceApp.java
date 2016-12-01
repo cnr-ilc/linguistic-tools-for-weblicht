@@ -21,7 +21,7 @@ public class TokenizerBaseServiceApp extends Application<TokenizerBaseServiceCon
 
     @Override
     public void initialize(Bootstrap<TokenizerBaseServiceConf> btstrp) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       
     }
 
     @Override
