@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>weblicht service</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Demo Service</h2>
+        There are three examples of web services included in this demo.
+        <h2>A sample TCF processing web service for tokenization and sentence splitting</h2>
+        <p>
+            This web service is an example of a simple tokenization and sentence boundaries detection service.
+            The service processes POST requests containing TCF data with text.
+        </p>
+        <p>
+            This web service demonstrates the case when the underlying processing tool object is not
+            expensive to create and it does not consume a lot of memory.
+            In such a case it is convenient to create the tool object with each client POST request, 
+            as shown in the service implementation.
+            You don't need to worry about whether the tool is thread-safe or not.
+        </p>
+        <p>You can test the service endpoints using curl or wget as follows:</p>
+        <ul>
+            <li>download the provided <a href="input_tok.xml">input_tok.xml</a> file</li>
+            <li>Send the input file to the endpoints for processing:
+                    </br>With curl:
+                    </br>
+                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_tok.xml -X POST <span class="url"></span>toksentence/stream</code>
+                    </br>
+                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_tok.xml -X POST <span class="url"></span>toksentence/bytes</code>
+                    </br>Or wget:
+                    </br>
+                    <code> wget --post-file=input_tok.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>toksentence/stream</code>
+                    </br>
+                    <code> wget --post-file=input_tok.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>toksentence/bytes</code>
+            </li>
+        </ul>
+        <h2>A sample TCF processing web service for reference identifying</h2>
+        <p>
+            This web service is an example of a simple service that creates reference annotations
+            based on previously annotated named entities.
+            The service processes POST requests containing TCF data with tokens, PoS tags, and named entities.
+        </p>
+        <p>
+        This web service demonstrates the case where the underlying processing tool object requires 
+        a model for identifying the references.
+        Since a model can consume much memory and/or require much time when loading, 
+        the tool instance is created only once (the corresponding model is loaded only once), 
+        when the application is created. The example shows the case when the tool is 
+        thread-safe, it can be shared among the clients without any synchronization.
+        </p>
+        <p>You can test the service endpoint using curl or wget as follows:</p>
+        <ul>
+            <li>download the provided <a href="input_ref.xml">input_ref.xml</a> file</li>
+            <li>Send the input file to the endpoints for processing:
+                    </br>With curl:
+                    </br>
+                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_ref.xml -X POST <span class="url"></span>refidf/bytes</code>
+                    </br>
+                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_ref.xml -X POST <span class="url"></span>refidf/stream</code>
+                    </br>Or wget:
+                    </br>
+                    <code> wget --post-file=input_ref.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>refidf/bytes</code>
+                    </br>
+                    <code> wget --post-file=input_ref.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>refidf/stream</code>
+            </li>
+        </ul>
+        <h2>A sample TCF processing web service for named entity recognition</h2>
+        <p>
+            This web service is an example of a simple named entity recognizer service.
+            The service processes POST requests containing TCF data with tokens.
+            It uses token annotations to produce named entity annotations.
+        </p>
+        <p>
+            It demonstrates the case where the tool must load a list of named entities 
+            which is used to identify them.
+            This is a common use case where a tool uses resources such as a list, 
+            database, index, a machine learning model, etc. under the hood.
+            Such resources can consume much memory and/or require much time when loading.
+            Therefore, it is better to create only one instance (or certain restricted 
+            number of instances) of the tool per application.
+            In this example, the tool instance is created only once (i.e. the corresponding 
+            list resource is loaded only once), when the application is created.
+            In this example, the tool is not thread-safe.
+            Therefore, the tool's process() method requires synchronization.
+        </p>
+        <p>You can test the service endpoints using curl or wget as follows:</p>
+        <ul>
+            <li>download the provided <a href="input_ner.xml">input_ner.xml</a> file</li>
+            <li>Send the input file to the endpoints for processing:
+                    </br>With curl:
+                    </br>
+                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_ner.xml -X POST <span class="url"></span>ner/stream</code>
+                    </br>
+                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_ner.xml -X POST <span class="url"></span>ner/bytes</code>
+                    </br>Or wget:
+                    </br>
+                    <code> wget --post-file=input_ner.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>ner/stream</code>
+                    </br>
+                    <code> wget --post-file=input_ner.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>ner/bytes</code>
+            </li>
+        </ul>
+        <script type="text/javascript">
+                var elemList = document.getElementsByClassName("url");
+                for (var i = 0; i < elemList.length; i++) {
+                    elemList[i].innerHTML = window.location.href;
+                }
+        </script>
+    </body>
+</html>

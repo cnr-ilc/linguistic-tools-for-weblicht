@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<D-Spin xmlns="http://www.dspin.de/data" version="0.4">
+    <MetaData xmlns="http://www.dspin.de/data/metadata">
+    </MetaData>
+    <TextCorpus xmlns="http://www.dspin.de/data/textcorpus" lang="de">
+        <text>Karin fliegt nach New York. Sie will dort Urlaub machen.</text>
+        <tokens>
+            <token ID="t_0">Karin</token>
+            <token ID="t_1">fliegt</token>
+            <token ID="t_2">nach</token>
+            <token ID="t_3">New</token>
+            <token ID="t_4">York</token>
+            <token ID="t_5">.</token>
+            <token ID="t_6">Sie</token>
+            <token ID="t_7">will</token>
+            <token ID="t_8">dort</token>
+            <token ID="t_9">Urlaub</token>
+            <token ID="t_10">machen</token>
+            <token ID="t_11">.</token>
+        </tokens>
+        <sentences>
+            <sentence ID="s_0" tokenIDs="t_0 t_1 t_2 t_3 t_4 t_5"></sentence>
+            <sentence ID="s_1" tokenIDs="t_6 t_7 t_8 t_9 t_10 t_11"></sentence>
+        </sentences>
+        <POStags tagset="STTS">
+            <tag tokenIDs="t_0">NE</tag>
+            <tag tokenIDs="t_1">VVFIN</tag>
+            <tag tokenIDs="t_2">APPR</tag>
+            <tag tokenIDs="t_3">NE</tag>
+            <tag tokenIDs="t_4">NE</tag>
+            <tag tokenIDs="t_5">$.</tag>
+            <tag tokenIDs="t_6">PPER</tag>
+            <tag tokenIDs="t_7">VMFIN</tag>
+            <tag tokenIDs="t_8">ADV</tag>
+            <tag tokenIDs="t_9">NN</tag>
+            <tag tokenIDs="t_10">VVINF</tag>
+            <tag tokenIDs="t_11">$.</tag>
+        </POStags>
+        <lemmas>
+            <lemma tokenIDs="t_0">Karin</lemma>
+            <lemma tokenIDs="t_1">fliegen</lemma>
+            <lemma tokenIDs="t_2">nach</lemma>
+            <lemma tokenIDs="t_3">New</lemma>
+            <lemma tokenIDs="t_4">York</lemma>
+            <lemma tokenIDs="t_5">.</lemma>
+            <lemma tokenIDs="t_6">Sie|sie|sie</lemma>
+            <lemma tokenIDs="t_7">wollen</lemma>
+            <lemma tokenIDs="t_8">dort</lemma>
+            <lemma tokenIDs="t_9">Urlaub</lemma>
+            <lemma tokenIDs="t_10">machen</lemma>
+            <lemma tokenIDs="t_11">.</lemma>
+        </lemmas>
+        <namedEntities type="CoNLL2002">
+            <entity ID="ne_0" class="PER" tokenIDs="t_0"></entity>
+            <entity ID="ne_1" class="LOC" tokenIDs="t_3 t_4"></entity>
+        </namedEntities>
+    </TextCorpus>
+</D-Spin>

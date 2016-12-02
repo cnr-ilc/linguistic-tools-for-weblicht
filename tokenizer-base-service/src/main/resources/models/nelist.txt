@@ -1,0 +1,3 @@
+Krin#PER#0.8
+Paris#LOC#0.9
+Essen#LOC#0.55

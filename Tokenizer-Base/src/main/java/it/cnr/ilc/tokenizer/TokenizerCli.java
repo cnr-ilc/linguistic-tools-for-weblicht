@@ -346,7 +346,6 @@ public class TokenizerCli {
         System.out.println("\t\t the -f parameter is optional  and tells the program to write the output in the format. If no format is provided a tab output is rendered");
 
         System.out.println("\n\n In case of 2) if no input_file is provided, the program waits for human input from keyboard");
-
     }
 
 }
