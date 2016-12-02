@@ -23,6 +23,5 @@ public class Vars {
     public static String version ="1.0.1";
     public static List<String> langs = Arrays.asList(Vars.DE, Vars.EN, Vars.ES, Vars.FR, Vars.IT, Vars.NL);
     public static String encoding="UTF-8";
-    
-    
+
 } 
