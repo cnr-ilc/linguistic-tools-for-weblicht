@@ -31,6 +31,11 @@
             <artifactId>stanford-corenlp</artifactId>
             <version>3.4</version>
         </dependency>
+        <dependency>
+            <groupId>it.cnr.ilc</groupId>
+            <artifactId>Tokenizer-Base</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -73,7 +78,8 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>my.org.weblicht.DemoApplication</mainClass>
+<!--                                    <mainClass>my.org.weblicht.DemoApplication</mainClass>-->
+                                    <mainClass>it.cnr.ilc.tokenizer.app.TokenizerBaseServiceApp</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
