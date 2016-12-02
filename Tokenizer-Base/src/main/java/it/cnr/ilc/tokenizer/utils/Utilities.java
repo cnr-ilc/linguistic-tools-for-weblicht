@@ -54,7 +54,7 @@ public class Utilities {
 
     /**
      * 
-     * @param is
+     * @param is the input stream
      * @return 
      */
     public String convertInputStreamToString(InputStream is) {
