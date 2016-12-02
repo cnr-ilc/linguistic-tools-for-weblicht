@@ -8,6 +8,11 @@ package it.cnr.ilc.tokenizer.app;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import it.cnr.ilc.tokenizer.service.resources.TokenizerBaseResource;
+import my.org.weblicht.resources.IndexResource;
+import my.org.weblicht.resources.NamedEntitiesResource;
+import my.org.weblicht.resources.ReferencesResource;
+import my.org.weblicht.resources.TokSentencesResource;
 
 /**
  *
@@ -25,8 +30,16 @@ public class TokenizerBaseServiceApp extends Application<TokenizerBaseServiceCon
     }
 
     @Override
-    public void run(TokenizerBaseServiceConf t, Environment e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void run(TokenizerBaseServiceConf t, Environment environment) throws Exception {
+        
+//        NamedEntitiesResource namedEntitiesResource = new NamedEntitiesResource();
+//        ReferencesResource referencesResource = new ReferencesResource();
+        IndexResource indexResource = new IndexResource();
+//        environment.jersey().register(namedEntitiesResource);
+//        environment.jersey().register(referencesResource);
+        environment.jersey().register(TokSentencesResource.class);
+        environment.jersey().register(TokenizerBaseResource.class);
+        environment.jersey().register(indexResource);
     }
     
     

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package it.cnr.ilc.tokenizer.service.core;
+
 import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessor;
 import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessorException;
 import eu.clarin.weblicht.wlfxb.tc.api.TextCorpus;
@@ -18,12 +19,17 @@ import java.util.List;
  *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
-public class TokenizerBaseCore implements TextCorpusProcessor{
-     private String lang = "";
+public class TokenizerBaseCore implements TextCorpusProcessor {
+
+    private String lang = "";
     private String iFile = "";
     private String oFile = "";
     private String format = "";
-    
+
+    public TokenizerBaseCore(String lang) {
+        this.lang = lang;
+    }
+
     @Override
     public EnumSet<TextCorpusLayerTag> getRequiredLayers() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -33,20 +39,19 @@ public class TokenizerBaseCore implements TextCorpusProcessor{
     public synchronized void process(TextCorpus tc) throws TextCorpusProcessorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    public synchronized void process(){
-        String[] args =  new String[1];
+
+    public synchronized void process() {
+        String[] args = new String[1];
         boolean goahead = true;
 
         Main m = new Main();
 
-       
         goahead = checkArgs(args);
 
         m.init(goahead);
-    
+
     }
-    
+
     private boolean checkArgs(String[] args) {
         boolean ret = true;
         int i = 0;
@@ -80,14 +85,14 @@ public class TokenizerBaseCore implements TextCorpusProcessor{
 
         return true;
     }
-    
-     private boolean checkLanguages(String lang) {
+
+    private boolean checkLanguages(String lang) {
         List<String> langs = new ArrayList<>();
         return Vars.langs.contains(lang);
 
     }
-     
-     /**
+
+    /**
      * @return the lang
      */
     public String getLang() {
@@ -143,6 +148,4 @@ public class TokenizerBaseCore implements TextCorpusProcessor{
         this.format = format;
     }
 
-    
-    
 }
