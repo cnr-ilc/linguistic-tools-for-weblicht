@@ -9,6 +9,7 @@ package it.cnr.ilc.tokenizer.utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -51,4 +52,26 @@ public class Utilities {
         return  theString;
     }
     
+    /**
+     * 
+     * @param is
+     * @return 
+     */
+    public String convertInputStreamToString(InputStream is) {
+        StringWriter writer = new StringWriter();
+        String encoding = Vars.encoding;
+        String message = "";
+        String theString="";
+        try {
+            IOUtils.copy(is, writer, encoding);
+            theString = writer.toString();
+        } catch (Exception e) {
+            message = "IOException in coverting the stream into a string " + e.getMessage();
+            Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, message);
+        }
+
+        
+
+        return theString;
+}
 }
