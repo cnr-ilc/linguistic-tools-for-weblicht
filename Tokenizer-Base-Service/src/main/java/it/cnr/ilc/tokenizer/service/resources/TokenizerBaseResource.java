@@ -76,32 +76,31 @@ public class TokenizerBaseResource {
     private void process(String lang, InputStream input, OutputStream output) {
         //System.err.println("LANG -" + lang + "- ");
         //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MESSAGE -" + input.toString() + "- ");
-        TextCorpusStreamed textCorpus = null;
+        //TextCorpusStreamed textCorpus = null;
+        TextCorpusStored textCorpusStored = null;
 
         try {
 
-            TextCorpusStored textCorpusStored = new TextCorpusStored(lang);
+            textCorpusStored = new TextCorpusStored(lang);
             textCorpusStored.createTextLayer().addText(InputToString.convertInputStreamToString(input));
             TokenizerBaseCore tool = new TokenizerBaseCore(lang);
 
-            
-
 // process TextCorpus and create new annotation layer(s) with your tool
             tool.process(textCorpusStored);
-            
+
             WLData wlData = new WLData(tool.getTextCorpusStored());
             WLDObjector.write(wlData, output);
-            
+
         } catch (TextCorpusProcessorException ex) {
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         } catch (Exception ex) {
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         } finally {
             try {
-                if (textCorpus != null) {
+                if (textCorpusStored != null) {
                     // it's important to close the TextCorpusStreamed, otherwise
                     // the TCF XML output will not be written to the end
-                    textCorpus.close();
+                   // textCorpusStored.;
                 }
             } catch (Exception ex) {
                 throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
@@ -117,7 +116,5 @@ public class TokenizerBaseResource {
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, message, ex);
         return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
     }
-
-    
 
 }

@@ -32,7 +32,7 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
     private String iFile = "";
     private String oFile = "";
     private String format = "";
-    private TokenizerCli tokenizerCli = new TokenizerCli();
+    private TokenizerCli tokenizerCli;
     private TextCorpusStored textCorpus;
 
     public TokenizerBaseCore(String lang) {
@@ -50,19 +50,20 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
     @Override
     public synchronized void process(TextCorpus tc) throws TextCorpusProcessorException {
         String input = tc.getTextLayer().getText();
-        System.err.println("TEXT -" + tc.getTextLayer().getText() + "- ");
+        //System.err.println("TEXT -" + tc.getTextLayer().getText() + "- for lang "+lang);
 
         boolean goahead = true;
 
         goahead = checkLanguages(lang);
-        Main m = new Main();
+        //Main m = new Main();
         if (goahead) {
             TokensLayer tokensLayer = tc.createTokensLayer();
             SentencesLayer sentencesLayer = tc.createSentencesLayer();
+            tokenizerCli = new TokenizerCli();
             Result r = tokenizerCli.run(lang, input);
             for (Sentence s : r.getSentences()) {
                 List<eu.clarin.weblicht.wlfxb.tc.api.Token> sentenceTokens = new ArrayList<eu.clarin.weblicht.wlfxb.tc.api.Token>();
-                
+
                 for (Token t : s.getTokens()) {
                     System.err.println(" token TEXT -" + t.getTheToken() + "- ");
                     eu.clarin.weblicht.wlfxb.tc.api.Token token = tokensLayer.addToken(t.getTheToken());
@@ -71,13 +72,9 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
                 sentencesLayer.addSentence(sentenceTokens);
             }
             setTextCorpusStored((TextCorpusStored) tc);
-            
+
         }
     }
-
-    
-
-    
 
     private boolean checkLanguages(String lang) {
         List<String> langs = new ArrayList<>();
@@ -140,8 +137,6 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
     public void setFormat(String format) {
         this.format = format;
     }
-
-    
 
     /**
      * @return the textCorpus
