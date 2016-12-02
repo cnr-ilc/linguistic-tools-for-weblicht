@@ -11,6 +11,7 @@ import eu.clarin.weblicht.wlfxb.tc.api.SentencesLayer;
 import eu.clarin.weblicht.wlfxb.tc.api.TextCorpus;
 import eu.clarin.weblicht.wlfxb.tc.api.TokensLayer;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusLayerTag;
+import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusStored;
 import it.cnr.ilc.tokenizer.Main;
 import it.cnr.ilc.tokenizer.TokenizerCli;
 import it.cnr.ilc.tokenizer.types.Result;
@@ -32,6 +33,7 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
     private String oFile = "";
     private String format = "";
     private TokenizerCli tokenizerCli = new TokenizerCli();
+    private TextCorpusStored textCorpus;
 
     public TokenizerBaseCore(String lang) {
         this.lang = lang;
@@ -59,60 +61,23 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
             SentencesLayer sentencesLayer = tc.createSentencesLayer();
             Result r = tokenizerCli.run(lang, input);
             for (Sentence s : r.getSentences()) {
+                List<eu.clarin.weblicht.wlfxb.tc.api.Token> sentenceTokens = new ArrayList<eu.clarin.weblicht.wlfxb.tc.api.Token>();
                 
                 for (Token t : s.getTokens()) {
                     System.err.println(" token TEXT -" + t.getTheToken() + "- ");
-                    tokensLayer.addToken(t.getTheToken());
+                    eu.clarin.weblicht.wlfxb.tc.api.Token token = tokensLayer.addToken(t.getTheToken());
+                    sentenceTokens.add(token);
                 }
+                sentencesLayer.addSentence(sentenceTokens);
             }
+            setTextCorpusStored((TextCorpusStored) tc);
+            
         }
     }
 
-    public synchronized void process() {
-//        String[] args = new String[1];
-//        boolean goahead = true;
-//
-//        Main m = new Main();
-//
-//        goahead = checkArgs(args);
-//
-//        m.init(goahead);
+    
 
-    }
-
-    private boolean checkArgs(String[] args) {
-        boolean ret = true;
-        int i = 0;
-        if ((args.length % 2) != 0) {
-            return false;
-        }
-        for (String arg : args) {
-            switch (arg) {
-                case "-l":
-
-                    if (checkLanguages(args[i + 1])) {
-                        setLang(args[i + 1]);
-                        break;
-                    } else {
-                        return false;
-                    }
-                case "-i":
-                    setiFile(args[i + 1]);
-                    break;
-                case "-o":
-                    setoFile(args[i + 1]);
-                    break;
-                case "-f":
-                    setFormat(args[i + 1]);
-                    break;
-
-            }
-            //System.err.println("arg at " + i + "-" + arg + "-");
-            i++;
-        }
-
-        return true;
-    }
+    
 
     private boolean checkLanguages(String lang) {
         List<String> langs = new ArrayList<>();
@@ -174,6 +139,22 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
      */
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    
+
+    /**
+     * @return the textCorpus
+     */
+    public TextCorpusStored getTextCorpusStored() {
+        return textCorpus;
+    }
+
+    /**
+     * @param textCorpus the textCorpus to set
+     */
+    public void setTextCorpusStored(TextCorpusStored textCorpus) {
+        this.textCorpus = textCorpus;
     }
 
 }
