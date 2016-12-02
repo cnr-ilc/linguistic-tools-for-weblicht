@@ -7,9 +7,15 @@ package it.cnr.ilc.tokenizer.service.core;
 
 import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessor;
 import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessorException;
+import eu.clarin.weblicht.wlfxb.tc.api.SentencesLayer;
 import eu.clarin.weblicht.wlfxb.tc.api.TextCorpus;
+import eu.clarin.weblicht.wlfxb.tc.api.TokensLayer;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusLayerTag;
 import it.cnr.ilc.tokenizer.Main;
+import it.cnr.ilc.tokenizer.TokenizerCli;
+import it.cnr.ilc.tokenizer.types.Result;
+import it.cnr.ilc.tokenizer.types.Sentence;
+import it.cnr.ilc.tokenizer.types.Token;
 import it.cnr.ilc.tokenizer.utils.Vars;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -25,30 +31,52 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
     private String iFile = "";
     private String oFile = "";
     private String format = "";
+    private TokenizerCli tokenizerCli = new TokenizerCli();
 
     public TokenizerBaseCore(String lang) {
         this.lang = lang;
     }
 
+    private static final EnumSet<TextCorpusLayerTag> requiredLayers
+            = EnumSet.of(TextCorpusLayerTag.TEXT);
+
     @Override
     public EnumSet<TextCorpusLayerTag> getRequiredLayers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return requiredLayers;
     }
 
     @Override
     public synchronized void process(TextCorpus tc) throws TextCorpusProcessorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String input = tc.getTextLayer().getText();
+        System.err.println("TEXT -" + tc.getTextLayer().getText() + "- ");
+
+        boolean goahead = true;
+
+        goahead = checkLanguages(lang);
+        Main m = new Main();
+        if (goahead) {
+            TokensLayer tokensLayer = tc.createTokensLayer();
+            SentencesLayer sentencesLayer = tc.createSentencesLayer();
+            Result r = tokenizerCli.run(lang, input);
+            for (Sentence s : r.getSentences()) {
+                
+                for (Token t : s.getTokens()) {
+                    System.err.println(" token TEXT -" + t.getTheToken() + "- ");
+                    tokensLayer.addToken(t.getTheToken());
+                }
+            }
+        }
     }
 
     public synchronized void process() {
-        String[] args = new String[1];
-        boolean goahead = true;
-
-        Main m = new Main();
-
-        goahead = checkArgs(args);
-
-        m.init(goahead);
+//        String[] args = new String[1];
+//        boolean goahead = true;
+//
+//        Main m = new Main();
+//
+//        goahead = checkArgs(args);
+//
+//        m.init(goahead);
 
     }
 

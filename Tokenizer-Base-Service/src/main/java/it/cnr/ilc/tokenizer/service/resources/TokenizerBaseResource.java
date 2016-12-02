@@ -5,9 +5,13 @@
  */
 package it.cnr.ilc.tokenizer.service.resources;
 
+import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessor;
+import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessorException;
 import eu.clarin.weblicht.wlfxb.io.TextCorpusStreamed;
 import eu.clarin.weblicht.wlfxb.io.WLFormatException;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusLayerTag;
+import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusStored;
+import it.cnr.ilc.tokenizer.service.core.TokenizerBaseCore;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,6 +31,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import my.org.weblicht.resources.StreamingTempFileOutput;
+import it.cnr.ilc.tokenizer.utils.Utilities;
+import java.io.StringWriter;
+import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -70,36 +77,36 @@ public class TokenizerBaseResource {
         return new StreamingTempFileOutput(tempOutputFile);
     }
 
-    private void process(String lang, InputStream input, OutputStream output) throws WLFormatException{
-        System.err.println("LANG -"+lang+ "- ");
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MESSAGE -"+input.toString()+"- ");
-         EnumSet<TextCorpusLayerTag> requiredLayers =
-            EnumSet.of(
-                    TextCorpusLayerTag.TEXT);
-        TextCorpusStreamed textCorpus = new TextCorpusStreamed(input, requiredLayers);
-        textCorpus.createTextLayer().addText(lang);
-//        try {
-//            TextCorpusProcessor tool = new TokenizerBaseCore(lang);
-//            textCorpus = new TextCorpusStreamed(input, null, output, false);
-//            // process TextCorpus and create new annotation layer(s) with your tool
-//            tool.process(textCorpus);
-//        } catch (TextCorpusProcessorException ex) {
-//            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
-//        } catch (WLFormatException ex) {
-//            throw new WebApplicationException(createResponse(ex, Response.Status.BAD_REQUEST));
-//        } catch (Exception ex) {
-//            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
-//        } finally {
-//            try {
-//                if (textCorpus != null) {
-//                    // it's important to close the TextCorpusStreamed, otherwise
-//                    // the TCF XML output will not be written to the end
-//                    textCorpus.close();
-//                }
-//            } catch (Exception ex) {
-//                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
-//            }
-//        }
+    private void process(String lang, InputStream input, OutputStream output) {
+        System.err.println("LANG -" + lang + "- ");
+        //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MESSAGE -" + input.toString() + "- ");
+        TextCorpusStreamed textCorpus = null;
+
+        try {
+
+            TextCorpusStored textCorpusStored = new TextCorpusStored(lang);
+            textCorpusStored.createTextLayer().addText(convertInputStreamToString(input));
+            TextCorpusProcessor tool = new TokenizerBaseCore(lang);
+
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MESSAGE -" + textCorpusStored.getTextLayer().getText() + "- ");
+
+// process TextCorpus and create new annotation layer(s) with your tool
+            tool.process(textCorpusStored);
+        } catch (TextCorpusProcessorException ex) {
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        } catch (Exception ex) {
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        } finally {
+            try {
+                if (textCorpus != null) {
+                    // it's important to close the TextCorpusStreamed, otherwise
+                    // the TCF XML output will not be written to the end
+                    textCorpus.close();
+                }
+            } catch (Exception ex) {
+                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+            }
+        }
     }
 
     private Response createResponse(Exception ex, Response.Status status) {
@@ -109,6 +116,25 @@ public class TokenizerBaseResource {
         }
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, message, ex);
         return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
+    }
+
+    private String convertInputStreamToString(InputStream is) {
+        StringWriter writer = new StringWriter();
+        String encoding = "UTF-8";
+        String message = "";
+        String theString = "";
+        try {
+            IOUtils.copy(is, writer, encoding);
+            theString = writer.toString();
+        } catch (Exception e) {
+            message = "IOException in coverting the stream into a string " + e.getMessage();
+            Logger.getLogger(Utilities.class.getName()).log(Level.SEVERE, message);
+        }
+
+        System.err.println("DDDD " + theString);
+        IOUtils.closeQuietly(is);
+        IOUtils.closeQuietly(writer);
+        return theString;
     }
 
 }
