@@ -53,14 +53,14 @@ public class LoadPrefixes {
     public void readPrefixesAsStream(String lang) {
         BufferedReader reader = null;
         HashMap<String, Integer> prefixmap = new HashMap<String, Integer>();
-        PREFIX_FILE_NAME = PREFIX_PATH + lang + "/" + PREFIX_FILE_NAME;
+        String prefix_file_name = PREFIX_PATH + lang + "/" + PREFIX_FILE_NAME;
         if (debug) {
-            Logger.getLogger(LoadPrefixes.class.getName()).log(Level.INFO, "Reading " + PREFIX_FILE_NAME);
+            Logger.getLogger(LoadPrefixes.class.getName()).log(Level.INFO, "Reading " + prefix_file_name);
         }
 
         //System.err.println("-- "+PREFIX_FILE_NAME);
         try {
-            reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(PREFIX_FILE_NAME), "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(prefix_file_name), "UTF-8"));
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();

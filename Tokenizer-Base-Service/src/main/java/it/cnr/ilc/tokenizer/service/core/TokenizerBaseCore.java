@@ -11,7 +11,7 @@ import eu.clarin.weblicht.wlfxb.tc.api.SentencesLayer;
 import eu.clarin.weblicht.wlfxb.tc.api.TextCorpus;
 import eu.clarin.weblicht.wlfxb.tc.api.TokensLayer;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusLayerTag;
-import it.cnr.ilc.tokenizer.Main;
+import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusStored;
 import it.cnr.ilc.tokenizer.TokenizerCli;
 import it.cnr.ilc.tokenizer.types.Result;
 import it.cnr.ilc.tokenizer.types.Sentence;
@@ -22,21 +22,52 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- *
+ * This class extends eu.clarin.weblicht.wlfxb.api.TextCorpusProcessor. This is needed for a full integration into the weblicht suite
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class TokenizerBaseCore implements TextCorpusProcessor {
 
+    /**
+     * the language
+     */
     private String lang = "";
+    
+    /**
+     * input file
+     */
     private String iFile = "";
+    
+    /**
+     * output file
+     */
     private String oFile = "";
+    
+    /**
+     * output format
+     */
     private String format = "";
-    private TokenizerCli tokenizerCli = new TokenizerCli();
+    
+    /**
+     * This is &quote;injection&quote; of the standing alone tokenizer software 
+     */
+    private TokenizerCli tokenizerCli;
+    
+    /**
+     * a weblicht textcorpus
+     */
+    private TextCorpusStored textCorpus;
 
+    /**
+     * Constructor
+     * @param lang the language used to select the model for tokenizer text 
+     */
     public TokenizerBaseCore(String lang) {
         this.lang = lang;
     }
 
+    /**
+     * Required layers of the TCF document to be valid
+     */
     private static final EnumSet<TextCorpusLayerTag> requiredLayers
             = EnumSet.of(TextCorpusLayerTag.TEXT);
 
@@ -45,75 +76,55 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
         return requiredLayers;
     }
 
+    /**
+     * This method is responsible for processing. The steps are the following
+     * <ol>
+     * <li>Extract the text from @param tc ;</li>
+     * <li>Check if the language is one of the managed. This is needed for loading the correct module which depends on the language;</li>
+     * <li>Create a TpkenLayer (for weblicht);</li>
+     * <li>Create a SentenceLayer (for weblicht);</li>
+     * <li>Initialize the core tokenizer;</li>
+     * <li>Execute the run method of the core tokenizer to tokenize @param input;</li>
+     * <li>Map tokenizer sentences and tokens to weblicht's. This is necessary to write a valid TCF document;</li>
+     * <li>Create TextCorpusStored (for weblicht);</li>
+     * </ol>
+     * @param tc the textcorpus to analyze
+     * @throws TextCorpusProcessorException Any TextCorpusProcessorException thrown
+     */
     @Override
     public synchronized void process(TextCorpus tc) throws TextCorpusProcessorException {
         String input = tc.getTextLayer().getText();
-        System.err.println("TEXT -" + tc.getTextLayer().getText() + "- ");
+        
 
         boolean goahead = true;
 
         goahead = checkLanguages(lang);
-        Main m = new Main();
+        
         if (goahead) {
             TokensLayer tokensLayer = tc.createTokensLayer();
             SentencesLayer sentencesLayer = tc.createSentencesLayer();
+            tokenizerCli = new TokenizerCli();
             Result r = tokenizerCli.run(lang, input);
             for (Sentence s : r.getSentences()) {
-                
+                List<eu.clarin.weblicht.wlfxb.tc.api.Token> sentenceTokens = new ArrayList<eu.clarin.weblicht.wlfxb.tc.api.Token>();
+
                 for (Token t : s.getTokens()) {
-                    System.err.println(" token TEXT -" + t.getTheToken() + "- ");
-                    tokensLayer.addToken(t.getTheToken());
+                    //System.err.println(" token TEXT -" + t.getTheToken() + "- ");
+                    eu.clarin.weblicht.wlfxb.tc.api.Token token = tokensLayer.addToken(t.getTheToken());
+                    sentenceTokens.add(token);
                 }
+                sentencesLayer.addSentence(sentenceTokens);
             }
+            setTextCorpusStored((TextCorpusStored) tc);
+
         }
     }
 
-    public synchronized void process() {
-//        String[] args = new String[1];
-//        boolean goahead = true;
-//
-//        Main m = new Main();
-//
-//        goahead = checkArgs(args);
-//
-//        m.init(goahead);
-
-    }
-
-    private boolean checkArgs(String[] args) {
-        boolean ret = true;
-        int i = 0;
-        if ((args.length % 2) != 0) {
-            return false;
-        }
-        for (String arg : args) {
-            switch (arg) {
-                case "-l":
-
-                    if (checkLanguages(args[i + 1])) {
-                        setLang(args[i + 1]);
-                        break;
-                    } else {
-                        return false;
-                    }
-                case "-i":
-                    setiFile(args[i + 1]);
-                    break;
-                case "-o":
-                    setoFile(args[i + 1]);
-                    break;
-                case "-f":
-                    setFormat(args[i + 1]);
-                    break;
-
-            }
-            //System.err.println("arg at " + i + "-" + arg + "-");
-            i++;
-        }
-
-        return true;
-    }
-
+    /**
+     * check language
+     * @param lang the language
+     * @return true if lang is supported
+     */
     private boolean checkLanguages(String lang) {
         List<String> langs = new ArrayList<>();
         return Vars.langs.contains(lang);
@@ -174,6 +185,20 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
      */
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    /**
+     * @return the textCorpus
+     */
+    public TextCorpusStored getTextCorpusStored() {
+        return textCorpus;
+    }
+
+    /**
+     * @param textCorpus the textCorpus to set
+     */
+    public void setTextCorpusStored(TextCorpusStored textCorpus) {
+        this.textCorpus = textCorpus;
     }
 
 }

@@ -10,38 +10,53 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import it.cnr.ilc.tokenizer.service.resources.TokenizerBaseResource;
 import my.org.weblicht.resources.IndexResource;
-import my.org.weblicht.resources.NamedEntitiesResource;
-import my.org.weblicht.resources.ReferencesResource;
 import my.org.weblicht.resources.TokSentencesResource;
 
 /**
- *
+ * This class extends io.dropwizard.Application and uses TokenizerBaseServiceConf as main configuration factory
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
-public class TokenizerBaseServiceApp extends Application<TokenizerBaseServiceConf>{
-    
-    public static void main(String[] args) throws Exception{
+public class TokenizerBaseServiceApp extends Application<TokenizerBaseServiceConf> {
+
+    /**
+     * You can execute as java -jar ABC.jar server [file].
+     * file specify the configuration file. If not provided the 8080 and the / as root context is used. 
+     * @param args the arguments provided. The first is server to start the server. 
+     * The second is optional and specifies the yaml configuration file. Usually this last one is under src/assembly/conf
+     * @throws Exception The possible exception thrown during the process
+     */
+    public static void main(String[] args) throws Exception {
+        
+        
         new TokenizerBaseServiceApp().run(args);
     }
 
     @Override
     public void initialize(Bootstrap<TokenizerBaseServiceConf> btstrp) {
-       
+
     }
 
+    
+    /**
+     * You can use this method to register your resources. You can do it in two ways:
+     * <ol>
+     * <li> register a single instance when the server starts up.</li>
+     * <li> register a new instance each time the service is invoked (myclass.class)</li>
+     * </ol>
+     * You should take care of thread safe[ln]ess in your code, essentially synchronizing the process method
+     */
     @Override
     public void run(TokenizerBaseServiceConf t, Environment environment) throws Exception {
-        
+
 //        NamedEntitiesResource namedEntitiesResource = new NamedEntitiesResource();
 //        ReferencesResource referencesResource = new ReferencesResource();
         IndexResource indexResource = new IndexResource();
+        TokenizerBaseResource tokresource = new TokenizerBaseResource();
 //        environment.jersey().register(namedEntitiesResource);
 //        environment.jersey().register(referencesResource);
         environment.jersey().register(TokSentencesResource.class);
-        environment.jersey().register(TokenizerBaseResource.class);
+        environment.jersey().register(tokresource);
         environment.jersey().register(indexResource);
     }
-    
-    
-    
+
 }
