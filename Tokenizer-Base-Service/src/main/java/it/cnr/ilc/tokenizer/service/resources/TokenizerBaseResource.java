@@ -6,7 +6,6 @@
 package it.cnr.ilc.tokenizer.service.resources;
 
 import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessorException;
-import eu.clarin.weblicht.wlfxb.io.TextCorpusStreamed;
 import eu.clarin.weblicht.wlfxb.io.WLDObjector;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusStored;
 import eu.clarin.weblicht.wlfxb.xb.WLData;
@@ -32,7 +31,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
 /**
- *
+ * The base resource to register in the environment. Registering this resource, the service will be available at the path wl/tokenizer
+ * which is the root of the service(s).
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 @Path("wl/tokenizer")
@@ -47,6 +47,9 @@ public class TokenizerBaseResource {
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(TEXT_TCF_XML)
+    /**
+     * This service tokenizes from a plain text. 
+     */
     public StreamingOutput tokenizeTextFromPlain(@QueryParam("lang") String lang, final InputStream input) {
         OutputStream tempOutputData = null;
         File tempOutputFile = null;
@@ -73,6 +76,13 @@ public class TokenizerBaseResource {
         return new OutPutWriter(tempOutputFile);
     }
 
+    /**
+     * This method processes the plain text and creates a TextCorpusStored from the input provided.
+     * It calls the corresponding method from the tool. Uses weblicht apis (WLData and WLDObjector) to write the annotated file
+     * @param lang the language used to load the module
+     * @param input the input stream
+     * @param output the output stream
+     */
     private void process(String lang, InputStream input, OutputStream output) {
         //System.err.println("LANG -" + lang + "- ");
         //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MESSAGE -" + input.toString() + "- ");
@@ -108,6 +118,12 @@ public class TokenizerBaseResource {
         }
     }
 
+    /**
+     * Private method to create the response depending on statuses and exceptions
+     * @param ex the exception
+     * @param status the status
+     * @return the response
+     */
     private Response createResponse(Exception ex, Response.Status status) {
         String message = ex.getMessage();
         if (message == null) {

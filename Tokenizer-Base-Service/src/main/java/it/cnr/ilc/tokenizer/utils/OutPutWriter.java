@@ -27,6 +27,9 @@ public class OutPutWriter implements StreamingOutput {
     public OutPutWriter(File file) {this.file = file;}
 
     @Override
+    /**
+     * write the stream
+     */
     public void write(OutputStream out) throws IOException, WebApplicationException {
         FileInputStream input = null;
         byte[] buffer = new byte[256 * 1024];

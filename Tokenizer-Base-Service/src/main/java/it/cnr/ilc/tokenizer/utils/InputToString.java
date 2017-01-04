@@ -12,10 +12,16 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 
 /**
- *
+ * Some utilities
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class InputToString {
+    
+    /**
+     * Convert an inputstream into a string
+     * @param is the inputstream
+     * @return the string from the input
+     */
     public static String convertInputStreamToString(InputStream is) {
         StringWriter writer = new StringWriter();
         String encoding = "UTF-8";

@@ -8,7 +8,7 @@ package it.cnr.ilc.tokenizer.app;
 import io.dropwizard.Configuration;
 
 /**
- *
+ * This class extends io.dropwizard.Configuration
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class TokenizerBaseServiceConf extends Configuration{
