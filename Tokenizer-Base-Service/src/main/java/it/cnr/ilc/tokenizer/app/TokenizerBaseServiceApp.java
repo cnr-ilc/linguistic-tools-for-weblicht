@@ -8,9 +8,8 @@ package it.cnr.ilc.tokenizer.app;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import it.cnr.ilc.tokenizer.service.resources.ReadMeResource;
 import it.cnr.ilc.tokenizer.service.resources.TokenizerBaseResource;
-import my.org.weblicht.resources.IndexResource;
-import my.org.weblicht.resources.TokSentencesResource;
 
 /**
  * This class extends io.dropwizard.Application and uses TokenizerBaseServiceConf as main configuration factory
@@ -20,7 +19,7 @@ public class TokenizerBaseServiceApp extends Application<TokenizerBaseServiceCon
 
     /**
      * You can execute as java -jar ABC.jar server [file].
-     * file specify the configuration file. If not provided the 8080 and the / as root context is used. 
+     * file specify the configuration file. If not provided the 8080 as port and the / as root context are used. 
      * @param args the arguments provided. The first is server to start the server. 
      * The second is optional and specifies the yaml configuration file. Usually this last one is under src/assembly/conf
      * @throws Exception The possible exception thrown during the process
@@ -50,13 +49,13 @@ public class TokenizerBaseServiceApp extends Application<TokenizerBaseServiceCon
 
 //        NamedEntitiesResource namedEntitiesResource = new NamedEntitiesResource();
 //        ReferencesResource referencesResource = new ReferencesResource();
-        IndexResource indexResource = new IndexResource();
+        ReadMeResource readmeResource = new ReadMeResource();
         TokenizerBaseResource tokresource = new TokenizerBaseResource();
 //        environment.jersey().register(namedEntitiesResource);
 //        environment.jersey().register(referencesResource);
-        environment.jersey().register(TokSentencesResource.class);
+        //environment.jersey().register(TokSentencesResource.class);
         environment.jersey().register(tokresource);
-        environment.jersey().register(indexResource);
+        environment.jersey().register(readmeResource);
     }
 
 }

@@ -5,8 +5,11 @@
  */
 package it.cnr.ilc.tokenizer.service.resources;
 
+import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessor;
 import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessorException;
+import eu.clarin.weblicht.wlfxb.io.TextCorpusStreamed;
 import eu.clarin.weblicht.wlfxb.io.WLDObjector;
+import eu.clarin.weblicht.wlfxb.io.WLFormatException;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusStored;
 import eu.clarin.weblicht.wlfxb.xb.WLData;
 import it.cnr.ilc.tokenizer.service.core.TokenizerBaseCore;
@@ -104,6 +107,7 @@ public class TokenizerBaseResource {
         } catch (TextCorpusProcessorException ex) {
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         } catch (Exception ex) {
+            
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         } finally {
             try {
@@ -131,6 +135,67 @@ public class TokenizerBaseResource {
         }
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, message, ex);
         return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
+    }
+    
+    /*
+    starting part for managing the TCF input files
+    */
+    @Path("tcf")
+    @POST
+    @Consumes(TEXT_TCF_XML)
+    @Produces(TEXT_TCF_XML)
+    public StreamingOutput tokenizeTextFromTcf(@QueryParam("lang") String lang,final InputStream input) {
+        OutputStream tempOutputData = null;
+        File tempOutputFile = null;
+        try {
+            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
+        } catch (IOException ex) {
+            if (tempOutputData != null) {
+                try {
+                    tempOutputData.close();
+                } catch (IOException e) {
+                    throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+                }
+            }
+            if (tempOutputFile != null) {
+                tempOutputFile.delete();
+            }
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+
+        // process incoming TCF and output resulting TCF with new annotation layer(s) added
+        //process(input, tempOutputData, tool);
+        processTcf(lang, input, tempOutputData);
+        return new OutPutWriter(tempOutputFile);
+    }
+    
+    private void processTcf(String lang, final InputStream input, OutputStream output) {
+        TextCorpusStreamed textCorpus = null;
+        try {
+            TokenizerBaseCore tool = new TokenizerBaseCore(lang);
+            // create TextCorpus object from the client request input,
+            // only required annotation layers will be read into the object
+            textCorpus = new TextCorpusStreamed(input, tool.getRequiredLayers(), output, false);
+            // process TextCorpus and create new annotation layer(s) with your tool
+            tool.process(textCorpus);
+        } catch (TextCorpusProcessorException ex) {
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        } catch (WLFormatException ex) {
+            throw new WebApplicationException(createResponse(ex, Response.Status.BAD_REQUEST));
+        } catch (Exception ex) {
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        } finally {
+            try {
+                if (textCorpus != null) {
+                    // it's important to close the TextCorpusStreamed, otherwise
+                    // the TCF XML output will not be written to the end
+                    textCorpus.close();
+                }
+            } catch (Exception ex) {
+                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+            }
+        }
     }
 
 }

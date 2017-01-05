@@ -22,7 +22,9 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * This class extends eu.clarin.weblicht.wlfxb.api.TextCorpusProcessor. This is needed for a full integration into the weblicht suite
+ * This class extends eu.clarin.weblicht.wlfxb.api.TextCorpusProcessor. This is
+ * needed for a full integration into the weblicht suite
+ *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class TokenizerBaseCore implements TextCorpusProcessor {
@@ -31,27 +33,27 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
      * the language
      */
     private String lang = "";
-    
+
     /**
      * input file
      */
     private String iFile = "";
-    
+
     /**
      * output file
      */
     private String oFile = "";
-    
+
     /**
      * output format
      */
     private String format = "";
-    
+
     /**
-     * This is &quote;injection&quote; of the standing alone tokenizer software 
+     * This is &quote;injection&quote; of the standing alone tokenizer software
      */
     private TokenizerCli tokenizerCli;
-    
+
     /**
      * a weblicht textcorpus
      */
@@ -59,7 +61,8 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
 
     /**
      * Constructor
-     * @param lang the language used to select the model for tokenizer text 
+     *
+     * @param lang the language used to select the model for tokenizer text
      */
     public TokenizerBaseCore(String lang) {
         this.lang = lang;
@@ -80,26 +83,30 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
      * This method is responsible for processing. The steps are the following
      * <ol>
      * <li>Extract the text from @param tc ;</li>
-     * <li>Check if the language is one of the managed. This is needed for loading the correct module which depends on the language;</li>
+     * <li>Check if the language is one of the managed. This is needed for
+     * loading the correct module which depends on the language;</li>
      * <li>Create a TpkenLayer (for weblicht);</li>
      * <li>Create a SentenceLayer (for weblicht);</li>
      * <li>Initialize the core tokenizer;</li>
-     * <li>Execute the run method of the core tokenizer to tokenize @param input;</li>
-     * <li>Map tokenizer sentences and tokens to weblicht's. This is necessary to write a valid TCF document;</li>
+     * <li>Execute the run method of the core tokenizer to tokenize @param
+     * input;</li>
+     * <li>Map tokenizer sentences and tokens to weblicht's. This is necessary
+     * to write a valid TCF document;</li>
      * <li>Create TextCorpusStored (for weblicht);</li>
      * </ol>
+     *
      * @param tc the textcorpus to analyze
-     * @throws TextCorpusProcessorException Any TextCorpusProcessorException thrown
+     * @throws TextCorpusProcessorException Any TextCorpusProcessorException
+     * thrown
      */
     @Override
     public synchronized void process(TextCorpus tc) throws TextCorpusProcessorException {
         String input = tc.getTextLayer().getText();
-        
 
         boolean goahead = true;
 
         goahead = checkLanguages(lang);
-        
+
         if (goahead) {
             TokensLayer tokensLayer = tc.createTokensLayer();
             SentencesLayer sentencesLayer = tc.createSentencesLayer();
@@ -117,11 +124,14 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
             }
             setTextCorpusStored((TextCorpusStored) tc);
 
+        } else {
+            throw new TextCorpusProcessorException("******** Unsopported language " + lang+" *********** \n");
         }
     }
 
     /**
      * check language
+     *
      * @param lang the language
      * @return true if lang is supported
      */
