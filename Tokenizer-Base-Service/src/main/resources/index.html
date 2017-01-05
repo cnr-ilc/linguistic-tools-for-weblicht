@@ -1,110 +1,70 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>weblicht service</title>
+        <title>CNR-ILC Tokenizer services</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h2>Demo Service</h2>
-        There are three examples of web services included in this demo.
-        <h2>A sample TCF processing web service for tokenization and sentence splitting</h2>
-        <p>
-            This web service is an example of a simple tokenization and sentence boundaries detection service.
-            The service processes POST requests containing TCF data with text.
+        <h2>Offered Services</h2>
+        <p>CNR-ILC provides two distinct web services to perform tokenization on texts in the following languages: it, fr, de, en, es, nl.
+        The application arises an Unsupported language exception if the language provided is not on the list.
         </p>
-        <p>
-            This web service demonstrates the case when the underlying processing tool object is not
-            expensive to create and it does not consume a lot of memory.
-            In such a case it is convenient to create the tool object with each client POST request, 
-            as shown in the service implementation.
-            You don't need to worry about whether the tool is thread-safe or not.
-        </p>
+        <p>The services are essentially the same, but while one consumes a plain text to produce a valid
+            TCF document, the second both consumes and produces TCF documents.</p>
+        <p>This page explains how to use the offered services.</p>
+        <p>The endpoints are the following:</p>
+        <ul>
+            <li><code>wl/tokenizer/plain</code> (use it to tokenize plain texts)</li>
+            <li><code>wl/tokenizer/tcf</code> (use it to tokenize TCF documents)</li>
+        </ul>
+        <p>The language is provided as a parameter: </p>
+        <ul>
+            <li><code>wl/tokenizer/plain?lang=XX</code></li>
+            <li><code>wl/tokenizer/tcf?lang=XX</code></li>
+        </ul>
         <p>You can test the service endpoints using curl or wget as follows:</p>
-        <ul>
-            <li>download the provided <a href="input_tok.xml">input_tok.xml</a> file</li>
-            <li>Send the input file to the endpoints for processing:
-                    </br>With curl:
-                    </br>
-                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_tok.xml -X POST <span class="url"></span>toksentence/stream</code>
-                    </br>
-                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_tok.xml -X POST <span class="url"></span>toksentence/bytes</code>
-                    </br>Or wget:
-                    </br>
-                    <code> wget --post-file=input_tok.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>toksentence/stream</code>
-                    </br>
-                    <code> wget --post-file=input_tok.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>toksentence/bytes</code>
-            </li>
-        </ul>
-        <h2>A sample TCF processing web service for reference identifying</h2>
-        <p>
-            This web service is an example of a simple service that creates reference annotations
-            based on previously annotated named entities.
-            The service processes POST requests containing TCF data with tokens, PoS tags, and named entities.
-        </p>
-        <p>
-        This web service demonstrates the case where the underlying processing tool object requires 
-        a model for identifying the references.
-        Since a model can consume much memory and/or require much time when loading, 
-        the tool instance is created only once (the corresponding model is loaded only once), 
-        when the application is created. The example shows the case when the tool is 
-        thread-safe, it can be shared among the clients without any synchronization.
-        </p>
-        <p>You can test the service endpoint using curl or wget as follows:</p>
-        <ul>
-            <li>download the provided <a href="input_ref.xml">input_ref.xml</a> file</li>
-            <li>Send the input file to the endpoints for processing:
-                    </br>With curl:
-                    </br>
-                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_ref.xml -X POST <span class="url"></span>refidf/bytes</code>
-                    </br>
-                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_ref.xml -X POST <span class="url"></span>refidf/stream</code>
-                    </br>Or wget:
-                    </br>
-                    <code> wget --post-file=input_ref.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>refidf/bytes</code>
-                    </br>
-                    <code> wget --post-file=input_ref.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>refidf/stream</code>
-            </li>
-        </ul>
-        <h2>A sample TCF processing web service for named entity recognition</h2>
-        <p>
-            This web service is an example of a simple named entity recognizer service.
-            The service processes POST requests containing TCF data with tokens.
-            It uses token annotations to produce named entity annotations.
-        </p>
-        <p>
-            It demonstrates the case where the tool must load a list of named entities 
-            which is used to identify them.
-            This is a common use case where a tool uses resources such as a list, 
-            database, index, a machine learning model, etc. under the hood.
-            Such resources can consume much memory and/or require much time when loading.
-            Therefore, it is better to create only one instance (or certain restricted 
-            number of instances) of the tool per application.
-            In this example, the tool instance is created only once (i.e. the corresponding 
-            list resource is loaded only once), when the application is created.
-            In this example, the tool is not thread-safe.
-            Therefore, the tool's process() method requires synchronization.
-        </p>
-        <p>You can test the service endpoints using curl or wget as follows:</p>
-        <ul>
-            <li>download the provided <a href="input_ner.xml">input_ner.xml</a> file</li>
-            <li>Send the input file to the endpoints for processing:
-                    </br>With curl:
-                    </br>
-                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_ner.xml -X POST <span class="url"></span>ner/stream</code>
-                    </br>
-                    <code> curl -H 'content-type: text/tcf+xml' --data-binary @input_ner.xml -X POST <span class="url"></span>ner/bytes</code>
-                    </br>Or wget:
-                    </br>
-                    <code> wget --post-file=input_ner.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>ner/stream</code>
-                    </br>
-                    <code> wget --post-file=input_ner.xml --header='Content-Type: text/tcf+xml' <span class="url"></span>ner/bytes</code>
-            </li>
-        </ul>
-        <script type="text/javascript">
-                var elemList = document.getElementsByClassName("url");
-                for (var i = 0; i < elemList.length; i++) {
-                    elemList[i].innerHTML = window.location.href;
-                }
-        </script>
-    </body>
+<ul>
+    
+    <li>Send the input file to the endpoints for processing:
+        </br>With curl:
+        </br>
+        <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>wl/tokenizer/plain?lang=it</code>
+        </br>
+        <code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.txt -X POST <span class="url"></span>wl/tokenizer/tcf?lang=it</code>
+        </br>Or wget:
+        </br>
+        <code> wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>wl/tokenizer/plain?lang=it</code>
+        </br>
+        <code> wget --post-file=tcf-file.txt --header='Content-Type: text/tcf+xml' <span class="url"></span>wl/tokenizer/tcf?lang=it</code>
+    </li>
+</ul>
+        <p>&nbsp;</p><p>&nbsp;</p>
+
+        As for plain text you can use <pre> Mi chiamo Riccardo. Abito a Roma</pre>
+                
+        As for TCF text you can use <pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;?xml-model href=&quot;http://de.clarin.eu/images/weblicht-tutorials/resources/tcf-04/schemas/latest/d-spin_0_4.rnc&quot; type=&quot;application/relax-ng-compact-syntax&quot;?&gt;
+    &lt;D-Spin xmlns=&quot;http://www.dspin.de/data&quot; version=&quot;0.4&quot;&gt;
+        &lt;md:MetaData xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:cmd=&quot;http://www.clarin.eu/cmd/&quot; 
+            xmlns:md=&quot;http://www.dspin.de/data/metadata&quot; 
+            xsi:schemaLocation=&quot;http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1320657629623/xsd&quot;
+        &gt;&lt;/md:MetaData&gt;
+            &lt;tc:TextCorpus xmlns:tc=&quot;http://www.dspin.de/data/textcorpus&quot; lang=&quot;it&quot;&gt;
+                &lt;tc:text&gt;
+                    Mi chiamo Alfredo. Abito a Roma.
+                &lt;/tc:text&gt;
+            &lt;/tc:TextCorpus&gt;
+    &lt;/D-Spin&gt;
+    </pre>
+
+
+
+<script type="text/javascript">
+    var elemList = document.getElementsByClassName("url");
+    for (var i = 0; i < elemList.length; i++) {
+        elemList[i].innerHTML = window.location.href;
+    }
+</script>
+</body>
 </html>
