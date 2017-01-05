@@ -6,21 +6,26 @@
     </head>
     <body>
         <h2>Offered Services</h2>
-        <p>CNR-ILC provides two distinct web services to perform tokenization on texts in the following languages: it, fr, de, en, es, nl.
+        <p>CNR-ILC provides three sets of distinct web services to perform tokenization on texts in the following languages: it, fr, de, en, es, nl.
         The application arises an Unsupported language exception if the language provided is not on the list.
         </p>
-        <p>The services are essentially the same, but while one consumes a plain text to produce a valid
-            TCF document, the second both consumes and produces TCF documents.</p>
+        <p>The services are essentially the same, but, according with the endpoints, valid TCF, KAF or tabbed files can be produced. 
+            The service that produces TCF can read fromm both a plain text or a valid TCF document. The mimetype is set accordingly. 
+            .</p>
         <p>This page explains how to use the offered services.</p>
         <p>The endpoints are the following:</p>
         <ul>
-            <li><code>wl/tokenizer/plain</code> (use it to tokenize plain texts)</li>
-            <li><code>wl/tokenizer/tcf</code> (use it to tokenize TCF documents)</li>
+            <li><code>wl/tokenizer/plain</code> (use it to tokenize plain texts and produce a TCF valid document)</li>
+            <li><code>wl/tokenizer/tcf</code> (use it to tokenize TCF document and produce a TCF valid document)</li>
+            <li><code>kaf/tokenizer/plain</code> (use it to tokenize plain texts and produce a KAF valid document)</li>
+            <li><code>tab/tokenizer/plain</code> (use it to tokenize TCF document and produce a tabbed document)</li>
         </ul>
         <p>The language is provided as a parameter: </p>
         <ul>
             <li><code>wl/tokenizer/plain?lang=XX</code></li>
             <li><code>wl/tokenizer/tcf?lang=XX</code></li>
+            <li><code>kaf/tokenizer/plain?lang=XX</code></li>
+            <li><code>tab/tokenizer/plain?lang=XX</code></li>
         </ul>
         <p>You can test the service endpoints using curl or wget as follows:</p>
 <ul>
@@ -31,11 +36,22 @@
         <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>wl/tokenizer/plain?lang=it</code>
         </br>
         <code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.txt -X POST <span class="url"></span>wl/tokenizer/tcf?lang=it</code>
+        </br>
+        <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>kaf/tokenizer/plain?lang=it</code>
+        </br>
+        <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>tab/tokenizer/plain?lang=it</code>
+       
         </br>Or wget:
         </br>
         <code> wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>wl/tokenizer/plain?lang=it</code>
         </br>
         <code> wget --post-file=tcf-file.txt --header='Content-Type: text/tcf+xml' <span class="url"></span>wl/tokenizer/tcf?lang=it</code>
+        </br>
+        <code> wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>kaf/tokenizer/plain?lang=it</code>
+        </br>
+        <code> wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>tab/tokenizer/plain?lang=it</code>
+     
+     
     </li>
 </ul>
         <p>&nbsp;</p><p>&nbsp;</p>
@@ -48,8 +64,8 @@
     &lt;D-Spin xmlns=&quot;http://www.dspin.de/data&quot; version=&quot;0.4&quot;&gt;
         &lt;md:MetaData xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:cmd=&quot;http://www.clarin.eu/cmd/&quot; 
             xmlns:md=&quot;http://www.dspin.de/data/metadata&quot; 
-            xsi:schemaLocation=&quot;http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1320657629623/xsd&quot;
-        &gt;&lt;/md:MetaData&gt;
+            xsi:schemaLocation=&quot;http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1320657629623/xsd&quot;&gt;
+        &lt;/md:MetaData&gt;
             &lt;tc:TextCorpus xmlns:tc=&quot;http://www.dspin.de/data/textcorpus&quot; lang=&quot;it&quot;&gt;
                 &lt;tc:text&gt;
                     Mi chiamo Alfredo. Abito a Roma.

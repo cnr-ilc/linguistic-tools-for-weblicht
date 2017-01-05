@@ -10,6 +10,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import it.cnr.ilc.tokenizer.service.resources.ReadMeResource;
 import it.cnr.ilc.tokenizer.service.resources.TokenizerBaseResource;
+import it.cnr.ilc.tokenizer.service.resources.TokenizerKafResource;
+import it.cnr.ilc.tokenizer.service.resources.TokenizerTabResource;
 
 /**
  * This class extends io.dropwizard.Application and uses TokenizerBaseServiceConf as main configuration factory
@@ -51,11 +53,15 @@ public class TokenizerBaseServiceApp extends Application<TokenizerBaseServiceCon
 //        ReferencesResource referencesResource = new ReferencesResource();
         ReadMeResource readmeResource = new ReadMeResource();
         TokenizerBaseResource tokresource = new TokenizerBaseResource();
+        TokenizerKafResource kafresource = new TokenizerKafResource();
+        TokenizerTabResource tabresource = new TokenizerTabResource();
 //        environment.jersey().register(namedEntitiesResource);
 //        environment.jersey().register(referencesResource);
         //environment.jersey().register(TokSentencesResource.class);
         environment.jersey().register(tokresource);
+        environment.jersey().register(kafresource);
         environment.jersey().register(readmeResource);
+        environment.jersey().register(tabresource);
     }
 
 }
