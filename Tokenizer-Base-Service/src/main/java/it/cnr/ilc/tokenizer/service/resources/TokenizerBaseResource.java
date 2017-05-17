@@ -90,7 +90,10 @@ public class TokenizerBaseResource {
      */
     public StreamingOutput tokenizeTextFromPlainFromUrl(@QueryParam("lang") String lang, @QueryParam("url") String theUrl, final InputStream input) {
         OutputStream tempOutputData = null;
-        System.err.println("theLang "+lang);
+        System.err.println("***** FOR LRS WL -POST INVOCATION:");
+        System.err.println("\t***** FOR LRS WL TCF -POST INVOCATION lang parameter :"+lang+ " ******");
+        System.err.println("\t***** FOR LRS WL TCF -POST INVOCATION url parameter :"+theUrl+ " ******");
+        System.err.println("***** FOR LRS WL -POST INVOCATION END *****\n\n");
         File tempOutputFile = null;
         try {
             tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
