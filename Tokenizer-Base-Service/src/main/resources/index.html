@@ -10,7 +10,7 @@
         The application arises an Unsupported language exception if the language provided is not on the list.
         </p>
         <p>The services are essentially the same, but, according with the endpoints, valid TCF, KAF or tabbed files can be produced. 
-            The service that produces TCF can read fromm both a plain text or a valid TCF document. The mimetype is set accordingly. 
+            The service that produces TCF can read from both a plain text or a valid TCF document. The mimetype is set accordingly. 
             .</p>
         <p>This page explains how to use the offered services.</p>
         <p>The endpoints are the following:</p>
@@ -18,7 +18,7 @@
             <li><code>wl/tokenizer/plain</code> (use it to tokenize plain texts and produce a TCF valid document)</li>
             <li><code>wl/tokenizer/tcf</code> (use it to tokenize TCF document and produce a TCF valid document)</li>
             <li><code>kaf/tokenizer/plain</code> (use it to tokenize plain texts and produce a KAF valid document)</li>
-            <li><code>tab/tokenizer/plain</code> (use it to tokenize TCF document and produce a tabbed document)</li>
+            <li><code>tab/tokenizer/plain</code> (use it to tokenize plain texts and produce a tabbed document)</li>
         </ul>
         <p>The language is provided as a parameter: </p>
         <ul>
@@ -54,6 +54,21 @@
      
     </li>
 </ul>
+        <p></p>
+        <p>For Language Resource Switchboard we added three GET endpoints</p>
+        <p>The endpoints are the following:</p>
+        <ul>
+            <li><code>wl/tokenizer/plainget</code> (use it to tokenize plain texts and produce a TCF valid document)</li>
+            <li><code>kaf/tokenizer/plainget</code> (use it to tokenize plain texts and produce a KAF valid document)</li>
+            <li><code>tab/tokenizer/plainget</code> (use it to tokenize plain texts  and produce a tabbed document)</li>
+        </ul>
+        <p>The language is provided as a parameter: </p>
+        <ul>
+            <li><code>wl/tokenizer/plain?lang=XX</code></li>
+            <li><code>wl/tokenizer/tcf?lang=XX</code></li>
+            <li><code>kaf/tokenizer/plain?lang=XX</code></li>
+            <li><code>tab/tokenizer/plain?lang=XX</code></li>
+        </ul>
         <p>&nbsp;</p><p>&nbsp;</p>
 
         As for plain text you can use <pre> Mi chiamo Riccardo. Abito a Roma</pre>

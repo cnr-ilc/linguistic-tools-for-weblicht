@@ -5,7 +5,6 @@
  */
 package it.cnr.ilc.tokenizer.service.resources;
 
-import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessor;
 import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessorException;
 import eu.clarin.weblicht.wlfxb.io.TextCorpusStreamed;
 import eu.clarin.weblicht.wlfxb.io.WLDObjector;
@@ -24,6 +23,7 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -34,8 +34,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
 /**
- * The base resource to register in the environment. Registering this resource, the service will be available at the path wl/tokenizer
- * which is the root of the service(s).
+ * The base resource to register in the environment. Registering this resource,
+ * the service will be available at the path wl/tokenizer which is the root of
+ * the service(s).
+ *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 @Path("wl/tokenizer")
@@ -51,7 +53,7 @@ public class TokenizerBaseResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(TEXT_TCF_XML)
     /**
-     * This service tokenizes from a plain text. 
+     * This service tokenizes from a plain text.
      */
     public StreamingOutput tokenizeTextFromPlain(@QueryParam("lang") String lang, final InputStream input) {
         OutputStream tempOutputData = null;
@@ -79,9 +81,45 @@ public class TokenizerBaseResource {
         return new OutPutWriter(tempOutputFile);
     }
 
+    @Path("plainget")
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(TEXT_TCF_XML)
     /**
-     * This method processes the plain text and creates a TextCorpusStored from the input provided.
-     * It calls the corresponding method from the tool. Uses weblicht apis (WLData and WLDObjector) to write the annotated file
+     * This service tokenizes from a plain text.
+     */
+    public StreamingOutput tokenizeTextFromPlainFromUrl(@QueryParam("lang") String lang, @QueryParam("url") String theUrl, final InputStream input) {
+        OutputStream tempOutputData = null;
+        System.err.println("theLang "+lang);
+        File tempOutputFile = null;
+        try {
+            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
+        } catch (IOException ex) {
+            if (tempOutputData != null) {
+                try {
+                    tempOutputData.close();
+                } catch (IOException e) {
+                    throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+                }
+            }
+            if (tempOutputFile != null) {
+                tempOutputFile.delete();
+            }
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+        processUrl(lang, theUrl, input, tempOutputData);
+
+        // if there were no errors reading and writing TCF data, the resulting
+        // TCF can be sent as StreamingOutput from the TCF output temporary file
+        return new OutPutWriter(tempOutputFile);
+    }
+
+    /**
+     * This method processes the plain text and creates a TextCorpusStored from
+     * the input provided. It calls the corresponding method from the tool. Uses
+     * weblicht apis (WLData and WLDObjector) to write the annotated file
+     *
      * @param lang the language used to load the module
      * @param input the input stream
      * @param output the output stream
@@ -107,14 +145,14 @@ public class TokenizerBaseResource {
         } catch (TextCorpusProcessorException ex) {
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         } catch (Exception ex) {
-            
+
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         } finally {
             try {
                 if (textCorpusStored != null) {
                     // it's important to close the TextCorpusStreamed, otherwise
                     // the TCF XML output will not be written to the end
-                   // textCorpusStored.;
+                    // textCorpusStored.;
                 }
             } catch (Exception ex) {
                 throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
@@ -123,7 +161,54 @@ public class TokenizerBaseResource {
     }
 
     /**
-     * Private method to create the response depending on statuses and exceptions
+     * This method processes the plain text and creates a TextCorpusStored from
+     * the input provided. It calls the corresponding method from the tool. Uses
+     * weblicht apis (WLData and WLDObjector) to write the annotated file
+     *
+     * @param lang the language used to load the module
+     * @param input the input stream
+     * @param output the output stream
+     */
+    private void processUrl(String lang, String theUrl, InputStream input, OutputStream output) {
+        //System.err.println("LANG -" + lang + "- ");
+        //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MESSAGE -" + input.toString() + "- ");
+        //TextCorpusStreamed textCorpus = null;
+        TextCorpusStored textCorpusStored = null;
+
+        try {
+
+            textCorpusStored = new TextCorpusStored(lang);
+            textCorpusStored.createTextLayer().addText(InputToString.convertInputStreamFromUrlToString(theUrl));
+            TokenizerBaseCore tool = new TokenizerBaseCore(lang);
+
+// process TextCorpus and create new annotation layer(s) with your tool
+            tool.process(textCorpusStored);
+
+            WLData wlData = new WLData(tool.getTextCorpusStored());
+            WLDObjector.write(wlData, output);
+
+        } catch (TextCorpusProcessorException ex) {
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        } catch (Exception ex) {
+
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        } finally {
+            try {
+                if (textCorpusStored != null) {
+                    // it's important to close the TextCorpusStreamed, otherwise
+                    // the TCF XML output will not be written to the end
+                    // textCorpusStored.;
+                }
+            } catch (Exception ex) {
+                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+            }
+        }
+    }
+
+    /**
+     * Private method to create the response depending on statuses and
+     * exceptions
+     *
      * @param ex the exception
      * @param status the status
      * @return the response
@@ -136,15 +221,15 @@ public class TokenizerBaseResource {
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, message, ex);
         return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
     }
-    
+
     /*
     starting part for managing the TCF input files
-    */
+     */
     @Path("tcf")
     @POST
     @Consumes(TEXT_TCF_XML)
     @Produces(TEXT_TCF_XML)
-    public StreamingOutput tokenizeTextFromTcf(@QueryParam("lang") String lang,final InputStream input) {
+    public StreamingOutput tokenizeTextFromTcf(@QueryParam("lang") String lang, final InputStream input) {
         OutputStream tempOutputData = null;
         File tempOutputFile = null;
         try {
@@ -169,7 +254,7 @@ public class TokenizerBaseResource {
         processTcf(lang, input, tempOutputData);
         return new OutPutWriter(tempOutputFile);
     }
-    
+
     private void processTcf(String lang, final InputStream input, OutputStream output) {
         TextCorpusStreamed textCorpus = null;
         try {
