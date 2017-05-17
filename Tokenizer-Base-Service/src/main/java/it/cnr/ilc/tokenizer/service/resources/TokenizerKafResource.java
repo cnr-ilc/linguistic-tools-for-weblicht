@@ -14,9 +14,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -76,6 +78,39 @@ public class TokenizerKafResource {
         // TCF can be sent as StreamingOutput from the TCF output temporary file
         return new OutPutWriter(tempOutputFile);
     }
+    @Path("plainget")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(TEXT_XML)
+    public StreamingOutput tokenizeTextFromPlainFromUrl(@QueryParam("lang") String lang, @QueryParam("url") String theUrl, final InputStream input) {
+        OutputStream tempOutputData = null;
+        System.err.println("***** FOR LRS KAF -GET INVOCATION:");
+        System.err.println("\t***** FOR LRS KAF -GET INVOCATION lang parameter :"+lang+ " ******");
+        System.err.println("\t***** FOR LRS KAF -GET INVOCATION url parameter :"+theUrl+ " ******");
+        System.err.println("***** FOR LRS KAF -GET INVOCATION END *****\n\n");
+        File tempOutputFile = null;
+        try {
+            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+            
+        } catch (IOException ex) {
+            if (tempOutputData != null) {
+                try {
+                    tempOutputData.close();
+                } catch (IOException e) {
+                    throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+                }
+            }
+            if (tempOutputFile != null) {
+                tempOutputFile.delete();
+            }
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+        processUrl(lang, theUrl, input, tempOutputFile);
+
+        // if there were no errors reading and writing TCF data, the resulting
+        // TCF can be sent as StreamingOutput from the TCF output temporary file
+        return new OutPutWriter(tempOutputFile);
+    }
     /**
      * This method processes the plain text and creates a KAF document from the input provided.
      * It calls the corresponding method from the tool.
@@ -86,6 +121,28 @@ public class TokenizerKafResource {
     private void process(String lang, InputStream input, File out) {
          try {
              TokenizerKafCore tool = new TokenizerKafCore(lang);
+             tool.process(input);
+             PrintStream ps = new PrintStream(out);
+             tool.getResult().toKaf(ps);
+             
+         } catch (Exception ex) {
+            
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+        
+    }
+    
+    /**
+     * This method processes the plain text and creates a KAF document from the input provided.
+     * It calls the corresponding method from the tool.
+     * @param lang the language used to load the module
+     * @param input the input stream
+     * @param out the output file
+     */
+    private void processUrl(String lang, String theUrl,InputStream input, File out) {
+         try {
+             TokenizerKafCore tool = new TokenizerKafCore(lang);
+             input=new URL(theUrl).openStream();
              tool.process(input);
              PrintStream ps = new PrintStream(out);
              tool.getResult().toKaf(ps);
