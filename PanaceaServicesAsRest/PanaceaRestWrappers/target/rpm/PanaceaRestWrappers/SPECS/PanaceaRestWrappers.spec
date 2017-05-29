@@ -1,7 +1,7 @@
 %define __jar_repack 0
 Name: PanaceaRestWrappers
 Version: 1.0
-Release: SNAPSHOT20170529103244
+Release: SNAPSHOT20170529110129
 Summary: PanaceaRestWrappers
 License: (c) null
 Group: Applications/System

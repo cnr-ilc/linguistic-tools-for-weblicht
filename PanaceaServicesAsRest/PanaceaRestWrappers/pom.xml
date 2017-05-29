@@ -32,6 +32,11 @@
             <artifactId>stanford-corenlp</artifactId>
             <version>3.4</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>PanaceaSoapClient</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
