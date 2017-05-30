@@ -1,7 +1,0 @@
-BASEDIR=/var/lib/Tokenizer-Base-Service
-LOGDIR=/var/log/Tokenizer-Base-Service
-HEAPSIZE=1024m
-CONFFILE=/etc/clarind/Tokenizer-Base-Service.yaml
-SERVICEJARFILE=/usr/share/Tokenizer-Base-Service/Tokenizer-Base-Service.jar
-CONTEXTPATH=/Tokenizer-Base-Service
-export LOGDIR CONTEXTPATH BASEDIR HEAPSIZE CONFFILE SERVICEJARFILE
