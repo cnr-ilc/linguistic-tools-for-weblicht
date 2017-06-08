@@ -13,23 +13,45 @@ import org.soaplab.clients.SoaplabBaseClient;
  */
 public interface PanaceaService {
     
+    /**
+     * The endpoint where services are
+     * TODO: move it to a property file
+     */
     public static final String URL_ENDPOINT="http://langtech3.ilc.cnr.it:8080/soaplab2-axis/services";
     
     /**
-     * run the specific service
+     * run the specific service reading from a string
      */
     public void runService();
     
-    /**
-     * run the specific service reading from url
-     */
-    public void runServiceFromUrl();
+    
     
     /**
      * get the client from the soaplab endpoint
      * @param endpoint 
-     * @return the soaplab client
+     * @return the soaplab client used to access the specific service
      */
     public SoaplabBaseClient getClient(String endpoint);
+    
+    /**
+     * 
+     * @return the status 
+     */
+    public int getStatus();
+    
+    
+    /**
+     * 
+     * @return the output url where the result is 
+     */
+    public String getOutputUrl();
+    
+    /**
+     * 
+     * @return the output url where the result is 
+     */
+    public String getOutputStream();
+    
+    
     
 }
