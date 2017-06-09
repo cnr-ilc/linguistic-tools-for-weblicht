@@ -5,7 +5,11 @@
  */
 package it.cnr.ilc.soapclient.app;
 
+
+import it.cnr.ilc.ilcioutils.IlcIOUtils;
+import it.cnr.ilc.ilcioutils.IlcInputToFile;
 import it.cnr.ilc.soapclient.impl.FreelingIt;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -54,7 +58,24 @@ public class SimpleClient {
         }
         System.err.println("\t Status: " + freelingIt.getStatus());
         System.err.println("\t outputUrl: " + freelingIt.getOutputUrl());
-        System.err.println("\t Stream: " + freelingIt.getOutputStream());
+       // System.err.println("\t Stream: " + freelingIt.getOutputStream());
+
+//        String x = InputToString.convertInputStreamFromUrlToString(freelingIt.getOutputUrl());
+//        try {
+//            InputToString.readStramFromUrl(freelingIt.getOutputUrl());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+//        for (String line : InputToString.readStreamAndCreateAstringFromUrl(freelingIt.getOutputUrl())) {
+//            System.err.println("line "+line);
+//        }
+//        
+        File file =IlcInputToFile.createAndWriteTempFileFromString(freelingIt.getOutputStream());
+        
+        for (String line : IlcIOUtils.readFromFile(file)) {
+            System.err.println("line "+line);
+        }
 
     }
 
