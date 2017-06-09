@@ -131,7 +131,7 @@ public class FreelingIt implements PanaceaService {
     public void runService() {
         
         SoaplabBaseClient client = getClient(SERVICE_ENDPOINT);
-        
+      
 
         String message = "";
         try {
@@ -180,6 +180,7 @@ public class FreelingIt implements PanaceaService {
     public SoaplabBaseClient getClient(String endpoint) {
         String message;
         ServiceLocator locator = new ServiceLocator();
+        
         locator.setProtocol(ClientConfig.PROTOCOL_AXIS1);
         locator.setServiceEndpoint(endpoint);
         
