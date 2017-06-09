@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class Vars {
     public static boolean debug=false;
-    public static String IT="it";
-    public static String EN="en";
-    public static String FR="fr";
-    public static String ES="es";
-    public static String DE="de";
-    public static String NL="nl";
+    public static String IT="ita";
+    public static String EN="eng";
+    public static String FR="fra";
+    public static String ES="esp";
+    public static String DE="deu";
+    public static String NL="nld";
     public static String version ="1.0.1";
     public static List<String> langs = Arrays.asList(Vars.DE, Vars.EN, Vars.ES, Vars.FR, Vars.IT, Vars.NL);
     public static String encoding="UTF-8";

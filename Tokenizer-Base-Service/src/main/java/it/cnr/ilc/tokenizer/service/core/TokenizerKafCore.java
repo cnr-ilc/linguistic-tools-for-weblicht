@@ -75,7 +75,7 @@ public class TokenizerKafCore {
      */
     public synchronized void process(InputStream is) throws Exception {
         String input = InputToString.convertInputStreamToString(is);
-        System.err.println("input "+input);
+        //System.err.println("input "+input);
         boolean goahead = true;
 
         goahead = checkLanguages(lang);
