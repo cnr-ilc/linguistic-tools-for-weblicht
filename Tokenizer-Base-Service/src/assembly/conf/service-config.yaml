@@ -1,14 +1,14 @@
 server:
   type: simple
-  applicationContextPath: /Tokenizer-Base-Service
+  applicationContextPath: /services/
   connector:
     type: http
-    port: 4016
+    port: 8100
   requestLog:
     timeZone: UTC
     appenders:
       - type: file
-        currentLogFilename: /var/log/Tokenizer-Base-Service/access.log
+        currentLogFilename: /tmp/log/services/access.log
         archivedLogFilenamePattern: /var/log/Tokenizer-Base-Service/access-%d.log.gz
         archivedFileCount: 5
 
@@ -16,7 +16,7 @@ logging:
   level: INFO
   appenders:
     - type: file
-      currentLogFilename: /var/log/Tokenizer-Base-Service/Tokenizer-Base-Service.log
-      archivedLogFilenamePattern: /var/log/Tokenizer-Base-Service/Tokenizer-Base-Service-%d.log.gz
+      currentLogFilename: /tmp/log/services/services.log
+      archivedLogFilenamePattern: /tmp/log/services/services-%d.log.gz
       archivedFileCount: 5
       timeZone: UTC
