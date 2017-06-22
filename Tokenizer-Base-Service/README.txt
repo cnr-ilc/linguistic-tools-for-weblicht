@@ -105,11 +105,28 @@ wget  &quot;http://localhost:8100/services/tab/tokenizer/lrs?lang=ita&url=https:
 Please note that services designed for Language Resource Switchboard clearly work by themselves invoking the commands above.
 
 
-As for plain text you can use <pre> Mi chiamo Riccardo. Abito a Roma
+As for plain text you can use: 
+Mi chiamo Riccardo. Abito a Roma
 
-As for TCF text you can use <pre>
+As for TCF text you can use 
 
-
-       
-        In case of problems write an email to ILC-Clarin-tech-staff@ilc.cnr.it with all the information needed to solve the issues. 
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://de.clarin.eu/images/weblicht-tutorials/resources/tcf-04/schemas/latest/d-spin_0_4.rnc" type="application/relax-ng-compact-syntax"?>
+    <D-Spin xmlns="http://www.dspin.de/data" version="0.4">
+        <md:MetaData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cmd="http://www.clarin.eu/cmd/"
+            xmlns:md="http://www.dspin.de/data/metadata"
+            xsi:schemaLocation="http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1320657629623/xsd">
+        </md:MetaData>
+            <tc:TextCorpus xmlns:tc="http://www.dspin.de/data/textcorpus" lang="it">
+                <tc:text>
+                    Mi chiamo Alfredo. Abito a Roma.
+                </tc:text>
+            </tc:TextCorpus>
+    </D-Spin>
+In case of problems write an email to ILC-Clarin-tech-staff@ilc.cnr.it with all the information needed to solve the issues. 
 Use the following subject 2Problems in ILC4CLARIN Offered services"
+
+You car run the services locally by executing:
+java -jar Tokenizer-Base-Service-1.0-SNAPSHOT.jar server to run the services in the default 8080 port
+Or using a specific port in a configuration file
+java -jar Tokenizer-Base-Service-1.0-SNAPSHOT.jar server service-config.yaml
