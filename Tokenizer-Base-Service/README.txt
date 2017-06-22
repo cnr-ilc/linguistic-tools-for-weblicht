@@ -58,24 +58,24 @@ Send the input file to the endpoints for processing:
                 
 With curl:
                 
-curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>wl/tokenizer/plain?lang=ita
+curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST wl/tokenizer/plain?lang=ita
                 
-curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.txt -X POST <span class="url"></span>wl/tokenizer/tcf?lang=ita
+curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.txt -X POST wl/tokenizer/tcf?lang=ita
                 
-curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>kaf/tokenizer/plain?lang=ita
+curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST kaf/tokenizer/plain?lang=ita
                 
-curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>tab/tokenizer/plain?lang=it
+curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST tab/tokenizer/plain?lang=it
 
                 
 Or wget:
                 
-wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>wl/tokenizer/plain?lang=ita
+wget --post-file=plain-file.txt --header='Content-Type: text/plain' wl/tokenizer/plain?lang=ita
                 
-wget --post-file=tcf-file.txt --header='Content-Type: text/tcf+xml' <span class="url"></span>wl/tokenizer/tcf?lang=ita
+wget --post-file=tcf-file.txt --header='Content-Type: text/tcf+xml' wl/tokenizer/tcf?lang=ita
                 
-wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>kaf/tokenizer/plain?lang=ita
+wget --post-file=plain-file.txt --header='Content-Type: text/plain' kaf/tokenizer/plain?lang=ita
                 
-wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>tab/tokenizer/plain?lang=ita
+wget --post-file=plain-file.txt --header='Content-Type: text/plain' tab/tokenizer/plain?lang=ita
 
 
             
