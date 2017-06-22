@@ -47,6 +47,8 @@ public class TokenizerBaseResource {
     private static final String FALL_BACK_MESSAGE = "Data processing failed";
     private static final String TEMP_FILE_PREFIX = "tok-sent-output-temp";
     private static final String TEMP_FILE_SUFFIX = ".xml";
+    private String CLASS_NAME = TokenizerBaseResource.class.getName();
+    private String context = "services/wl";
 
     @Path("plain")
     @POST
@@ -57,6 +59,11 @@ public class TokenizerBaseResource {
      */
     public StreamingOutput tokenizeTextFromPlain(@QueryParam("lang") String lang, final InputStream input) {
         OutputStream tempOutputData = null;
+        String message;
+        String routine = "tokenizeTextFromPlain";
+        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
         File tempOutputFile = null;
         try {
             tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
@@ -64,14 +71,23 @@ public class TokenizerBaseResource {
         } catch (IOException ex) {
             if (tempOutputData != null) {
                 try {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", ex.getMessage(), routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
                     tempOutputData.close();
                 } catch (IOException e) {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
                     throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
                 }
             }
             if (tempOutputFile != null) {
                 tempOutputFile.delete();
             }
+            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         }
         process(lang, input, tempOutputData);
@@ -80,20 +96,84 @@ public class TokenizerBaseResource {
         // TCF can be sent as StreamingOutput from the TCF output temporary file
         return new OutPutWriter(tempOutputFile);
     }
-
-    @Path("plainget")
+    
+    /*
+    starting part for managing the TCF input files
+     */
+    @Path("tcf")
     @POST
+    @Consumes(TEXT_TCF_XML)
+    @Produces(TEXT_TCF_XML)
+    public StreamingOutput tokenizeTextFromTcf(@QueryParam("lang") String lang, final InputStream input) {
+        OutputStream tempOutputData = null;
+        String message;
+        String routine = "tokenizeTextFromTcf";
+        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+        
+        File tempOutputFile = null;
+        try {
+            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
+        } catch (IOException ex) {
+            if (tempOutputData != null) {
+                try {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", ex.getMessage(), routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    tempOutputData.close();
+                } catch (IOException e) {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+                }
+            }
+            if (tempOutputFile != null) {
+                tempOutputFile.delete();
+            }
+            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+
+        // process incoming TCF and output resulting TCF with new annotation layer(s) added
+        //process(input, tempOutputData, tool);
+        processTcf(lang, input, tempOutputData);
+        return new OutPutWriter(tempOutputFile);
+    }
+
+    @Path("lrs")
+    @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(TEXT_TCF_XML)
     /**
      * This service tokenizes from a plain text.
      */
     public StreamingOutput tokenizeTextFromPlainFromUrl(@QueryParam("lang") String lang, @QueryParam("url") String theUrl, final InputStream input) {
+
+        String message;
+        String submessage;
+        String routine = "tokenizeTextFromPlainFromUrl";
+        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
         OutputStream tempOutputData = null;
-        System.err.println("***** FOR LRS WL -POST INVOCATION:");
-        System.err.println("\t***** FOR LRS WL TCF -POST INVOCATION lang parameter :"+lang+ " ******");
-        System.err.println("\t***** FOR LRS WL TCF -POST INVOCATION url parameter :"+theUrl+ " ******");
-        System.err.println("***** FOR LRS WL -POST INVOCATION END *****\n\n");
+        submessage = String.format("***** FOR LRS WL -GET INVOCATION:\n\t"
+                + "***** FOR LRS WL -GET INVOCATION lang parameter -%s- ******\n\t"
+                + "***** FOR LRS WL -GET INVOCATION url parameter -%s- ******\n\t"
+                + "***** FOR LRS WL -GET INVOCATION END *****\n\n", lang, theUrl);
+        message = String.format("-%s-\n", submessage);
+       
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+
+//        System.err.println("***** FOR LRS WL -POST INVOCATION:");
+//        System.err.println("\t***** FOR LRS WL TCF -POST INVOCATION lang parameter :" + lang + " ******");
+//        System.err.println("\t***** FOR LRS WL TCF -POST INVOCATION url parameter :" + theUrl + " ******");
+//        System.err.println("***** FOR LRS WL -POST INVOCATION END *****\n\n");
         File tempOutputFile = null;
         try {
             tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
@@ -103,6 +183,9 @@ public class TokenizerBaseResource {
                 try {
                     tempOutputData.close();
                 } catch (IOException e) {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
                     throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
                 }
             }
@@ -225,38 +308,7 @@ public class TokenizerBaseResource {
         return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
     }
 
-    /*
-    starting part for managing the TCF input files
-     */
-    @Path("tcf")
-    @POST
-    @Consumes(TEXT_TCF_XML)
-    @Produces(TEXT_TCF_XML)
-    public StreamingOutput tokenizeTextFromTcf(@QueryParam("lang") String lang, final InputStream input) {
-        OutputStream tempOutputData = null;
-        File tempOutputFile = null;
-        try {
-            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
-            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
-        } catch (IOException ex) {
-            if (tempOutputData != null) {
-                try {
-                    tempOutputData.close();
-                } catch (IOException e) {
-                    throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
-                }
-            }
-            if (tempOutputFile != null) {
-                tempOutputFile.delete();
-            }
-            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
-        }
-
-        // process incoming TCF and output resulting TCF with new annotation layer(s) added
-        //process(input, tempOutputData, tool);
-        processTcf(lang, input, tempOutputData);
-        return new OutPutWriter(tempOutputFile);
-    }
+    
 
     private void processTcf(String lang, final InputStream input, OutputStream output) {
         TextCorpusStreamed textCorpus = null;

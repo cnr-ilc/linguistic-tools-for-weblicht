@@ -40,6 +40,8 @@ public class TokenizerTabResource {
     private static final String FALL_BACK_MESSAGE = "Data processing failed";
     private static final String TEMP_FILE_PREFIX = "tok-sent-output-temp";
     private static final String TEMP_FILE_SUFFIX = ".xml";
+    private String CLASS_NAME = TokenizerTabResource.class.getName();
+    private String context = "services/tab";
 
     /**
      * This method tokenizes a plain text to produce a valid KAF document
@@ -53,6 +55,11 @@ public class TokenizerTabResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public StreamingOutput tokenizeTextFromPlain(@QueryParam("lang") String lang, final InputStream input) {
+        String message;
+        String routine = "tokenizeTextFromPlain";
+        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
         OutputStream tempOutputData = null;
         File tempOutputFile = null;
         try {
@@ -63,12 +70,20 @@ public class TokenizerTabResource {
                 try {
                     tempOutputData.close();
                 } catch (IOException e) {
+
+                    message = String.format("IOException -%s- in -%s- with context -%s-", e.getMessage(), routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+
                     throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
                 }
             }
             if (tempOutputFile != null) {
                 tempOutputFile.delete();
             }
+            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         }
         process(lang, input, tempOutputFile);
@@ -78,21 +93,44 @@ public class TokenizerTabResource {
         return new OutPutWriter(tempOutputFile);
     }
 
-    @Path("plainget")
-    @POST
+    @Path("lrs")
+    @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public StreamingOutput tokenizeTextFromPlainFromUrl(@QueryParam("lang") String lang, @QueryParam("url") String theUrl, final InputStream input) {
+        String message;
+        String submessage;
+        String routine = "tokenizeTextFromPlainFromUrl";
+        message = String.format("Executing  -%s- in context -%s-\n", routine, context);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
         OutputStream tempOutputData = null;
+        submessage = String.format("***** FOR LRS TAB -GET INVOCATION:\n\t"
+                + "***** FOR LRS TAB -GET INVOCATION lang parameter -%s- ******\n\t"
+                + "***** FOR LRS TAB -GET INVOCATION url parameter -%s- ******\n\t"
+                + "***** FOR LRS TAB -GET INVOCATION END *****\n\n", lang, theUrl);
+        message = String.format("-%s-\n", submessage);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
         File tempOutputFile = null;
         try {
             tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
 
         } catch (IOException ex) {
+            message = String.format("IOException -%s- in -%s- with context -%s-", ex.getMessage(), routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
             if (tempOutputData != null) {
                 try {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+
                     tempOutputData.close();
                 } catch (IOException e) {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
                     throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
                 }
             }
@@ -101,7 +139,7 @@ public class TokenizerTabResource {
             }
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         }
-        processUrl(lang, theUrl,input, tempOutputFile);
+        processUrl(lang, theUrl, input, tempOutputFile);
 
         // if there were no errors reading and writing TCF data, the resulting
         // TCF can be sent as StreamingOutput from the TCF output temporary file
@@ -129,7 +167,7 @@ public class TokenizerTabResource {
         }
 
     }
-    
+
     /**
      * This method processes the plain text and creates a tabbed document from
      * the input provided. It calls the corresponding method from the tool.
@@ -138,10 +176,10 @@ public class TokenizerTabResource {
      * @param input the input stream
      * @param out the output file
      */
-    private void processUrl(String lang, String theUrl,InputStream input, File out) {
+    private void processUrl(String lang, String theUrl, InputStream input, File out) {
         try {
             TokenizerTabCore tool = new TokenizerTabCore(lang);
-            input=new URL(theUrl).openStream();
+            input = new URL(theUrl).openStream();
             tool.process(input);
             PrintStream ps = new PrintStream(out);
             tool.getResult().toTab(ps);

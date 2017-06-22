@@ -1,0 +1,22 @@
+server:
+  type: simple
+  applicationContextPath: /kaf
+  connector:
+    type: http
+    port: 8100
+  requestLog:
+    timeZone: UTC
+    appenders:
+      - type: file
+        currentLogFilename: /tmp/log/kaf-services/access.log
+        archivedLogFilenamePattern: /tmp/log/kaf-services/access-%d.log.gz
+        archivedFileCount: 5
+
+logging:
+  level: INFO
+  appenders:
+    - type: file
+      currentLogFilename: /tmp/log/kaf-services/kaf-services.log
+      archivedLogFilenamePattern: /tmp/log/kaf-services/kaf-services-%d.log.gz
+      archivedFileCount: 5
+      timeZone: UTC
