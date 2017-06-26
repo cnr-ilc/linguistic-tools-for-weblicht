@@ -8,7 +8,7 @@ import java.io.InputStream;
 /**
  * Resource that serves up the index page.
  */
-@Path("/")
+@Path("/readme")
 public class ReadMeResource {
     @GET
     @Produces("text/html")

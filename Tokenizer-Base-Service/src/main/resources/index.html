@@ -101,25 +101,25 @@
             <li>To test the services for language Resource Switchboard:
                 <br></br>With curl:
 
-                <code> curl -X GET  &quot;http://localhost:8100/services/wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
+                <code> curl -X GET  &quot;<span class="url"></span>wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
                 </code>
                 <br></br>
-                <code> curl -X GET  &quot;http://localhost:8100/services/kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
+                <code> curl -X GET  &quot;<span class="url"></span>kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
                 </code>
                 <br></br>
-                <code> curl -X GET  &quot;http://localhost:8100/services/tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
+                <code> curl -X GET  &quot;<span class="url"></span>tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
                 </code>
 
                 <br></br>
                 Or wget:
                 <br></br>
-                <code>  wget  &quot;http://localhost:8100/services/wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]</code>
+                <code>  wget  &quot;<span class="url"></span>wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]</code>
 
                 <br></br>
-                <code>  wget  &quot;http://localhost:8100/services/kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]</code>
+                <code>  wget  &quot;<span class="url"></span>kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]</code>
 
                 <br></br>
-                <code>  wget  &quot;http://localhost:8100/services/tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]</code>
+                <code>  wget  &quot;<span class="url"></span>tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]</code>
                 <br></br>
 
             </li>
@@ -149,9 +149,15 @@
         In case of problems write an email to <a href="mailto:ILC-Clarin-tech-staff@ilc.cnr.it?subject=Problems in ILC4CLARIN Offered services">The ILC4CLARIN technical staff</a> with all the information needed to solve the issues.
 
         <script type="text/javascript">
+            var uri=window.location.href;
+            //alert ('uri '+uri);
+            var lastslashindex = uri.lastIndexOf('/');
+            var result= uri.substring(0,lastslashindex  + 1); 
+            //alert ('result '+result);
             var elemList = document.getElementsByClassName("url");
             for (var i = 0; i < elemList.length; i++) {
-                elemList[i].innerHTML = window.location.href;
+                
+                elemList[i].innerHTML = result; //window.location.href;
             }
         </script>
     </body>

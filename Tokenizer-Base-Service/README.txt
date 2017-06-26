@@ -40,6 +40,7 @@ wl/tokenizer/lrs (GET service to tokenize a text retrieved from URL  and to prod
 kaf/tokenizer/lrs (GET service to tokenize a text retrieved from URL  and to produce a KAF valid document)
             
 tab/tokenizer/lrs (GET service to tokenize a text retrieved from URL  and to produce a tabbed document)
+
  
 Both the language and the url are provided as a parameters: 
  
@@ -54,54 +55,67 @@ This because the integration of services in Language Resource Switchboard requir
 You can test the service endpoints using curl or wget as follows:
         
 
+
+You car run the services locally or in a dedicated machine by executing:
+java -jar Tokenizer-Base-Service-1.0-SNAPSHOT.jar server (to run the services in the default 8080 port and in the root context /)
+
+Or using a specific port <PORT> and context <CONTEXT> in a configuration file.
+If you see the service-config.yaml example file, you should change:
+applicationContextPath: WRITE CONTEXT
+port: WRITE PORT
+Since the config file is external to the application, you can change the values and restart the server. The commando in the following
+
+java -jar Tokenizer-Base-Service-1.0-SNAPSHOT.jar server service-config.yaml
+
+The list of available services and a short howto is available at:
+
+http://HOST:PORT/CONTEXT/readme
+
 Send the input file to the endpoints for processing:
                 
 With curl:
                 
-curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST wl/tokenizer/plain?lang=ita
+curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST http://HOST:PORT/CONTEXT/wl/tokenizer/plain?lang=ita
                 
-curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.txt -X POST wl/tokenizer/tcf?lang=ita
+curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.txt -X POST http://HOST:PORT/CONTEXT/wl/tokenizer/tcf?lang=ita
                 
-curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST kaf/tokenizer/plain?lang=ita
+curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST http://HOST:PORT/CONTEXT/kaf/tokenizer/plain?lang=ita
                 
-curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST tab/tokenizer/plain?lang=it
+curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST http://HOST:PORT/CONTEXT/tab/tokenizer/plain?lang=it
 
                 
-Or wget:
+Or using wget:
                 
-wget --post-file=plain-file.txt --header='Content-Type: text/plain' wl/tokenizer/plain?lang=ita
+wget --post-file=plain-file.txt --header='Content-Type: text/plain' http://HOST:PORT/CONTEXT/wl/tokenizer/plain?lang=ita
                 
-wget --post-file=tcf-file.txt --header='Content-Type: text/tcf+xml' wl/tokenizer/tcf?lang=ita
+wget --post-file=tcf-file.txt --header='Content-Type: text/tcf+xml' http://HOST:PORT/CONTEXT/wl/tokenizer/tcf?lang=ita
                 
-wget --post-file=plain-file.txt --header='Content-Type: text/plain' kaf/tokenizer/plain?lang=ita
+wget --post-file=plain-file.txt --header='Content-Type: text/plain' http://HOST:PORT/CONTEXT/kaf/tokenizer/plain?lang=ita
                 
-wget --post-file=plain-file.txt --header='Content-Type: text/plain' tab/tokenizer/plain?lang=ita
+wget --post-file=plain-file.txt --header='Content-Type: text/plain' http://HOST:PORT/CONTEXT/tab/tokenizer/plain?lang=ita
 
 
-            
 To test the services for language Resource Switchboard:
 With curl:
 
-curl -X GET  &quot;http://localhost:8100/services/wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
+curl -X GET  "http://HOST:PORT/CONTEXT/wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt"
                 
                 
-curl -X GET  &quot;http://localhost:8100/services/kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
+curl -X GET  "http://HOST:PORT/CONTEXT/kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt"
                 
                 
-curl -X GET  &quot;http://localhost:8100/services/tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
+curl -X GET  "http://HOST:PORT/CONTEXT/tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt"
                 
 
+Or using wget:
                 
-Or wget:
+wget  "http://HOST:PORT/CONTEXT/wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt" [-O out_file]
                 
-wget  &quot;http://localhost:8100/services/wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]
-                
-wget  &quot;http://localhost:8100/services/kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]
+wget  "http://HOST:PORT/CONTEXT/kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt" [-O out_file]
 
-wget  &quot;http://localhost:8100/services/tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]
+wget  "http://HOST:PORT/CONTEXT/tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt" [-O out_file]
 
 
-            
 Please note that services designed for Language Resource Switchboard clearly work by themselves invoking the commands above.
 
 
@@ -126,7 +140,4 @@ As for TCF text you can use
 In case of problems write an email to ILC-Clarin-tech-staff@ilc.cnr.it with all the information needed to solve the issues. 
 Use the following subject 2Problems in ILC4CLARIN Offered services"
 
-You car run the services locally by executing:
-java -jar Tokenizer-Base-Service-1.0-SNAPSHOT.jar server to run the services in the default 8080 port
-Or using a specific port in a configuration file
-java -jar Tokenizer-Base-Service-1.0-SNAPSHOT.jar server service-config.yaml
+
