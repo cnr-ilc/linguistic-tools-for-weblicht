@@ -6,7 +6,7 @@
 package it.cnr.ilc.soapclient.app;
 
 
-import it.cnr.ilc.ilcioutils.IlcIOUtils;
+import it.cnr.ilc.ilcfillsimpletypes.basic.FillSimpleTypesFromFreelingIt;
 import it.cnr.ilc.ilcioutils.IlcInputToFile;
 import it.cnr.ilc.soapclient.impl.FreelingIt;
 import java.io.File;
@@ -29,9 +29,11 @@ public class SimpleClient {
         String inputType = "Hai ragione. Bisognerebbe scappare!!";
         //String inputType = "https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt";
 
-        inputType = "Ti prego, che bel fiore: pensi di meritartelo? se sì, coglimelo. Avervi a cena è bello, non puoi schifarmi";
+        inputType = "Ti prego, che bel fiore: pensi di meritartelo? se sì, coglimelo. Amabilmente lavoro con il Primo Ministro per promulgare delle buone leggi per le persone sulle sedie a rotelle. Avervi a cena è bello, non puoi schifarmi. E che diavolo!";
+        inputType = "Avere a cena il Primo Ministro vale una promozione. E che diavolo.";
         boolean fromUrl = false;
         FreelingIt freelingIt = new FreelingIt();
+        FillSimpleTypesFromFreelingIt fillSimpleTypesFromFreelingIt= new FillSimpleTypesFromFreelingIt();
 
         // Get an UrlValidator
         UrlValidator defaultValidator = new UrlValidator(); // default schemes
@@ -48,6 +50,7 @@ public class SimpleClient {
 
         Map inputs = new HashMap();
         inputs.put("output_format", "tagged");
+        inputs.put("multiword","true");
         freelingIt.setInputs(inputs);
         message = String.format("Calling service Freeling_It with fromUrl %s", fromUrl);
         Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
@@ -73,9 +76,18 @@ public class SimpleClient {
 //        
         File file =IlcInputToFile.createAndWriteTempFileFromString(freelingIt.getOutputStream());
         
-        for (String line : IlcIOUtils.readFromFile(file)) {
-            System.err.println("line "+line);
-        }
+//        for (String line : IlcIOUtils.readFromFile(file)) {
+//            System.err.println("line "+line);
+//        }
+        
+//        for (String line : fillSimpleTypesFromFreelingIt.getLinesFromFile(file)) {
+//            System.err.println("line "+line);
+//        }
+        
+        fillSimpleTypesFromFreelingIt.manageServiceOutput(fillSimpleTypesFromFreelingIt.getLinesFromFile(file));
+        //System.err.println("Tokens "+fillSimpleTypesFromFreelingIt.getTokens().toString());
+        System.err.println("lemmas "+fillSimpleTypesFromFreelingIt.getLemmas().toString());
+        
 
     }
 

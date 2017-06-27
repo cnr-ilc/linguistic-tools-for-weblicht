@@ -5,6 +5,9 @@
  */
 package it.cnr.ilc.ilcfillsimpletypes.basic.i;
 
+import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
+import it.cnr.ilc.ilcsimpletypes.IlcSimpleSentence;
+import it.cnr.ilc.ilcsimpletypes.IlcSimpleToken;
 import java.io.File;
 import java.util.List;
 
@@ -13,15 +16,15 @@ import java.util.List;
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public interface FillSimpleTypes {
-    
-    
-    public List<String> getLinesFromFile(File file); 
-    
-    public void createListOfTokens(List<String> list);
-    
-    public void createListOfSentences(List<String> list);
-    
-    public String[] splitLinesFromSep(String Sep); 
-    
-    
+
+    public List<String> getLinesFromFile(File file);
+
+    public List<IlcSimpleToken> createListOfTokens();
+
+    public List<IlcSimpleSentence> createListOfSentences();
+
+    public List<IlcSimpleLemma> createListOfLemmas();
+
+    public void manageServiceOutput(List<String> lines);
+
 }

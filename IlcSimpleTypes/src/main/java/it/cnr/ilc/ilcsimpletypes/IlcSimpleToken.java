@@ -112,7 +112,7 @@ public class IlcSimpleToken {
     
     public String toKaf() {
         String ret="";
-        ret="\t\t\t<wf wid=\""+wfid+"\" sent=\"#S#\"  para=\"1\" offset=\""+start_offset+"\" length=\""+tokenLength+"\"><![CDATA["+theToken+"]]></wf>\n";
+        ret="\t\t\t<wf wid=\"w"+wfid+"\" sent=\"#S#\"  para=\"1\" offset=\""+start_offset+"\" length=\""+tokenLength+"\"><![CDATA["+theToken+"]]></wf>\n";
         //ret="\t\t\t<wf wid=\""+wfid+"\" sent=\"#S#\" para=\"#P#\" offset=\""+start_offset+"\" length=\""+tokenLength+"\"><![CDATA["+theToken+"]]></wf>\n";
         return ret;
     }
