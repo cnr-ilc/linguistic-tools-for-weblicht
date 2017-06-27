@@ -65,6 +65,8 @@ public class IlcIOUtils {
 
         return lines;
     }
+    
+    
 
     /**
      * Read content from URL and creates a list of lines. use this method when
