@@ -16,7 +16,6 @@ import org.soaplab.clients.SoaplabBaseClient;
 import org.soaplab.share.SoaplabException;
 import org.soaplab.share.SoaplabMap;
 
-
 /**
  * This class implements the freeling_it soaplab service.
  * <br>
@@ -37,6 +36,10 @@ import org.soaplab.share.SoaplabMap;
  * <li><li>set input("output_format", &lt;value>&gt;) values: token, tagged,
  * splitted, (default tagged)</li>
  * </ul>
+ * Please note that the backend service DOES NOT manage multiwords = false. When the output format is token, no multiword is
+ * returned; when tagged or splitted, multiwords are returned even if the parameter is set to false.
+ * </br>
+ * However, for future releases, add this parameters to your list.
  *
  *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
@@ -57,6 +60,33 @@ public class FreelingIt implements PanaceaService {
      * The category of services. Services are category.servicename
      */
     public static final String SERVICE_CATEGORY = "panacea";
+
+    /**
+     * True to multiword
+     */
+    public static final String SERVICE_MULTIWORD = "multiword";
+    /**
+     * Managed values: true, false. def false
+     */
+    public static final String SERVICE_MULTIWORD_VAL = "false";
+
+    /**
+     * basic to ner
+     */
+    public static final String SERVICE_NER = "ner";
+    /**
+     * Managed values: basic, none. def none
+     */
+    public static final String SERVICE_NER_VAL = "none";
+
+    /**
+     * basic to ner
+     */
+    public static final String SERVICE_OUTPUT_FORMAT = "output_format";
+    /**
+     * Managed values: tabbed, splitted, token. def none
+     */
+    public static final String SERVICE_OUTPUT_FORMAT_VAL = "tagged";
 
     /**
      * A parameter to set if the data are passed as string
@@ -109,32 +139,67 @@ public class FreelingIt implements PanaceaService {
      */
     private String outputFromStream = "";
 
+    /**
+     * basic constructor which sets the default values for output format,
+     * multiwords, and ner and output_format
+     *
+     */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public FreelingIt() {
+        @SuppressWarnings("LocalVariableHidesMemberVariable")
+        Map inputs = new HashMap();
+        inputs = getInputs();
+        
+        inputs.put(SERVICE_MULTIWORD, SERVICE_MULTIWORD_VAL);
+        inputs.put(SERVICE_NER, SERVICE_NER_VAL);
+        inputs.put(SERVICE_OUTPUT_FORMAT, SERVICE_OUTPUT_FORMAT_VAL);
+        setInputs(inputs);
+
+    }
+
+  
     
+    public void setInputForService(String mw, String ner, String format){
+        Map inputs = new HashMap();
+        inputs=getInputs();
+        inputs.put(SERVICE_MULTIWORD, mw);
+        inputs.put(SERVICE_NER, ner);
+        inputs.put(SERVICE_OUTPUT_FORMAT, format);
+        setInputs(inputs);
+    
+    }
+
     /**
      * Set the input type and the language.
-     * @param inputType Either the string to analyze or the URL where the data are.
+     *
+     * @param inputType Either the string to analyze or the URL where the data
+     * are.
      * @param fromUrl if true the input is read from URL
      */
     public void runService(String inputType, boolean fromUrl) {
-        System.err.println("string "+inputType);
+        System.err.println("string " + inputType);
         
+        //getInputs().put(SERVICE_MULTIWORD, SERVICE_MULTIWORD_VAL);
+        System.err.println("input b4 " + getInputs().toString());
         getInputs().put(SERVICE_LANGUAGE, SERVICE_LANGUAGE_VAL);
-        if (fromUrl){
+        if (fromUrl) {
             getInputs().put(SERVICE_INPUT_URL_DATA, inputType);
         } else {
             getInputs().put(SERVICE_INPUT_DIRECT_DATA, inputType);
         }
+        
         runService();
+        System.err.println("input after " + getInputs().toString());
     }
 
     @Override
     public void runService() {
-        
+
         SoaplabBaseClient client = getClient(SERVICE_ENDPOINT);
-      
 
         String message = "";
         try {
+            System.err.println("input in run " + getInputs().toString());
             SoaplabMap results = client.runAndWaitFor(SoaplabMap
                     .fromMap(getInputs()));
             Map outputs = SoaplabMap.toMap(results);
@@ -180,10 +245,10 @@ public class FreelingIt implements PanaceaService {
     public SoaplabBaseClient getClient(String endpoint) {
         String message;
         ServiceLocator locator = new ServiceLocator();
-        
+
         locator.setProtocol(ClientConfig.PROTOCOL_AXIS1);
         locator.setServiceEndpoint(endpoint);
-        
+
         try {
             return new SoaplabBaseClient(locator);
         } catch (SoaplabException e) {
@@ -194,8 +259,6 @@ public class FreelingIt implements PanaceaService {
         }
         return null;
     }
-
-
 
     @Override
     public int getStatus() {
@@ -237,7 +300,7 @@ public class FreelingIt implements PanaceaService {
 
     @Override
     public String getOutputStream() {
-       return outputFromStream;
+        return outputFromStream;
     }
 
     /**
