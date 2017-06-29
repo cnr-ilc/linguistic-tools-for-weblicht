@@ -130,5 +130,24 @@ public class IlcSimpleLemma {
         }
         return ret;
     }
+    
+    public String toKaf() {
+        String ret="";
+        ret="\t\t\t<term tid=\"t"+id+"\" type=\""+type+"\"  lemma=\""+theLemma+"\" pos=\""+thePos+"\">\n\t\t\t\t<span>";
+        for (int wfid: getWfids()){
+            ret=ret+"\n\t\t\t\t\t<target id=\"w"+wfid+"\"/>";
+        }
+        //ret="\t\t\t<wf wid=\""+wfid+"\" sent=\"#S#\" para=\"#P#\" offset=\""+start_offset+"\" length=\""+tokenLength+"\"><![CDATA["+theToken+"]]></wf>\n";
+        ret= ret+"\n\t\t\t\t</span>\n\t\t\t</term>";
+        return ret;
+    }
+    /*
+    <term tid="t29" type="close" lemma="because_of" pos="P">
+   <span>
+    <target id="w32"/>
+    <target id="w33"/>
+   </span>
+  </term>
+    */
 
 }
