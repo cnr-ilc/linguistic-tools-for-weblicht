@@ -10,7 +10,9 @@ import it.cnr.ilc.ilcioutils.IlcInputToFile;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
 import it.cnr.ilc.soapclient.impl.FreelingIt;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,10 +24,57 @@ import org.apache.commons.validator.routines.UrlValidator;
  */
 public class SimpleClient {
 
+    /**
+     * @return the service
+     */
+    public String getService() {
+        return service;
+    }
+
+    /**
+     * @param service the service to set
+     */
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    /**
+     * @return the iFile
+     */
+    public String getiFile() {
+        return iFile;
+    }
+
+    /**
+     * @param iFile the iFile to set
+     */
+    public void setiFile(String iFile) {
+        this.iFile = iFile;
+    }
+
+    /**
+     * @return the oFile
+     */
+    public String getoFile() {
+        return oFile;
+    }
+
+    /**
+     * @param oFile the oFile to set
+     */
+    public void setoFile(String oFile) {
+        this.oFile = oFile;
+    }
+
     public static final String CLASS_NAME = SimpleClient.class.getName();
-    public String output_format = Format.OUT_TAB;
-    public String find_mw = Format.FIND_MW;
-    public String find_ner = Format.FIND_NER;
+    private String output_format = Format.OUT_TAB;
+    private String find_mw = Format.FIND_MW;
+    private String find_ner = Format.FIND_NER;
+    
+    private String service="";
+    private String iFile = "";
+    private String oFile = "";
+   
 
     private boolean checkArgsForHelp(String[] args) {
 
@@ -42,18 +91,62 @@ public class SimpleClient {
 
         return false;
     }
+    
+    public void printTheHelp() {
+        //tokenizerCli.printHelp();
+    }
+    
+    private boolean checkServices(String service) {
+        
+        return Vars.services.contains(service);
+
+    }
+    
+    private boolean checkArgs(String[] args) {
+        boolean ret = true;
+        int i = 0;
+        if ((args.length % 2) != 0) {
+            return false;
+        }
+        for (String arg : args) {
+            switch (arg) {
+                case "-l":
+
+                    if (checkServices(args[i + 1])) {
+                        setService(args[i + 1]);
+                        break;
+                    } else {
+                        return false;
+                    }
+                case "-i":
+                    setiFile(args[i + 1]);
+                    break;
+                case "-o":
+                    setoFile(args[i + 1]);
+                    break;
+                case "-f":
+                    //setFormat(args[i + 1]);
+                    break;
+
+            }
+            //System.err.println("arg at " + i + "-" + arg + "-");
+            i++;
+        }
+
+        return true;
+    }
 
     public static void main(String[] args) {
 
         boolean goahead = true;
 
-        SimpleClient m = new SimpleClient();
+        SimpleClient sc = new SimpleClient();
 
-        if (m.checkArgsForHelp(args)) {
-            m.printTheHelp();
+        if (sc.checkArgsForHelp(args)) {
+            sc.printTheHelp();
             System.exit(0);
         }
-        goahead = m.checkArgs(args);
+        goahead = sc.checkArgs(args);
 
         //m.init(goahead);
         String message;
