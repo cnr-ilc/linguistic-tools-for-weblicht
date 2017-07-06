@@ -158,7 +158,7 @@ public class FreelingIt implements PanaceaService {
     }
 
   
-    
+    @Override
     public void setInputForService(String mw, String ner, String format){
         Map inputs = new HashMap();
         inputs=getInputs();
@@ -176,6 +176,7 @@ public class FreelingIt implements PanaceaService {
      * are.
      * @param fromUrl if true the input is read from URL
      */
+    @Override
     public void runService(String inputType, boolean fromUrl) {
         System.err.println("string " + inputType);
         
@@ -287,6 +288,7 @@ public class FreelingIt implements PanaceaService {
     /**
      * @return the inputs
      */
+    @Override
     public Map getInputs() {
         return inputs;
     }
@@ -294,6 +296,7 @@ public class FreelingIt implements PanaceaService {
     /**
      * @param inputs the inputs to set
      */
+    @Override
     public void setInputs(Map inputs) {
         this.inputs = inputs;
     }
