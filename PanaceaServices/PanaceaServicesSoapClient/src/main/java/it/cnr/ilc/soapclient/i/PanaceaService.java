@@ -5,6 +5,7 @@
  */
 package it.cnr.ilc.soapclient.i;
 
+import java.util.Map;
 import org.soaplab.clients.SoaplabBaseClient;
 
 /**
@@ -12,46 +13,62 @@ import org.soaplab.clients.SoaplabBaseClient;
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public interface PanaceaService {
-    
+
     /**
-     * The endpoint where services are
-     * TODO: move it to a property file
+     * The endpoint where services are TODO: move it to a property file
      */
-    public static final String URL_ENDPOINT="http://langtech3.ilc.cnr.it:8080/soaplab2-axis/services";
-    
+    public static final String URL_ENDPOINT = "http://langtech3.ilc.cnr.it:8080/soaplab2-axis/services";
+
     /**
      * run the specific service reading from a string
      */
     public void runService();
-    
-    
-    
+
     /**
      * get the client from the soaplab endpoint
-     * @param endpoint 
+     *
+     * @param endpoint
      * @return the soaplab client used to access the specific service
      */
     public SoaplabBaseClient getClient(String endpoint);
-    
+
     /**
-     * 
-     * @return the status 
+     *
+     * @return the status
      */
     public int getStatus();
-    
-    
+
     /**
      * 
-     * @return the output url where the result is 
+     * @param mw
+     * @param ner
+     * @param format 
+     */
+    public void setInputForService(String mw, String ner, String format);
+    
+    /**
+     * Set the input type and the language.
+     *
+     * @param inputType Either the string to analyze or the URL where the data
+     * are.
+     * @param fromUrl if true the input is read from URL
+     */
+    public void runService(String inputType, boolean fromUrl);
+
+    /**
+     *
+     * @return the output url where the result is
      */
     public String getOutputUrl();
-    
+
     /**
-     * 
-     * @return the output url where the result is 
+     *
+     * @return the output url where the result is
      */
     public String getOutputStream();
     
+    public Map getInputs();
     
-    
+    public void setInputs(Map inputs);
+
 }

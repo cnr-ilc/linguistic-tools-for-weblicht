@@ -127,5 +127,37 @@ public class IlcIOUtils {
 
         return is;
     }
+    
+    public static String readFileContent(String filepath) throws IOException {
+        String message = "";
+        File initialFile;
+        InputStream targetStream = null;
+        String theString = "";
+
+        try {
+            initialFile = new File(filepath);
+            targetStream = FileUtils.openInputStream(initialFile);
+            theString = IOUtils.toString(targetStream, "UTF-8");
+        } catch (IOException e) {
+
+            message = "IOaaException in reading the stream for " + filepath + " " + e.getMessage();
+            Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            //System.exit(-1);
+        } finally {
+            if (targetStream != null) {
+                try {
+                    targetStream.close();
+                } catch (IOException e) {
+                    message = "IOException in closing the stream for " + filepath + " " + e.getMessage();
+                    Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    //System.exit(-1);
+                }
+
+            }
+
+        }
+        //System.err.println(theString);
+        return theString;
+    }
 
 }

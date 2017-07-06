@@ -59,7 +59,7 @@ public class LinguisticProcessor {
         for (String lp: getLps()) {
             ret=ret+"\t\t\t"+"<lp name=\""+lp.split("#")[0]+"\" version=\""+version+"\" timestamp=\""+lp.split("#")[1]+"\"/>\n";
         }
-        ret=ret+"\t\t</linguisticProcessors>\n";
+        ret=ret+"\t\t</linguisticProcessors>\n\t";
 
         return ret;
 
