@@ -5,7 +5,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h2>ILC4CLARIN Offered Services</h2>
+        <h2>Linguistic services</h2>
+        <p>This is the Java porting of the perl-based tokenizer developed within the opener project and available  
+            <a href="https://github.com/opener-project/tokenizer-base" target="_blank">here</a></p>
+        <p>Current Software version 0.1, released on 28/06/2017</p>
         <p>ILC4CLARIN provides three sets of distinct web services to perform tokenization on texts for the following languages: 
         <ul>
             <li>ita</li> 
@@ -66,7 +69,7 @@
             <li></li>
             <li><code>kaf/tokenizer/lrs?lang=iso_3_codes_lang&amp;url=URL</code></li>
             <li></li>
-            <li><code>/tab/tokenizer/lrs?lang=iso_3_codes_lang&amp;url=URL</code></li>
+            <li><code>tab/tokenizer/lrs?lang=iso_3_codes_lang&amp;url=URL</code></li>
         </ul>
         This because the integration of services in Language Resource Switchboard requires the URL passed as an input parameter.
         <p>You can test the service endpoints using curl or wget as follows:</p>
@@ -146,17 +149,19 @@
         </pre>
 
         <h2>Contacts</h2>
-        In case of problems write an email to <a href="mailto:ILC-Clarin-tech-staff@ilc.cnr.it?subject=Problems in ILC4CLARIN Offered services">The ILC4CLARIN technical staff</a> with all the information needed to solve the issues.
+        In case of problems write an email 
+        to <a href="mailto:ILC-Clarin-tech-staff@ilc.cnr.it?subject=Problems in ILC4CLARIN Offered services">The ILC4CLARIN technical staff</a> with all the information needed to solve the issues,
+        included the version number.
 
         <script type="text/javascript">
-            var uri=window.location.href;
+            var uri = window.location.href;
             //alert ('uri '+uri);
             var lastslashindex = uri.lastIndexOf('/');
-            var result= uri.substring(0,lastslashindex  + 1); 
+            var result = uri.substring(0, lastslashindex + 1);
             //alert ('result '+result);
             var elemList = document.getElementsByClassName("url");
             for (var i = 0; i < elemList.length; i++) {
-                
+
                 elemList[i].innerHTML = result; //window.location.href;
             }
         </script>

@@ -1,4 +1,7 @@
-ILC4CLARIN Offered Services
+Linguistic services
+This is the Java porting of the perl-based tokenizer developed within the opener project and available  
+at https://github.com/opener-project/tokenizer-base
+Current Software version 0.1, released on 28/06/2017
 ILC4CLARIN provides three sets of distinct web services to perform tokenization on texts for the following languages: 
 ita, fra, deu, eng, esp, nld
 
@@ -137,7 +140,7 @@ As for TCF text you can use
                 </tc:text>
             </tc:TextCorpus>
     </D-Spin>
-In case of problems write an email to ILC-Clarin-tech-staff@ilc.cnr.it with all the information needed to solve the issues. 
-Use the following subject 2Problems in ILC4CLARIN Offered services"
+In case of problems write an email to ILC-Clarin-tech-staff@ilc.cnr.it with all the information needed to solve the issues, included the version number.
+Use the following subject "Problems in ILC4CLARIN Offered services"
 
 
