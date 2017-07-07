@@ -92,16 +92,20 @@ public class SimpleClient {
                 try {
                     input = IlcIOUtils.readFileContent(getiFile());
                 } catch (IOException e) {
-                    //tokenizerCli.printHelp();
+                    theservice.printHelp();
                     System.exit(-1);
                 }
 
             }
-            //input = "https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt";
+            
             System.err.println("input " + input);
 
             // actual code from here
             PanaceaService s = factory.getService(getService());
+            
+            //theservice.setService(s);
+            theservice.setService(s, input, inputs);
+            theservice.run();
 
             inputs = s.getInputs();
 
@@ -147,7 +151,7 @@ public class SimpleClient {
 
     }
 
-    public static void main1(String[] args) {
+    public static void main(String[] args) {
 
         boolean goahead = true;
 
@@ -163,11 +167,11 @@ public class SimpleClient {
 
         //m.init(goahead);
         String message;
-        String inputType = "Hai ragione. Bisognerebbe scappare!!";
-        //String inputType = "https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt";
-
-        inputType = "Ti prego, che bel fiore: pensi di meritartelo? se sì, coglimelo. Amabilmente lavoro con il Primo Ministro per promulgare delle buone leggi per le persone sulle sedie a rotelle. Avervi a cena è bello, non puoi schifarmi. E che diavolo!";
-        inputType = "Avere a cena il Primo Ministro vale una promozione. E che diavolo.";
+//        String inputType = "Hai ragione. Bisognerebbe scappare!!";
+//        //String inputType = "https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt";
+//
+//        inputType = "Ti prego, che bel fiore: pensi di meritartelo? se sì, coglimelo. Amabilmente lavoro con il Primo Ministro per promulgare delle buone leggi per le persone sulle sedie a rotelle. Avervi a cena è bello, non puoi schifarmi. E che diavolo!";
+//        inputType = "Avere a cena il Primo Ministro vale una promozione. E che diavolo.";
         boolean fromUrl = false;
         FreelingIt freelingIt = new FreelingIt();
         Map inputs = new HashMap();
@@ -233,7 +237,7 @@ public class SimpleClient {
 //        }
     }
 
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
         /*
         String message;
         String inputType = "Hai ragione. Bisognerebbe scappare!!";
