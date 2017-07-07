@@ -107,40 +107,7 @@ public class SimpleClient {
             theservice.setService(s, input, inputs);
             theservice.run();
 
-            inputs = s.getInputs();
-
-            //s.setInputForService("false", "basic", "tagged");
-            inputs = s.getInputs();
-
-            s.setInputs(inputs);
-            inputs = s.getInputs();
-
-            //FillSimpleTypesFromFreelingIt fillSimpleTypesFromFreelingIt = new FillSimpleTypesFromFreelingIt();
-            // Get an UrlValidator
-            UrlValidator defaultValidator = new UrlValidator(); // default schemes
-            if (defaultValidator.isValid(input)) {
-                fromUrl = true;
-                message = String.format("The inputType supplied -%s- requires to be execued reading from a URL. So fromUrl is set to %s", input, fromUrl);
-                Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-
-            } else {
-                fromUrl = false;
-                message = String.format("The inputType supplied -%s- requires to be execued reading from a String. So fromUrl is set to %s", input, fromUrl);
-                Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-            }
-
-            // Map inputs = new HashMap();
-            //inputs.put("output_format", "tagged");
-            //freelingIt.setInputs(inputs);
-            message = String.format("Calling service Freeling_It with fromUrl %s", fromUrl);
-            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-
-            s.runService(input, fromUrl);
-            if (s.getStatus() == 0 && !s.getOutputUrl().isEmpty()) {
-                System.err.println("Hi well done: ");
-            }
-            System.err.println("\t Status: " + s.getStatus());
-            System.err.println("\t outputUrl: " + s.getOutputUrl());
+            
 
         } else {
 
