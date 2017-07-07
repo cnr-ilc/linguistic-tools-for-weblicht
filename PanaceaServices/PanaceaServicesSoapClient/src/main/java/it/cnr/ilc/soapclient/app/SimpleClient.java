@@ -109,7 +109,7 @@ public class SimpleClient {
 
             inputs = s.getInputs();
 
-            s.setInputForService("false", "basic", "tagged");
+            //s.setInputForService("false", "basic", "tagged");
             inputs = s.getInputs();
 
             s.setInputs(inputs);
@@ -165,76 +165,76 @@ public class SimpleClient {
         sc.init(goahead);
         System.exit(0);
 
-        //m.init(goahead);
-        String message;
-//        String inputType = "Hai ragione. Bisognerebbe scappare!!";
-//        //String inputType = "https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt";
+//        //m.init(goahead);
+//        String message;
+////        String inputType = "Hai ragione. Bisognerebbe scappare!!";
+////        //String inputType = "https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt";
+////
+////        inputType = "Ti prego, che bel fiore: pensi di meritartelo? se sì, coglimelo. Amabilmente lavoro con il Primo Ministro per promulgare delle buone leggi per le persone sulle sedie a rotelle. Avervi a cena è bello, non puoi schifarmi. E che diavolo!";
+////        inputType = "Avere a cena il Primo Ministro vale una promozione. E che diavolo.";
+//        boolean fromUrl = false;
+//        FreelingIt freelingIt = new FreelingIt();
+//        Map inputs = new HashMap();
+//        inputs = freelingIt.getInputs();
 //
-//        inputType = "Ti prego, che bel fiore: pensi di meritartelo? se sì, coglimelo. Amabilmente lavoro con il Primo Ministro per promulgare delle buone leggi per le persone sulle sedie a rotelle. Avervi a cena è bello, non puoi schifarmi. E che diavolo!";
-//        inputType = "Avere a cena il Primo Ministro vale una promozione. E che diavolo.";
-        boolean fromUrl = false;
-        FreelingIt freelingIt = new FreelingIt();
-        Map inputs = new HashMap();
-        inputs = freelingIt.getInputs();
-
-        freelingIt.setInputForService("false", "basic", "token");
-        inputs = freelingIt.getInputs();
-
-        freelingIt.setInputs(inputs);
-        inputs = freelingIt.getInputs();
-
-        //FillSimpleTypesFromFreelingIt fillSimpleTypesFromFreelingIt = new FillSimpleTypesFromFreelingIt();
-        // Get an UrlValidator
-        UrlValidator defaultValidator = new UrlValidator(); // default schemes
-        if (defaultValidator.isValid(inputType)) {
-            fromUrl = true;
-            message = String.format("The inputType supplied -%s- requires to be execued reading from a URL. So fromUrl is set to %s", inputType, fromUrl);
-            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-
-        } else {
-            fromUrl = false;
-            message = String.format("The inputType supplied -%s- requires to be execued reading from a String. So fromUrl is set to %s", inputType, fromUrl);
-            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-        }
-
-        // Map inputs = new HashMap();
-        //inputs.put("output_format", "tagged");
-        //freelingIt.setInputs(inputs);
-        message = String.format("Calling service Freeling_It with fromUrl %s", fromUrl);
-        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-
-        freelingIt.runService(inputType, fromUrl);
-        if (freelingIt.getStatus() == 0 && !freelingIt.getOutputUrl().isEmpty()) {
-            System.err.println("Hi well done: ");
-        }
-        System.err.println("\t Status: " + freelingIt.getStatus());
-        System.err.println("\t outputUrl: " + freelingIt.getOutputUrl());
-        // System.err.println("\t Stream: " + freelingIt.getOutputStream());
-
-//        String x = InputToString.convertInputStreamFromUrlToString(freelingIt.getOutputUrl());
-//        try {
-//            InputToString.readStramFromUrl(freelingIt.getOutputUrl());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        for (String line : InputToString.readStreamAndCreateAstringFromUrl(freelingIt.getOutputUrl())) {
-//            System.err.println("line "+line);
-//        }
-//        
-//        File file = IlcInputToFile.createAndWriteTempFileFromString(freelingIt.getOutputStream());
+//        freelingIt.setInputForService("false", "basic", "token");
+//        inputs = freelingIt.getInputs();
 //
-////        for (String line : IlcIOUtils.readFromFile(file)) {
+//        freelingIt.setInputs(inputs);
+//        inputs = freelingIt.getInputs();
+//
+//        //FillSimpleTypesFromFreelingIt fillSimpleTypesFromFreelingIt = new FillSimpleTypesFromFreelingIt();
+//        // Get an UrlValidator
+//        UrlValidator defaultValidator = new UrlValidator(); // default schemes
+//        if (defaultValidator.isValid(inputType)) {
+//            fromUrl = true;
+//            message = String.format("The inputType supplied -%s- requires to be execued reading from a URL. So fromUrl is set to %s", inputType, fromUrl);
+//            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+//
+//        } else {
+//            fromUrl = false;
+//            message = String.format("The inputType supplied -%s- requires to be execued reading from a String. So fromUrl is set to %s", inputType, fromUrl);
+//            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+//        }
+//
+//        // Map inputs = new HashMap();
+//        //inputs.put("output_format", "tagged");
+//        //freelingIt.setInputs(inputs);
+//        message = String.format("Calling service Freeling_It with fromUrl %s", fromUrl);
+//        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+//
+//        freelingIt.runService(inputType, fromUrl);
+//        if (freelingIt.getStatus() == 0 && !freelingIt.getOutputUrl().isEmpty()) {
+//            System.err.println("Hi well done: ");
+//        }
+//        System.err.println("\t Status: " + freelingIt.getStatus());
+//        System.err.println("\t outputUrl: " + freelingIt.getOutputUrl());
+//        // System.err.println("\t Stream: " + freelingIt.getOutputStream());
+//
+////        String x = InputToString.convertInputStreamFromUrlToString(freelingIt.getOutputUrl());
+////        try {
+////            InputToString.readStramFromUrl(freelingIt.getOutputUrl());
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+////        for (String line : InputToString.readStreamAndCreateAstringFromUrl(freelingIt.getOutputUrl())) {
 ////            System.err.println("line "+line);
 ////        }
-////        for (String line : fillSimpleTypesFromFreelingIt.getLinesFromFile(file)) {
-////            System.err.println("line "+line);
+////        
+////        File file = IlcInputToFile.createAndWriteTempFileFromString(freelingIt.getOutputStream());
+////
+//////        for (String line : IlcIOUtils.readFromFile(file)) {
+//////            System.err.println("line "+line);
+//////        }
+//////        for (String line : fillSimpleTypesFromFreelingIt.getLinesFromFile(file)) {
+//////            System.err.println("line "+line);
+//////        }
+////        fillSimpleTypesFromFreelingIt.manageServiceOutput(fillSimpleTypesFromFreelingIt.getLinesFromFile(file));
+////        //System.err.println("Tokens "+fillSimpleTypesFromFreelingIt.getTokens().toString());
+////        //System.err.println("lemmas " + fillSimpleTypesFromFreelingIt.getLemmas());
+////        for (IlcSimpleLemma lemma : fillSimpleTypesFromFreelingIt.getLemmas()) {
+////            System.err.println(lemma.toKaf());
 ////        }
-//        fillSimpleTypesFromFreelingIt.manageServiceOutput(fillSimpleTypesFromFreelingIt.getLinesFromFile(file));
-//        //System.err.println("Tokens "+fillSimpleTypesFromFreelingIt.getTokens().toString());
-//        //System.err.println("lemmas " + fillSimpleTypesFromFreelingIt.getLemmas());
-//        for (IlcSimpleLemma lemma : fillSimpleTypesFromFreelingIt.getLemmas()) {
-//            System.err.println(lemma.toKaf());
-//        }
     }
 
     public static void main1(String[] args) {
