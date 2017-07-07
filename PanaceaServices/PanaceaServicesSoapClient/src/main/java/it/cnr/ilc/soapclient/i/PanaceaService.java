@@ -38,13 +38,7 @@ public interface PanaceaService {
      */
     public int getStatus();
 
-    /**
-     * 
-     * @param mw
-     * @param ner
-     * @param format 
-     */
-    public void setInputForService(String mw, String ner, String format);
+    
     
     /**
      * Set the input type and the language.

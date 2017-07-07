@@ -158,16 +158,16 @@ public class FreelingIt implements PanaceaService {
     }
 
   
-    @Override
-    public void setInputForService(String mw, String ner, String format){
-        Map inputs = new HashMap();
-        inputs=getInputs();
-        inputs.put(SERVICE_MULTIWORD, mw);
-        inputs.put(SERVICE_NER, ner);
-        inputs.put(SERVICE_OUTPUT_FORMAT, format);
-        setInputs(inputs);
-    
-    }
+//    @Override
+//    public void setInputForService(String mw, String ner, String format){
+//        Map inputs = new HashMap();
+//        inputs=getInputs();
+//        inputs.put(SERVICE_MULTIWORD, mw);
+//        inputs.put(SERVICE_NER, ner);
+//        inputs.put(SERVICE_OUTPUT_FORMAT, format);
+//        setInputs(inputs);
+//    
+//    }
 
     /**
      * Set the input type and the language.
