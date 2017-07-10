@@ -5,6 +5,9 @@
  */
 package it.cnr.ilc.soapclient.app;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
@@ -29,7 +32,7 @@ public class Format {
     /**
      * formats for output as TAB which is the default
      */
-    public static String OUT_TAB = "tabbed"; // 
+    public static String OUT_TAB = "tagged"; // 
     
     /**
      * formats for output as SPLIT which is the default
@@ -50,5 +53,7 @@ public class Format {
      * formats for output as TOKEN which is the default
      */
     public static String FIND_MW = "false"; // 
+    
+    public static List<String> serviceFormats = Arrays.asList(OUT_SPLIT, OUT_TOK, OUT_TAB);
 
 }
