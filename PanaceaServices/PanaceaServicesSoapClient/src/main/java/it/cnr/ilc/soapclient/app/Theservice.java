@@ -25,9 +25,11 @@ public class Theservice {
 
     public void printHelp() {
         System.out.println("This tool wrappers the following Panacea services: " + Vars.services + " and can process both texts and URLs");
-        System.out.println("Texts or URLs can be provided in two ways");
+        System.out.println("In what follows, -sf and -m parameters depend on the service profile loaded. However, the program exits "
+                + "if supplied parameter are not correct");
+        System.out.println("\n\nTexts or URLs can be provided in two ways");
 
-        System.out.println("1) Usage echo \"text_to_analize|URL\" | java -jar <code>.jar -s <service> [-o output_file] [-f <final_output>] [-sf <service_output] [-m inputs]");
+        System.out.println("1) Usage echo \"text_to_analize|URL\" | java -jar <code>.jar -s <service> [-o output_file] [-f <final_output>] [-sf <service_output>] [-m inputs]");
         System.out.println("\twhere:");
         System.out.println("\t\t the -s parameter is mandatory and MUST be one out of " + Vars.services);
         System.out.println("\t\t the -o parameter is optional  and tells the program to write the output in file");
@@ -35,8 +37,10 @@ public class Theservice {
                 + " If no format is provided a tab output (which corresponds to " + Vars.OF_DEF + " is rendered. ");
         System.out.println("\t\t the -sf parameter is optional  and tells the program to write the output in passed format. "
                 + "If -sf parameter is set and -f parameter is not set, then the final output will be the value passed with -sf");
+        System.out.println("\t\t the -m parameter is optional  and tells the program which input parameter to use. The format is as follows:");
+        System.out.println("\t\t\t -m\"multiword=true,ner=basic,\"");
 
-        System.out.println("2) Usage java -jar <code>.jar -s <service> [-i input_file] [-o output_file] [-f <final_output>] [-sf <service_output] [-m inputs]");
+        System.out.println("2) Usage java -jar <code>.jar -s <service> [-i input_file] [-o output_file] [-f <final_output>] [-sf <service_output>] [-m inputs]");
         System.out.println("\twhere:");
         System.out.println("\t\t the -s parameter is mandatory and MUST be one out of " + Vars.services);
         System.out.println("\t\t the -i parameter is optional  and tells the program to read from the output in file");
@@ -45,8 +49,23 @@ public class Theservice {
                 + " If no format is provided a tab output (which corresponds to " + Vars.OF_DEF + " is rendered. ");
         System.out.println("\t\t the -sf parameter is optional  and tells the program to write the output in passed format. "
                 + "If -sf parameter is set and -f parameter is not set, then the final output will be the value passed with -sf");
+        System.out.println("\t\t the -m parameter is optional  and tells the program which input parameter to use. The format is as follows:");
+        System.out.println("\t\t\t -m\"multiword=true,ner=basic,output_format=token\"");
 
         System.out.println("\n\n In case of 2) if no input_file is provided, the program waits for human input from keyboard");
+        System.out.println("\n\n ******************************************");
+        System.out.println("Example (for mode 1, just to see invocation...)");
+        System.out.println("echo \"Mi chiamo Alberto e abito a Pisa.\" | java -jar <code>.jar -s freeling_it -o /tmp/out -f kaf "
+                + "-sf token -m multiword=true, ner=basic");
+        System.out.println("where:");
+        System.out.println("\t -s freeling_it indicates that the service profile loaded is freeling_it");
+        System.out.println("\t -o /tmp/out indicates that the result of the execution will be saved in a file");
+        System.out.println("\t -f kaf indicates that the format of the result is in KAF");
+        System.out.println("\t -sf token indicates that the service outputs its result as a list of tokens. "
+                + "Since the -f parameter is specified, the list of tokens is rendered as a KAF document.");
+        System.out.println("\t -m multiword=true, ner=basic indicates additional parameters");
+        System.out.println("\n\n ******************************************");
+        //System.out.println("\t\t\t -m\"multiword=true,ner=basic,output_format=token\"");
     }
 
     /**
@@ -67,22 +86,15 @@ public class Theservice {
         this.service = service;
         this.setInput(input);
         this.setInputs(inputs);
+
     }
 
     public void run() {
         String message = "";
         boolean fromUrl = false;
 
-        inputs = service.getInputs();
-
-        //s.setInputForService("false", "basic", "tagged");
-        inputs = service.getInputs();
-
         service.setInputs(inputs);
-        inputs = service.getInputs();
 
-        //FillSimpleTypesFromFreelingIt fillSimpleTypesFromFreelingIt = new FillSimpleTypesFromFreelingIt();
-        // Get an UrlValidator
         UrlValidator defaultValidator = new UrlValidator(); // default schemes
         if (defaultValidator.isValid(input)) {
             fromUrl = true;
@@ -98,15 +110,16 @@ public class Theservice {
         // Map inputs = new HashMap();
         //inputs.put("output_format", "tagged");
         //freelingIt.setInputs(inputs);
-        message = String.format("Calling service Freeling_It with fromUrl %s", fromUrl);
+        message = String.format("Calling service %s with fromUrl %s", service.getSERVICE_NAME(), fromUrl);
         Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
 
-        service.runService(input, fromUrl);
+        service.runService(input, inputs, fromUrl);
         if (service.getStatus() == 0 && !service.getOutputUrl().isEmpty()) {
-            System.err.println("Hi well done: ");
+            message = String.format("Executed service %s with status %s and output url %s", 
+                    service.getSERVICE_NAME(), service.getStatus(), service.getOutputUrl());
+            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
         }
-        System.err.println("\t Status: " + service.getStatus());
-        System.err.println("\t outputUrl: " + service.getOutputUrl());
+        
 
     }
 

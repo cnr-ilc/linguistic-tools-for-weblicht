@@ -38,16 +38,15 @@ public interface PanaceaService {
      */
     public int getStatus();
 
-    
-    
     /**
      * Set the input type and the language.
      *
-     * @param inputType Either the string to analyze or the URL where the data
-     * are.
+     * @param inputs the map with input parameters
+     * @param inputType Either the string to analyze or the URL
+     * where the data are.
      * @param fromUrl if true the input is read from URL
      */
-    public void runService(String inputType, boolean fromUrl);
+    public void runService(String inputType, Map inputs, boolean fromUrl);
 
     /**
      *
@@ -60,9 +59,11 @@ public interface PanaceaService {
      * @return the output url where the result is
      */
     public String getOutputStream();
-    
+
     public Map getInputs();
-    
+
     public void setInputs(Map inputs);
+
+    public String getSERVICE_NAME();
 
 }

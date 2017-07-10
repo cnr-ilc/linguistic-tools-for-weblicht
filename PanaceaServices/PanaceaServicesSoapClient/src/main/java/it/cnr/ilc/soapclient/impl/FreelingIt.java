@@ -36,8 +36,9 @@ import org.soaplab.share.SoaplabMap;
  * <li><li>set input("output_format", &lt;value>&gt;) values: token, tagged,
  * splitted, (default tagged)</li>
  * </ul>
- * Please note that the backend service DOES NOT manage multiwords = false. When the output format is token, no multiword is
- * returned; when tagged or splitted, multiwords are returned even if the parameter is set to false.
+ * Please note that the backend service DOES NOT manage multiwords = false. When
+ * the output format is token, no multiword is returned; when tagged or
+ * splitted, multiwords are returned even if the parameter is set to false.
  * </br>
  * However, for future releases, add this parameters to your list.
  *
@@ -54,7 +55,7 @@ public class FreelingIt implements PanaceaService {
     /**
      * The name of the service
      */
-    public static final String SERVICE_NAME = "freeling_it";
+    private static final String SERVICE_NAME = "freeling_it";
 
     /**
      * The category of services. Services are category.servicename
@@ -117,7 +118,15 @@ public class FreelingIt implements PanaceaService {
     /**
      * The endpoint to invoke the service from
      */
-    public static final String SERVICE_ENDPOINT = URL_ENDPOINT + "/" + SERVICE_CATEGORY + "." + SERVICE_NAME;
+    public final String SERVICE_ENDPOINT = URL_ENDPOINT + "/" + SERVICE_CATEGORY + "." + getSERVICE_NAME();
+
+    /**
+     * @return the SERVICE_NAME
+     */
+    @Override
+    public String getSERVICE_NAME() {
+        return SERVICE_NAME;
+    }
 
     /**
      * A map containing values for input parameters
@@ -144,29 +153,20 @@ public class FreelingIt implements PanaceaService {
      * multiwords, and ner and output_format
      *
      */
-    @SuppressWarnings("OverridableMethodCallInConstructor")
     public FreelingIt() {
-        @SuppressWarnings("LocalVariableHidesMemberVariable")
-        Map inputs = new HashMap();
-        inputs = getInputs();
-        
-        inputs.put(SERVICE_MULTIWORD, SERVICE_MULTIWORD_VAL);
-        inputs.put(SERVICE_NER, SERVICE_NER_VAL);
-        inputs.put(SERVICE_OUTPUT_FORMAT, SERVICE_OUTPUT_FORMAT_VAL);
-        setInputs(inputs);
-
     }
 
-  
-//    @Override
-//    public void setInputForService(String mw, String ner, String format){
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+//    public FreelingIt() {
+//        @SuppressWarnings("LocalVariableHidesMemberVariable")
 //        Map inputs = new HashMap();
-//        inputs=getInputs();
-//        inputs.put(SERVICE_MULTIWORD, mw);
-//        inputs.put(SERVICE_NER, ner);
-//        inputs.put(SERVICE_OUTPUT_FORMAT, format);
+//        inputs = getInputs();
+//
+//        inputs.put(SERVICE_MULTIWORD, SERVICE_MULTIWORD_VAL);
+//        inputs.put(SERVICE_NER, SERVICE_NER_VAL);
+//        inputs.put(SERVICE_OUTPUT_FORMAT, SERVICE_OUTPUT_FORMAT_VAL);
 //        setInputs(inputs);
-//    
+//
 //    }
 
     /**
@@ -177,20 +177,17 @@ public class FreelingIt implements PanaceaService {
      * @param fromUrl if true the input is read from URL
      */
     @Override
-    public void runService(String inputType, boolean fromUrl) {
-        System.err.println("string " + inputType);
-        
-        //getInputs().put(SERVICE_MULTIWORD, SERVICE_MULTIWORD_VAL);
-        System.err.println("input b4 " + getInputs().toString());
+    public void runService(String inputType, Map inputs, boolean fromUrl) {
+       
         getInputs().put(SERVICE_LANGUAGE, SERVICE_LANGUAGE_VAL);
         if (fromUrl) {
             getInputs().put(SERVICE_INPUT_URL_DATA, inputType);
         } else {
             getInputs().put(SERVICE_INPUT_DIRECT_DATA, inputType);
         }
-        
+
         runService();
-        System.err.println("input after " + getInputs().toString());
+        //System.err.println("input after " + inputs.toString());
     }
 
     @Override
@@ -225,7 +222,7 @@ public class FreelingIt implements PanaceaService {
                 if (i == 3) {
                     outputFromStream = (String) outputs.get(k);
                     setOutputFromStream(outputFromStream);
-                    System.err.println("object for k " + k + " at position i=" + i + ": " + outputs.get(k));
+                    System.err.println("\nobject for k " + k + " at position i=" + i + ": \n" + outputs.get(k));
 
                 }
 //                if (i > 1) {

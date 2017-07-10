@@ -29,13 +29,16 @@ import org.apache.commons.validator.routines.UrlValidator;
 public class SimpleClient {
 
     public static final String CLASS_NAME = SimpleClient.class.getName();
-    private String output_format = Format.OUT_TAB;
+
     private String find_mw = Format.FIND_MW;
     private String find_ner = Format.FIND_NER;
 
     private String service = "";
+    private String otherInputs = "";
     private String iFile = "";
     private String oFile = "";
+    private String format = Format.OUT_TAB;
+    private String serviceOutputFormat = Format.OUT_TAB;
 
     public Theservice theservice = new Theservice();
 
@@ -97,17 +100,23 @@ public class SimpleClient {
                 }
 
             }
-            
-            System.err.println("input " + input);
 
+            //System.err.println("input " + input);
             // actual code from here
             PanaceaService s = factory.getService(getService());
-            
+
+            if (!getServiceOutputFormat().isEmpty()) {
+
+                inputs.put("output_format", getServiceOutputFormat());
+            }
+
             //theservice.setService(s);
+            if (!getOtherInputs().isEmpty()) {
+                inputs = fillOtherInputParams(getOtherInputs(), inputs);
+            }
+
             theservice.setService(s, input, inputs);
             theservice.run();
-
-            
 
         } else {
 
@@ -116,6 +125,34 @@ public class SimpleClient {
             System.exit(0);
         }
 
+    }
+
+    private Map fillOtherInputParams(String paramList, Map inputs) throws IllegalArgumentException {
+        String key, value;
+        String[] params;
+        String message;
+
+        params = paramList.split(",");
+        if (params.length == 0) {
+            message = String.format("IllegalArgumentException in %s ", paramList);
+            throw new IllegalArgumentException(message);
+        }
+
+        for (String param : params) {
+            String[] p;
+            p = param.split("=");
+            if (p.length != 2) {
+                message = String.format("IllegalArgumentException in %s ", param);
+                throw new IllegalArgumentException(message);
+            }
+            key = p[0];
+            value = p[1];
+
+            inputs.put(key, value);
+            //System.err.println("XXX inputs "+inputs);
+
+        }
+        return inputs;
     }
 
     public static void main(String[] args) {
@@ -132,7 +169,6 @@ public class SimpleClient {
         sc.init(goahead);
         System.exit(0);
 
-        
     }
 
     public static void main1(String[] args) {
@@ -185,7 +221,7 @@ public class SimpleClient {
         message = String.format("Calling service Freeling_It with fromUrl %s", fromUrl);
         Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
 
-        freelingIt.runService(inputType, fromUrl);
+        freelingIt.runService(inputType, null, fromUrl);
         if (freelingIt.getStatus() == 0 && !freelingIt.getOutputUrl().isEmpty()) {
             System.err.println("Hi well done: ");
         }
@@ -248,6 +284,12 @@ public class SimpleClient {
 
     }
 
+    private boolean checkServiceFormat(String serviceformat) {
+
+        return Format.serviceFormats.contains(serviceformat);
+
+    }
+
     private boolean checkArgs(String[] args) {
         boolean ret = true;
         int i = 0;
@@ -270,8 +312,19 @@ public class SimpleClient {
                 case "-o":
                     setoFile(args[i + 1]);
                     break;
+                case "-sf":
+                    if (checkServiceFormat(args[i + 1])) {
+                        setFormat(args[i + 1]);
+                    } else {
+                        setServiceOutputFormat(Format.OUT_TAB);
+                    }
+
+                    break;
                 case "-f":
-                    //setFormat(args[i + 1]);
+                    setFormat(args[i + 1]);
+                    break;
+                case "-m":
+                    setOtherInputs(args[i + 1]);
                     break;
 
             }
@@ -322,5 +375,47 @@ public class SimpleClient {
      */
     public void setoFile(String oFile) {
         this.oFile = oFile;
+    }
+
+    /**
+     * @return the otherInputs
+     */
+    public String getOtherInputs() {
+        return otherInputs;
+    }
+
+    /**
+     * @param otherInputs the otherInputs to set
+     */
+    public void setOtherInputs(String otherInputs) {
+        this.otherInputs = otherInputs;
+    }
+
+    /**
+     * @return the format
+     */
+    public String getFormat() {
+        return format;
+    }
+
+    /**
+     * @param format the format to set
+     */
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    /**
+     * @return the serviceOutputFormat
+     */
+    public String getServiceOutputFormat() {
+        return serviceOutputFormat;
+    }
+
+    /**
+     * @param serviceOutputFormat the serviceOutputFormat to set
+     */
+    public void setServiceOutputFormat(String serviceOutputFormat) {
+        this.serviceOutputFormat = serviceOutputFormat;
     }
 }
