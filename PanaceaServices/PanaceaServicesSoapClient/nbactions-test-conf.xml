@@ -10,7 +10,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath it.cnr.ilc.soapclient.app.SimpleClient -s freeling_it -m multiword=ccc,ner=none -sf sxsdsd</exec.args>
+                <exec.args>-classpath %classpath it.cnr.ilc.soapclient.app.SimpleClient -s freeling_it -m multiword=ccc,ner=none -sf token -r</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

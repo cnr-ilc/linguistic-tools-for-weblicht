@@ -5,6 +5,8 @@
  */
 package it.cnr.ilc.soapclient.app;
 
+import it.cnr.ilc.ilcfillsimpletypes.basic.FillSimpleTypesFromFreelingIt;
+import it.cnr.ilc.ilcfillsimpletypes.basic.i.FillSimpleTypes;
 import it.cnr.ilc.soapclient.i.PanaceaService;
 import it.cnr.ilc.soapclient.impl.FreelingIt;
 
@@ -20,6 +22,16 @@ public class ServiceFactory {
         }
         if (service.equalsIgnoreCase(Vars.FREELING_IT)) {
             return new FreelingIt();
+        }
+        return null;
+    }
+    
+    public FillSimpleTypes getFillSimpleType(String service){
+    if (service == null) {
+            return null;
+        }
+        if (service.equalsIgnoreCase(Vars.FREELING_IT)) {
+            return new FillSimpleTypesFromFreelingIt();
         }
         return null;
     }

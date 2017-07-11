@@ -6,6 +6,7 @@
 package it.cnr.ilc.soapclient.app;
 
 import it.cnr.ilc.ilcfillsimpletypes.basic.FillSimpleTypesFromFreelingIt;
+import it.cnr.ilc.ilcfillsimpletypes.basic.i.FillSimpleTypes;
 import it.cnr.ilc.ilcioutils.IlcIOUtils;
 import it.cnr.ilc.ilcioutils.IlcInputToFile;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
@@ -39,6 +40,11 @@ public class SimpleClient {
     private String oFile = "";
     private String format = Format.OUT_TAB;
     private String serviceOutputFormat = Format.OUT_TAB;
+    /**
+     * if false the output is read from a temporary file instead that from the
+     * URL of the service use the swith -t in the list of parameters
+     */
+    private boolean readOutputFromUrl = true;
 
     public Theservice theservice = new Theservice();
 
@@ -52,6 +58,8 @@ public class SimpleClient {
         boolean fromUrl = false;
 
         Map inputs = new HashMap();
+        
+        File file;
 
         if (goahead) {
             if (getiFile().isEmpty()) {
@@ -104,9 +112,9 @@ public class SimpleClient {
             //System.err.println("input " + input);
             // actual code from here
             PanaceaService s = factory.getService(getService());
+            FillSimpleTypes t = factory.getFillSimpleType(service);
 
             if (!getServiceOutputFormat().isEmpty()) {
-
                 inputs.put("output_format", getServiceOutputFormat());
             }
 
@@ -117,6 +125,26 @@ public class SimpleClient {
 
             theservice.setService(s, input, inputs);
             theservice.run();
+
+            // get the output
+            if (!readOutputFromUrl) {
+                file = IlcInputToFile.createAndWriteTempFileFromString(s.getOutputStream());
+
+                for (String line : IlcIOUtils.readFromFile(file)) {
+                    System.err.println("line " + line);
+                }
+                for (String line : t.getLinesFromFile(file)) {
+                    System.err.println("line 1 " + line);
+                }
+            } else { // from url
+                file = IlcInputToFile.createAndWriteTempFileFromUrl(s.getOutputUrl());
+                t.manageServiceOutput(t.getLinesFromFile(file));
+                //System.err.println("Tokens "+fillSimpleTypesFromFreelingIt.getTokens().toString());
+                //System.err.println("lemmas " + fillSimpleTypesFromFreelingIt.getLemmas());
+                for (IlcSimpleLemma lemma : t.getLemmas()) {
+                    System.err.println(lemma.toKaf());
+                }
+            }
 
         } else {
 
@@ -240,6 +268,8 @@ public class SimpleClient {
 //        }
 //        
         File file = IlcInputToFile.createAndWriteTempFileFromString(freelingIt.getOutputStream());
+        
+        
 
 //        for (String line : IlcIOUtils.readFromFile(file)) {
 //            System.err.println("line "+line);
@@ -325,6 +355,9 @@ public class SimpleClient {
                     break;
                 case "-m":
                     setOtherInputs(args[i + 1]);
+                    break;
+                case "-t":
+                    setReadOutputFromUrl(false);
                     break;
 
             }
@@ -417,5 +450,19 @@ public class SimpleClient {
      */
     public void setServiceOutputFormat(String serviceOutputFormat) {
         this.serviceOutputFormat = serviceOutputFormat;
+    }
+
+    /**
+     * @return the readOutputFromUrl
+     */
+    public boolean isReadOutputFromUrl() {
+        return readOutputFromUrl;
+    }
+
+    /**
+     * @param readOutputFromUrl the readOutputFromUrl to set
+     */
+    public void setReadOutputFromUrl(boolean readOutputFromUrl) {
+        this.readOutputFromUrl = readOutputFromUrl;
     }
 }
