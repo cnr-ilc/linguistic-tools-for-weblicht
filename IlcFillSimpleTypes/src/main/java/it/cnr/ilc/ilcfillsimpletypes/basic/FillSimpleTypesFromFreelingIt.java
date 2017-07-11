@@ -66,7 +66,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
         return ret;
     }
 
-    public String[] splitLinesFromSep(String line, String Sep) {
+    private String[] splitLinesFromSep(String line, String Sep) {
         String[] values;
         //values = new String[line.split(Sep).length];
         values = line.split(Sep);
@@ -182,6 +182,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
     /**
      * @return the tokens
      */
+    @Override
     public ArrayList<IlcSimpleToken> getTokens() {
         return tokens;
     }
@@ -189,6 +190,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
     /**
      * @return the sents
      */
+    @Override
     public ArrayList<IlcSimpleSentence> getSents() {
         return sents;
     }
@@ -196,6 +198,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
     /**
      * @return the lemmas
      */
+    @Override
     public ArrayList<IlcSimpleLemma> getLemmas() {
         return lemmas;
     }
