@@ -18,6 +18,7 @@ public class IlcSimpleToken {
     private int end_offset;
     private int tokenLength;
     private int id;
+    private int sid;
     private int wfid;
 
     public IlcSimpleToken(String theToken, int start_offset, int end_offset, int tokenlength) {
@@ -107,12 +108,12 @@ public class IlcSimpleToken {
 
     @Override
     public String toString() {
-        return "Token{" + "theToken=" + theToken + ", start_offset=" + start_offset + ", end_offset=" + end_offset + ", tokenLength=" + tokenLength + ", id=" + id + ", wfid="+wfid+ '}';
+        return "Token{" + "theToken=" + theToken + ", start_offset=" + start_offset + ", end_offset=" + end_offset + ", tokenLength=" + tokenLength + ", id=" + id + ", wfid="+wfid+ ", sid="+sid+'}';
     }
     
     public String toKaf() {
         String ret="";
-        ret="\t\t\t<wf wid=\"w"+wfid+"\" sent=\"#S#\"  para=\"1\" offset=\""+start_offset+"\" length=\""+tokenLength+"\"><![CDATA["+theToken+"]]></wf>\n";
+        ret="\t\t\t<wf wid=\"w"+wfid+"\" sent=\""+sid+"\" para=\"1\" offset=\""+start_offset+"\" length=\""+tokenLength+"\"><![CDATA["+theToken+"]]></wf>\n";
         //ret="\t\t\t<wf wid=\""+wfid+"\" sent=\"#S#\" para=\"#P#\" offset=\""+start_offset+"\" length=\""+tokenLength+"\"><![CDATA["+theToken+"]]></wf>\n";
         return ret;
     }
@@ -141,6 +142,20 @@ public class IlcSimpleToken {
      */
     public void setWfid(int wfid) {
         this.wfid = wfid;
+    }
+
+    /**
+     * @return the sid
+     */
+    public int getSid() {
+        return sid;
+    }
+
+    /**
+     * @param sid the sid to set
+     */
+    public void setSid(int sid) {
+        this.sid = sid;
     }
     
 }
