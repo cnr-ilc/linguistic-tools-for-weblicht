@@ -19,10 +19,7 @@ public interface PanaceaService {
      */
     public static final String URL_ENDPOINT = "http://langtech3.ilc.cnr.it:8080/soaplab2-axis/services";
 
-    /**
-     * run the specific service reading from a string
-     */
-    public void runService();
+    
 
     /**
      * get the client from the soaplab endpoint

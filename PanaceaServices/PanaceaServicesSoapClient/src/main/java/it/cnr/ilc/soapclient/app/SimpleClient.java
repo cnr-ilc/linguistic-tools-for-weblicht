@@ -10,6 +10,7 @@ import it.cnr.ilc.ilcfillsimpletypes.basic.i.FillSimpleTypes;
 import it.cnr.ilc.ilcioutils.IlcIOUtils;
 import it.cnr.ilc.ilcioutils.IlcInputToFile;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
+import it.cnr.ilc.ilcsimpletypes.IlcSimpleToken;
 import it.cnr.ilc.soapclient.i.PanaceaService;
 import it.cnr.ilc.soapclient.impl.FreelingIt;
 import java.io.BufferedReader;
@@ -55,7 +56,7 @@ public class SimpleClient {
         String input = "";
         String message = "";
         ServiceFactory factory = new ServiceFactory();
-        boolean fromUrl = false;
+        
 
         Map inputs = new HashMap();
         
@@ -113,7 +114,7 @@ public class SimpleClient {
             // actual code from here
             PanaceaService s = factory.getService(getService());
             FillSimpleTypes t = factory.getFillSimpleType(service);
-
+            //System.err.println("input in init "+s.getInputs());
             if (!getServiceOutputFormat().isEmpty()) {
                 inputs.put("output_format", getServiceOutputFormat());
             }
@@ -138,11 +139,15 @@ public class SimpleClient {
                 }
             } else { // from url
                 file = IlcInputToFile.createAndWriteTempFileFromUrl(s.getOutputUrl());
-                t.manageServiceOutput(t.getLinesFromFile(file));
+                t.manageServiceOutput(t.getLinesFromFile(file), getServiceOutputFormat());
                 //System.err.println("Tokens "+fillSimpleTypesFromFreelingIt.getTokens().toString());
                 //System.err.println("lemmas " + fillSimpleTypesFromFreelingIt.getLemmas());
                 for (IlcSimpleLemma lemma : t.getLemmas()) {
                     System.err.println(lemma.toKaf());
+                }
+                
+                for (IlcSimpleToken tok : t.getTokens()) {
+                    System.err.println(tok.toKaf());
                 }
             }
 
@@ -277,7 +282,7 @@ public class SimpleClient {
 //        for (String line : fillSimpleTypesFromFreelingIt.getLinesFromFile(file)) {
 //            System.err.println("line "+line);
 //        }
-        fillSimpleTypesFromFreelingIt.manageServiceOutput(fillSimpleTypesFromFreelingIt.getLinesFromFile(file));
+        //fillSimpleTypesFromFreelingIt.manageServiceOutput(fillSimpleTypesFromFreelingIt.getLinesFromFile(file), getServiceOutputFormat());
         //System.err.println("Tokens "+fillSimpleTypesFromFreelingIt.getTokens().toString());
         //System.err.println("lemmas " + fillSimpleTypesFromFreelingIt.getLemmas());
         for (IlcSimpleLemma lemma : fillSimpleTypesFromFreelingIt.getLemmas()) {
@@ -304,7 +309,7 @@ public class SimpleClient {
 
     public void printTheHelp() {
         //tokenizerCli.printHelp();
-        System.err.println("PRINTHELP");
+       //System.err.println("PRINTHELP");
         theservice.printHelp();
     }
 
@@ -344,7 +349,7 @@ public class SimpleClient {
                     break;
                 case "-sf":
                     if (checkServiceFormat(args[i + 1])) {
-                        setFormat(args[i + 1]);
+                        setServiceOutputFormat(args[i + 1]);
                     } else {
                         setServiceOutputFormat(Format.OUT_TAB);
                     }
@@ -354,6 +359,7 @@ public class SimpleClient {
                     setFormat(args[i + 1]);
                     break;
                 case "-m":
+                    //System.err.println("STOQUI");
                     setOtherInputs(args[i + 1]);
                     break;
                 case "-t":

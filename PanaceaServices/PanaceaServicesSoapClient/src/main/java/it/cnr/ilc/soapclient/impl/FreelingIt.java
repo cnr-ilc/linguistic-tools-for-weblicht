@@ -156,18 +156,7 @@ public class FreelingIt implements PanaceaService {
     public FreelingIt() {
     }
 
-    @SuppressWarnings("OverridableMethodCallInConstructor")
-//    public FreelingIt() {
-//        @SuppressWarnings("LocalVariableHidesMemberVariable")
-//        Map inputs = new HashMap();
-//        inputs = getInputs();
-//
-//        inputs.put(SERVICE_MULTIWORD, SERVICE_MULTIWORD_VAL);
-//        inputs.put(SERVICE_NER, SERVICE_NER_VAL);
-//        inputs.put(SERVICE_OUTPUT_FORMAT, SERVICE_OUTPUT_FORMAT_VAL);
-//        setInputs(inputs);
-//
-//    }
+    
 
     /**
      * Set the input type and the language.
@@ -186,18 +175,13 @@ public class FreelingIt implements PanaceaService {
             getInputs().put(SERVICE_INPUT_DIRECT_DATA, inputType);
         }
 
-        runService();
+        //runService();
         //System.err.println("input after " + inputs.toString());
-    }
-
-    @Override
-    public void runService() {
-
         SoaplabBaseClient client = getClient(SERVICE_ENDPOINT);
 
         String message = "";
         try {
-            System.err.println("input in run " + getInputs().toString());
+//            System.err.println("input in run " + getInputs().toString());
             SoaplabMap results = client.runAndWaitFor(SoaplabMap
                     .fromMap(getInputs()));
             Map outputs = SoaplabMap.toMap(results);
@@ -222,7 +206,7 @@ public class FreelingIt implements PanaceaService {
                 if (i == 3) {
                     outputFromStream = (String) outputs.get(k);
                     setOutputFromStream(outputFromStream);
-                    System.err.println("\nobject for k " + k + " at position i=" + i + ": \n" + outputs.get(k));
+                    //System.err.println("\nobject for k " + k + " at position i=" + i + ": \n" + outputs.get(k));
 
                 }
 //                if (i > 1) {
@@ -238,6 +222,8 @@ public class FreelingIt implements PanaceaService {
             setOutputFromStream("");
         }
     }
+
+    
 
     @Override
     public SoaplabBaseClient getClient(String endpoint) {
