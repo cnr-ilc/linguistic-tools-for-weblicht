@@ -9,6 +9,7 @@ import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleSentence;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleToken;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,12 @@ public interface FillSimpleTypes {
 
     public List<IlcSimpleLemma> createListOfLemmas();
 
-    public void manageServiceOutput(List<String> lines);
+    public void manageServiceOutput(List<String> lines, String servceoutput);
+
+    public ArrayList<IlcSimpleToken> getTokens();
+
+    public ArrayList<IlcSimpleSentence> getSents();
+    
+    public ArrayList<IlcSimpleLemma> getLemmas();
 
 }

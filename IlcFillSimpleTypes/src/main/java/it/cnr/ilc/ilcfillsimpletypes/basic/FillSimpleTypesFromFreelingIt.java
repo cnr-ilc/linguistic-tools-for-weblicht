@@ -10,6 +10,7 @@ import it.cnr.ilc.ilcioutils.IlcIOUtils;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleSentence;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleToken;
+import it.cnr.ilc.ilcsimpletypes.utils.Format;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +67,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
         return ret;
     }
 
-    public String[] splitLinesFromSep(String line, String Sep) {
+    private String[] splitLinesFromSep(String line, String Sep) {
         String[] values;
         //values = new String[line.split(Sep).length];
         values = line.split(Sep);
@@ -84,7 +85,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
     }
 
     @Override
-    public void manageServiceOutput(List<String> lines) {
+    public void manageServiceOutput(List<String> lines, String serviceoutput) {
         //IlcSimpleSentence sent;// = new IlcSimpleSentence();
         int sid = 1;
         int tid = 1;
@@ -102,76 +103,173 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
         String[] splitted;
         ArrayList<IlcSimpleToken> toks = new ArrayList<>();
         ArrayList<IlcSimpleLemma> lems = new ArrayList<>();
-        for (String line : lines) {
-            if (!line.isEmpty()) {
+        if (serviceoutput.equals(Format.OUT_TAB)) { // tokens + offsets + splitted by sentences
+            for (String line : lines) {
+                if (!line.isEmpty()) {
+
+                    splitted = splitLinesFromSep(line, sep);
+                    sent = new IlcSimpleSentence();
+                    token = new IlcSimpleToken();
+                    lemma = new IlcSimpleLemma();
+
+                    theToken = splitted[0];
+                    theLemma = splitted[1];
+                    pos = splitted[2];
+                    start_offset = Integer.parseInt(splitted[4]);
+                    end_offset = Integer.parseInt(splitted[5]);
+                    tokenLenght = end_offset - start_offset;
+
+//                    System.err.println("token in manage " + theToken);
+//                    System.err.println("TAGGED");
+//           
+                    token.setTheToken(theToken);
+                    token.setId(tid);
+                    token.setWfid(tid);
+                    token.setStart_offset(start_offset);
+                    token.setEnd_offset(end_offset);
+                    token.setTokenLength(tokenLenght);
+                    token.setSid(sid);
+
+                    // lemma and pos and additional info on token 
+                    lemma.setId(lid);
+                    lemma.setLemmaLength(theLemma.length());
+                    lemma.setThePos(pos);
+                    lemma.setTheLemma(theLemma);
+                    lemma.setType(getLemmaType(pos));
+                    // multiword??
+                    wfids = ifWmThenReturnIdSize(tid, theToken);
+                    if (wfids.length > 1) {
+                        System.out.println("Token " + theToken + " è MW with " + Arrays.toString(wfids));
+                        tid = tid + wfids.length - 1;
+                    }
+
+                    lemma.setWfids(wfids);
+                    lems.add(lemma);
+
+                    toks.add(token);
+
+                    prev_start_offset = start_offset;
+                    if (start_offset == prev_end_offset) {
+                        theSentence = theSentence + theToken;
+                        //System.out.println("IF token " + theToken + " so " + start_offset + " peo " + prev_end_offset);
+                    } else {
+                        theSentence = theSentence + " " + theToken;
+                        //System.out.println("ELSE token " + theToken + " so " + start_offset + " peo " + prev_end_offset);
+                    }
+                    prev_end_offset = end_offset;
+                    //System.out.println("word " + theSentence);
+                } else {
+                    //System.err.println("FINISCO QUI?");
+                    last_sent_end_offset = end_offset;
+                    sent.setId(sid);
+                    sent.setTheSentence(theSentence);
+                    sent.setSentenceLength(theSentence.length());
+                    sent.setEnd_offset(last_sent_end_offset);
+                    sent.setStart_offset(sent.getEnd_offset() - sent.getSentenceLength() + 1);
+                    //System.out.println("EMPTY " + theSentence);
+                    theSentence = "";
+
+                    sent.setTokens(toks);
+                    getSents().add(sent);
+
+                    sid++;
+                    tokens.addAll(toks);
+                    lemmas.addAll(lems);
+                    toks = new ArrayList<>();
+                    //System.err.println("AAAA " + getSents().toString());
+                }
+                tid++;
+                lid++;
+            }
+        } else if (serviceoutput.equals(Format.OUT_SPLIT)) { // no lemma but empty line for sentence
+            for (String line : lines) {
+                if (!line.isEmpty()) {
+                    splitted = splitLinesFromSep(line, sep);
+                    sent = new IlcSimpleSentence();
+                    token = new IlcSimpleToken();
+
+                    theToken = splitted[0];
+
+//                    System.err.println("token in splitted " + theToken);
+//                    System.err.println("SPLITTED");
+//           
+                    token.setTheToken(theToken);
+                    token.setId(tid);
+                    token.setWfid(tid);
+                    token.setStart_offset(start_offset);
+                    token.setEnd_offset(end_offset);
+                    token.setSid(sid);
+                    toks.add(token);
+                    theSentence = theSentence + " " + theToken;
+
+                } else {
+                    //System.err.println("FINISCO QUI SPLITTED?");
+                    last_sent_end_offset = end_offset;
+                    sent.setId(sid);
+                    sent.setTheSentence(theSentence);
+                    sent.setSentenceLength(theSentence.length());
+                    sent.setEnd_offset(last_sent_end_offset);
+                    sent.setStart_offset(sent.getEnd_offset() - sent.getSentenceLength() + 1);
+                    //System.out.println("EMPTY " + theSentence);
+                    theSentence = "";
+
+                    sent.setTokens(toks);
+                    getSents().add(sent);
+
+                    sid++;
+                    tokens.addAll(toks);
+
+                    toks = new ArrayList<>();
+                    //System.err.println("AAAA SPLITTED" + getSents().toString());
+                }
+                tid++;
+                //System.err.println("line " + line);
+            }
+
+        } else if (serviceoutput.equals(Format.OUT_TOK)) { // a list of tokens in a single sentence
+            for (String line : lines) {
 
                 splitted = splitLinesFromSep(line, sep);
                 sent = new IlcSimpleSentence();
                 token = new IlcSimpleToken();
-                lemma = new IlcSimpleLemma();
 
                 theToken = splitted[0];
-                theLemma = splitted[1];
-                pos = splitted[2];
-                start_offset = Integer.parseInt(splitted[4]);
-                end_offset = Integer.parseInt(splitted[5]);
-                tokenLenght = end_offset - start_offset;
 
+//                System.err.println("token in token " + theToken);
+//                System.err.println("TOKEN");
+//           
+                token.setTheToken(theToken);
                 token.setId(tid);
+                token.setWfid(tid);
                 token.setStart_offset(start_offset);
                 token.setEnd_offset(end_offset);
-                token.setTokenLength(tokenLenght);
-                token.setTheToken(theToken);
-                token.setWfid(tid);
+                token.setSid(sid);
                 toks.add(token);
-
-                // lemma
-                lemma.setId(lid);
-                lemma.setLemmaLength(theLemma.length());
-                lemma.setThePos(pos);
-                lemma.setTheLemma(theLemma);
-                lemma.setType(getLemmaType(pos));
-                // multiword??
-                wfids = ifWmThenReturnIdSize(tid, theToken);
-                if (wfids.length > 1) {
-                    System.out.println("Token " + theToken+ " è MW with "+Arrays.toString(wfids));
-                    tid=tid+wfids.length-1;
-                } else {
-                }
-
-                lemma.setWfids(wfids);
-                lems.add(lemma);
-                prev_start_offset = start_offset;
-                if (start_offset == prev_end_offset) {
-                    theSentence = theSentence + theToken;
-                    //System.out.println("IF token " + theToken+ " so "+start_offset+ " peo "+prev_end_offset);
-                } else {
-                    theSentence = theSentence + " " + theToken;
-                    //System.out.println("ELSE token " + theToken+ " so "+start_offset+ " peo "+prev_end_offset);
-                }
-                prev_end_offset = end_offset;
-                //System.out.println("word " + theSentence);
-            } else {
+                theSentence = theSentence + " " + theToken;
+                //System.err.println("FINISCO QUI TOKEN? " + theSentence);
                 last_sent_end_offset = end_offset;
-                sent.setId(sid);
-                sent.setTheSentence(theSentence);
-                sent.setSentenceLength(theSentence.length());
-                sent.setEnd_offset(last_sent_end_offset);
-                sent.setStart_offset(sent.getEnd_offset() - sent.getSentenceLength() + 1);
-                //System.out.println("EMPTY " + theSentence);
-                theSentence = "";
-                System.err.println("AAAA " + getSents().toString());
-                sent.setTokens(toks);
-                getSents().add(sent);
 
-                sid++;
-                tokens.addAll(toks);
-                lemmas.addAll(lems);
-                toks = new ArrayList<>();
+                //System.out.println("EMPTY " + theSentence);
+//                toks = new ArrayList<>();
+
+                tid++;
+
+                //System.err.println("line " + line);
             }
-            tid++;
-            lid++;
+            sent.setTokens(toks);
+            sent.setId(sid);
+            sent.setTheSentence(theSentence);
+            sent.setSentenceLength(theSentence.length());
+            sent.setEnd_offset(theSentence.length());
+            sent.setStart_offset(0);
+            sent.setTokens(toks);
+            getSents().add(sent);
+
+            tokens.addAll(toks);
+            //System.err.println("AAAA TOKEN" + getSents().toString());
         }
+
+        //System.err.println("tokens " + toks.toString());
     }
 
     @Override
@@ -182,6 +280,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
     /**
      * @return the tokens
      */
+    @Override
     public ArrayList<IlcSimpleToken> getTokens() {
         return tokens;
     }
@@ -189,6 +288,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
     /**
      * @return the sents
      */
+    @Override
     public ArrayList<IlcSimpleSentence> getSents() {
         return sents;
     }
@@ -196,6 +296,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
     /**
      * @return the lemmas
      */
+    @Override
     public ArrayList<IlcSimpleLemma> getLemmas() {
         return lemmas;
     }

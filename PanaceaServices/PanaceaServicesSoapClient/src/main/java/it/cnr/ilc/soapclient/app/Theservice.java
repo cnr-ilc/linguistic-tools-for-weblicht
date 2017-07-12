@@ -39,8 +39,11 @@ public class Theservice {
                 + "If -sf parameter is set and -f parameter is not set, then the final output will be the value passed with -sf");
         System.out.println("\t\t the -m parameter is optional  and tells the program which input parameter to use. The format is as follows:");
         System.out.println("\t\t\t -m\"multiword=true,ner=basic,\"");
+        System.out.println("\t\t the -t parameter is optional  and tells the program to read from temporary file instead that from the service "
+                + "URL which is the default");
 
-        System.out.println("2) Usage java -jar <code>.jar -s <service> [-i input_file] [-o output_file] [-f <final_output>] [-sf <service_output>] [-m inputs]");
+        System.out.println("2) Usage java -jar <code>.jar -s <service> [-i input_file] [-o output_file] "
+                + "[-f <final_output>] [-sf <service_output>] [-m inputs] -r");
         System.out.println("\twhere:");
         System.out.println("\t\t the -s parameter is mandatory and MUST be one out of " + Vars.services);
         System.out.println("\t\t the -i parameter is optional  and tells the program to read from the output in file");
