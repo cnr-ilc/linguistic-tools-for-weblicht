@@ -26,7 +26,7 @@ public interface FillSimpleTypes {
 
     public List<IlcSimpleLemma> createListOfLemmas();
 
-    public void manageServiceOutput(List<String> lines);
+    public void manageServiceOutput(List<String> lines, String servceoutput);
 
     public ArrayList<IlcSimpleToken> getTokens();
 
