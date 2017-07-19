@@ -18,5 +18,33 @@ public class Result {
     private List<IlcSimpleSentence> sentences = new ArrayList<>();
     private LinguisticProcessor linguisticProcessor;
     private String message = "";
+
+    /**
+     * @return the sentences
+     */
+    public List<IlcSimpleSentence> getSentences() {
+        return sentences;
+    }
+
+    /**
+     * @param sentences the sentences to set
+     */
+    public void setSentences(List<IlcSimpleSentence> sentences) {
+        this.sentences = sentences;
+    }
+
+    /**
+     * @return the linguisticProcessor
+     */
+    public LinguisticProcessor getLinguisticProcessor() {
+        return linguisticProcessor;
+    }
+
+    /**
+     * @param linguisticProcessor the linguisticProcessor to set
+     */
+    public void setLinguisticProcessor(LinguisticProcessor linguisticProcessor) {
+        this.linguisticProcessor = linguisticProcessor;
+    }
     
 }
