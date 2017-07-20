@@ -5,7 +5,8 @@
  */
 package it.cnr.ilc.ilcsimpletypes;
 
-import it.cnr.ilc.ilcsimpletypes.utils.Format;
+
+import it.cnr.ilc.ilcutils.Format;
 import java.util.ArrayList;
 import java.util.List;
 
