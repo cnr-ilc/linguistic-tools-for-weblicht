@@ -5,6 +5,7 @@
  */
 package it.cnr.ilc.consumer;
 
+import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleSentence;
 import it.cnr.ilc.producer.tokaf.LinguisticProcessor;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 public class Result {
     private List<IlcSimpleSentence> sentences = new ArrayList<>();
+    private List<IlcSimpleLemma> lemmas = new ArrayList<>();
     private LinguisticProcessor linguisticProcessor;
     private String message = "";
 
@@ -45,6 +47,20 @@ public class Result {
      */
     public void setLinguisticProcessor(LinguisticProcessor linguisticProcessor) {
         this.linguisticProcessor = linguisticProcessor;
+    }
+
+    /**
+     * @return the lemmas
+     */
+    public List<IlcSimpleLemma> getLemmas() {
+        return lemmas;
+    }
+
+    /**
+     * @param lemmas the lemmas to set
+     */
+    public void setLemmas(List<IlcSimpleLemma> lemmas) {
+        this.lemmas = lemmas;
     }
     
 }

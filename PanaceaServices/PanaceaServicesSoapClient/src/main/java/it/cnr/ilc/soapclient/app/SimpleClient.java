@@ -11,6 +11,8 @@ import it.cnr.ilc.ilcioutils.IlcIOUtils;
 import it.cnr.ilc.ilcioutils.IlcInputToFile;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleToken;
+import it.cnr.ilc.ilcutils.Format;
+import it.cnr.ilc.ilcutils.Vars;
 import it.cnr.ilc.soapclient.i.PanaceaService;
 import it.cnr.ilc.soapclient.impl.FreelingIt;
 import java.io.BufferedReader;
@@ -18,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -46,6 +49,8 @@ public class SimpleClient {
      * URL of the service use the swith -t in the list of parameters
      */
     private boolean readOutputFromUrl = true;
+    
+    Timestamp timestamp;// = new Timestamp(System.currentTimeMillis());
 
     public Theservice theservice = new Theservice();
 

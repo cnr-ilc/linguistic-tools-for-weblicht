@@ -3,7 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.cnr.ilc.ilcsimpletypes.utils;
+package it.cnr.ilc.ilcutils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -27,6 +30,19 @@ public class Format {
      * formats for output as TOKEN which is the default
      */
     public static String OUT_TOK = "token"; // 
+  
+   
     
+    /**
+     * formats for output as TOKEN which is the default
+     */
+    public static String FIND_NER = "none"; // 
+    
+    /**
+     * formats for output as TOKEN which is the default
+     */
+    public static String FIND_MW = "false"; // 
+    
+    public static List<String> serviceFormats = Arrays.asList(OUT_SPLIT, OUT_TOK, OUT_TAB);
     
 }

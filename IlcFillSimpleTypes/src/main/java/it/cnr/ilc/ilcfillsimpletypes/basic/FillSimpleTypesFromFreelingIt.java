@@ -10,7 +10,7 @@ import it.cnr.ilc.ilcioutils.IlcIOUtils;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleSentence;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleToken;
-import it.cnr.ilc.ilcsimpletypes.utils.Format;
+import it.cnr.ilc.ilcutils.Format;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
