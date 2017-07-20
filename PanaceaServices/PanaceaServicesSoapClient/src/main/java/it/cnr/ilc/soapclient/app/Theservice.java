@@ -5,6 +5,7 @@
  */
 package it.cnr.ilc.soapclient.app;
 
+import it.cnr.ilc.ilcutils.Vars;
 import it.cnr.ilc.soapclient.i.PanaceaService;
 import java.util.Map;
 import java.util.logging.Level;

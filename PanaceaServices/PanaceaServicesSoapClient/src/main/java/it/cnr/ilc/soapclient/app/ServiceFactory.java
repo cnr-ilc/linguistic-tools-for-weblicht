@@ -7,6 +7,7 @@ package it.cnr.ilc.soapclient.app;
 
 import it.cnr.ilc.ilcfillsimpletypes.basic.FillSimpleTypesFromFreelingIt;
 import it.cnr.ilc.ilcfillsimpletypes.basic.i.FillSimpleTypes;
+import it.cnr.ilc.ilcutils.Vars;
 import it.cnr.ilc.soapclient.i.PanaceaService;
 import it.cnr.ilc.soapclient.impl.FreelingIt;
 
