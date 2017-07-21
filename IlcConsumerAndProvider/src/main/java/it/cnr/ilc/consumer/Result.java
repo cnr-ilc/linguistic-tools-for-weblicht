@@ -20,6 +20,8 @@ public class Result {
     private List<IlcSimpleLemma> lemmas = new ArrayList<>();
     private LinguisticProcessor linguisticProcessor;
     private String message = "";
+    private String lang;
+    private String input;
 
     /**
      * @return the sentences
@@ -61,6 +63,34 @@ public class Result {
      */
     public void setLemmas(List<IlcSimpleLemma> lemmas) {
         this.lemmas = lemmas;
+    }
+
+    /**
+     * @return the lang
+     */
+    public String getLang() {
+        return lang;
+    }
+
+    /**
+     * @param lang the lang to set
+     */
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    /**
+     * @return the input
+     */
+    public String getInput() {
+        return input;
+    }
+
+    /**
+     * @param input the input to set
+     */
+    public void setInput(String input) {
+        this.input = input;
     }
     
 }
