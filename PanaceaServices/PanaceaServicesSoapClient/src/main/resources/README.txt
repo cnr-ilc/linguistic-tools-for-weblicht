@@ -18,6 +18,3 @@ panaceaServicesSoapClient (This project)
         |----IlcUtils  (Some variables)
         |
         |----IlcSimpleTypes (Simple types such as token, lemmas, sentences)
-                |
-                |
-                |----IlcUtils  (Some variables)

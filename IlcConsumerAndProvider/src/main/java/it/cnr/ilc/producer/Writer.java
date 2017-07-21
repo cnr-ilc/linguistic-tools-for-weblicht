@@ -174,17 +174,17 @@ public class Writer {
     }
 
     /* end totab */
-    
  /* start toTcf */
     public String toTcf() {
-        String ret = "";
+        WriterTCF writerTcf = new WriterTCF(result, format);
+        writerTcf.createTempTcfFileFromInput();
+        String ret = "IMHERE ";
 
         return ret;
 
     }
-    
-    /* end to tcf */
 
+    /* end to tcf */
     /**
      * @return the result
      */
