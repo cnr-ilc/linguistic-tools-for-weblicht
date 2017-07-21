@@ -5,8 +5,6 @@
  */
 package it.cnr.ilc.ilcsimpletypes;
 
-
-import it.cnr.ilc.ilcutils.Format;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +13,7 @@ import java.util.List;
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class IlcSimpleSentence {
+
     private String theSentence;
     private int start_offset;
     private int end_offset;
@@ -125,21 +124,4 @@ public class IlcSimpleSentence {
         return "Sentence{" + "theSentence=" + theSentence + ", start_offset=" + start_offset + ", end_offset=" + end_offset + ", sentenceLength=" + sentenceLength + ", id=" + id + ", tokens=" + tokens + '}';
     }
 
-    public String toKaf() {
-        String ret="";
-        
-        for (IlcSimpleToken t:getTokens()){
-            //System.err.println("t "+t);
-            ret=ret+t.toKaf().replaceAll("#S#", Integer.toString(id));
-        }
-        return ret;
-    }
-
-    public String toTab() {
-        String ret = "";
-        for (IlcSimpleToken t : getTokens()) {
-            ret = ret + id + Format.TAB + t.toTab() + "\n";
-        }
-        return ret;
-    }
 }

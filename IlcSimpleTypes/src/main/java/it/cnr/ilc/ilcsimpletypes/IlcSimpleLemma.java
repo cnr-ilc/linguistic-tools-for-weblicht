@@ -123,7 +123,7 @@ public class IlcSimpleLemma {
         return "Lemma{" + "theLemma=" + theLemma + ", thePos=" + thePos + ", theType=" + type + ", lemmaLength=" + lemmaLength + ", id=" + id + ", wfid=" + Arrays.toString(wfids) + '}';
     }
 
-    private String wfids2String(int[] values) {
+    public String wfids2String(int[] values) {
         String ret="";
         for (int value : values) {
             ret=ret+", "+value;
