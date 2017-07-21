@@ -5,8 +5,6 @@
  */
 package it.cnr.ilc.ilcsimpletypes;
 
-import it.cnr.ilc.ilcutils.Format;
-
 
 
 /**
@@ -22,6 +20,7 @@ public class IlcSimpleToken {
     private int id;
     private int sid;
     private int wfid;
+    private IlcSimpleLemma lemma;
 
     public IlcSimpleToken(String theToken, int start_offset, int end_offset, int tokenlength) {
         this.theToken = theToken;
@@ -113,24 +112,9 @@ public class IlcSimpleToken {
         return "Token{" + "theToken=" + theToken + ", start_offset=" + start_offset + ", end_offset=" + end_offset + ", tokenLength=" + tokenLength + ", id=" + id + ", wfid="+wfid+ ", sid="+sid+'}';
     }
     
-    public String toKaf() {
-        String ret="";
-        ret="\t\t\t<wf wid=\"w"+wfid+"\" sent=\""+sid+"\" para=\"1\" offset=\""+start_offset+"\" length=\""+tokenLength+"\"><![CDATA["+theToken+"]]></wf>\n";
-        //ret="\t\t\t<wf wid=\""+wfid+"\" sent=\"#S#\" para=\"#P#\" offset=\""+start_offset+"\" length=\""+tokenLength+"\"><![CDATA["+theToken+"]]></wf>\n";
-        return ret;
-    }
     
-    public String toTab() {
-        /* in tabbed format
-        tokenid \t start_offset \t lenght \t token 
-        */
-        
-
-        String ret="";
-        ret=ret+wfid+Format.TAB+start_offset+Format.TAB+tokenLength+Format.TAB+theToken;//+"\n";
-        
-        return ret;
-    }
+    
+    
 
     /**
      * @return the wfid
@@ -158,6 +142,20 @@ public class IlcSimpleToken {
      */
     public void setSid(int sid) {
         this.sid = sid;
+    }
+
+    /**
+     * @return the lemma
+     */
+    public IlcSimpleLemma getLemma() {
+        return lemma;
+    }
+
+    /**
+     * @param lemma the lemma to set
+     */
+    public void setLemma(IlcSimpleLemma lemma) {
+        this.lemma = lemma;
     }
     
 }
