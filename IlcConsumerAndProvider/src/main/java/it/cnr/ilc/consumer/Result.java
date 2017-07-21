@@ -7,7 +7,7 @@ package it.cnr.ilc.consumer;
 
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleSentence;
-import it.cnr.ilc.producer.tokaf.LinguisticProcessor;
+import it.cnr.ilc.producer.LinguisticProcessor;
 import java.util.ArrayList;
 import java.util.List;
 
