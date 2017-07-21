@@ -13,23 +13,25 @@ import java.util.List;
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class Format {
-    public static String KAF="kaf";
-    public static String TCF="tcf";
-    public static String TAB="\t";
+    public static String OUT_KAF="kaf";
+    public static String OUT_TCF="tcf";
+    public static String OUT_TAB="tab";
+    public static String SEP="\t";
+    
    /**
      * formats for output as TAB which is the default
      */
-    public static String OUT_TAB = "tagged"; // 
+    public static String SERVICE_OUT_TAG = "tagged"; // 
     
     /**
      * formats for output as SPLIT which is the default
      */
-    public static String OUT_SPLIT = "splitted"; // 
+    public static String SERVICE_OUT_SPLIT = "splitted"; // 
     
     /**
      * formats for output as TOKEN which is the default
      */
-    public static String OUT_TOK = "token"; // 
+    public static String SERVICE_OUT_TOK = "token"; // 
   
    
     
@@ -43,6 +45,6 @@ public class Format {
      */
     public static String FIND_MW = "false"; // 
     
-    public static List<String> serviceFormats = Arrays.asList(OUT_SPLIT, OUT_TOK, OUT_TAB);
+    public static List<String> serviceFormats = Arrays.asList(SERVICE_OUT_SPLIT, SERVICE_OUT_TOK, SERVICE_OUT_TAG);
     
 }
