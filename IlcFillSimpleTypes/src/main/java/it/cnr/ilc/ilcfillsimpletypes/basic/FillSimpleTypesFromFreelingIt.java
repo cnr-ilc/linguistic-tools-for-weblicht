@@ -13,7 +13,6 @@ import it.cnr.ilc.ilcsimpletypes.IlcSimpleToken;
 import it.cnr.ilc.ilcutils.Format;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,11 +33,6 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
     private String mw_sep = "_";
 
     @Override
-    /**
-     *
-     * @param file
-     * @return
-     */
     public List<String> getLinesFromFile(File file) {
         List<String> lines = null;
         lines = IlcIOUtils.readFromFile(file);
@@ -140,7 +134,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
                     // multiword??
                     wfids = ifWmThenReturnIdSize(tid, theToken);
                     if (wfids.length > 1) {
-                        System.out.println("Token " + theToken + " è MW with " + Arrays.toString(wfids));
+                        //System.out.println("Token " + theToken + " è MW with " + Arrays.toString(wfids));
                         tid = tid + wfids.length - 1;
                     }
 

@@ -18,20 +18,56 @@ import java.util.List;
  */
 public interface FillSimpleTypes {
 
+    /**
+     * reads the lines from the input file
+     * @param file the input file
+     * @return the list of lines
+     */
     public List<String> getLinesFromFile(File file);
 
+    
+    /**
+     * create a list of tokens
+     * @return a list of tokens
+     */
     public List<IlcSimpleToken> createListOfTokens();
 
+    /**
+     * create a list of sentences
+     * @return a list of sentences
+     */
     public List<IlcSimpleSentence> createListOfSentences();
 
+    
+    /**
+     * create a list of lemmas
+     * @return a list of lemmas
+     */
     public List<IlcSimpleLemma> createListOfLemmas();
 
-    public void manageServiceOutput(List<String> lines, String servceoutput);
+    /**
+     * reads the output of the service and creates tokens, lemmas, sentences according to @param serviceoutput
+     * @param lines lines to read
+     * @param serviceoutput the output format of the service
+     */
+    public void manageServiceOutput(List<String> lines, String serviceoutput);
 
+    /**
+     * 
+     * @return the tokens 
+     */
     public ArrayList<IlcSimpleToken> getTokens();
 
+    /**
+     * 
+     * @return the sentences
+     */
     public ArrayList<IlcSimpleSentence> getSents();
     
+    /**
+     * 
+     * @return the lemmas
+     */
     public ArrayList<IlcSimpleLemma> getLemmas();
 
 }
