@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
- *
+ *Some utilities to read from an inputstream and write a file
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class IlcInputToFile {
@@ -23,7 +23,7 @@ public class IlcInputToFile {
     private static final String TEMP_FILE_SUFFIX = ".txt";
     
     /**
-     * logme
+     * logmessage
      */
      public static final String CLASS_NAME = IlcInputToFile.class.getName();
 
@@ -52,7 +52,7 @@ public class IlcInputToFile {
     }
     
     /**
-     * Creates a file with the content read from the URL
+     * Creates a file with the content read from string
      * @param string the String with the content is
      * @return a File with the content from the URL
      */
