@@ -22,8 +22,7 @@ import it.cnr.ilc.consumer.Result;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleSentence;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleToken;
 import it.cnr.ilc.ilcutils.Format;
-import java.io.File;
-import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -46,14 +45,25 @@ public class WriterTCF implements TextCorpusProcessor {
      */
     private TextCorpusStored textCorpus;
 
+    /**
+     * Constructor
+     *
+     * @param result the result of the service
+     */
     public WriterTCF(Result result) {
         this.result = result;
 
     }
 
-    public WriterTCF(Result result, String format) {
+    /**
+     * Constructor
+     *
+     * @param result the result of the service
+     * @param serviceFormat the output format of the service
+     */
+    public WriterTCF(Result result, String serviceFormat) {
         this.result = result;
-        this.format = format;
+        this.format = serviceFormat;
 
     }
 
@@ -65,8 +75,7 @@ public class WriterTCF implements TextCorpusProcessor {
 
     @Override
     public void process(TextCorpus tc) throws TextCorpusProcessorException {
-        String input = tc.getTextLayer().getText();
-        System.err.println("A");
+        //String input = tc.getTextLayer().getText();
 
         PosTagsLayer posesLayer;
         TokensLayer tokensLayer = tc.createTokensLayer();
@@ -74,7 +83,7 @@ public class WriterTCF implements TextCorpusProcessor {
         LemmasLayer lemmasLayer;
         // loop over sentences and tokens
         for (IlcSimpleSentence ilcSentence : result.getSentences()) {
-            System.err.println("sent " + ilcSentence);
+//            System.err.println("sent " + ilcSentence);
             List<Token> sentenceTokens = new ArrayList<Token>();
             // loop over token
             for (IlcSimpleToken ilcToken : ilcSentence.getTokens()) {
@@ -87,6 +96,7 @@ public class WriterTCF implements TextCorpusProcessor {
 
         if (format.equals(Format.SERVICE_OUT_TAG)) { // tokens, pos, lemma layers
             posesLayer = tc.createPosTagsLayer("eagles");
+            lemmasLayer = tc.createLemmasLayer();
             for (int i = 0; i < tc.getSentencesLayer().size(); i++) {
                 // access each sentence
                 Sentence sentence = tc.getSentencesLayer().getSentence(i);
@@ -96,30 +106,76 @@ public class WriterTCF implements TextCorpusProcessor {
                     // add part-of-speech annotation to each token
                     posesLayer.addTag(result.getSentences().get(i).getTokens().get(j).getLemma().getThePos(), tokens[j]);
                 }
+
             }
+
+            for (int i = 0; i < tc.getSentencesLayer().size(); i++) {
+                // access each sentence
+                Sentence sentence = tc.getSentencesLayer().getSentence(i);
+                // access tokens of each sentence
+                Token[] tokens = tc.getSentencesLayer().getTokens(sentence);
+                for (int j = 0; j < tokens.length; j++) {
+                    // add part-of-speech annotation to each token
+                    lemmasLayer.addLemma(result.getSentences().get(i).getTokens().get(j).getLemma().getTheLemma(), tokens[j]);
+                }
+
+            }
+
         }
         setTextCorpus((TextCorpusStored) tc);
 
     }
 
-    public void createTempTcfFileFromInput() {
+    /**
+     * create the TCF output
+     *
+     * @param ps the printstream where to write
+     */
+    public void createTcfOutputFromInput(PrintStream ps) {
 
-        OutputStream tempOutputData = null;
+        //OutputStream tempOutputData = null;
         String message;
         String routine = "createTempTcfFileFromInput";
-        message = String.format("Executing  -%s- ", routine);
-        Logger
-                .getLogger(CLASS_NAME).log(Level.INFO, message);
-        File tempOutputFile = null;
+
         TextCorpusStored textCorpusStored = null;
         try {
             textCorpusStored = new TextCorpusStored(result.getLang());
+
+            textCorpusStored.createTextLayer().addText(result.getInput());
+            process(textCorpusStored);
+            WLData wlData = new WLData(getTextCorpus());
+            WLDObjector.write(wlData, ps);
+        } catch (Exception e) {
+            message = String.format("Error in routine -%s- with message ", routine, e.getMessage());
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        }
+
+    }
+
+    /**
+     * create the TCF output  
+     */
+    public void createTcfOutputFromInput() {
+
+        //OutputStream tempOutputData = null;
+        String message;
+        String routine = "createTempTcfFileFromInput";
+
+        TextCorpusStored textCorpusStored = null;
+        try {
+            textCorpusStored = new TextCorpusStored(result.getLang());
+
             textCorpusStored.createTextLayer().addText(result.getInput());
             process(textCorpusStored);
             WLData wlData = new WLData(getTextCorpus());
             WLDObjector.write(wlData, System.out);
         } catch (Exception e) {
-            e.printStackTrace();
+            message = String.format("Error in routine -%s- with message ", routine, e.getMessage());
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.INFO, message);
+
         }
 
     }

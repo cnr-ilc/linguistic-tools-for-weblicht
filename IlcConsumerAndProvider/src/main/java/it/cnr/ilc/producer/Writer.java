@@ -6,30 +6,55 @@
 package it.cnr.ilc.producer;
 
 import it.cnr.ilc.consumer.Result;
-import it.cnr.ilc.consumer.Vars;
+
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleSentence;
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleToken;
 import it.cnr.ilc.ilcutils.Format;
+import it.cnr.ilc.ilcutils.Vars;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
+ * This class exposes methods to write the result in different formats.
+ * <p>
+ * Even if methods might be redundant (for instance toTab() and
+ * toTab(PrintStream ps) they've been kept separated for the integration in
+ * jersey
  *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class Writer {
 
+    public static final String CLASS_NAME = Writer.class.getName();
+
     private Result result = new Result();
     private String format;
 
+    /**
+     * void constructor
+     *
+     */
     public Writer() {
     }
 
+    /**
+     * Constructor
+     *
+     * @param result The result of the service
+     */
     public Writer(Result result) {
         this.result = result;
     }
 
-    /* start tokaf */
+    /**
+     * Write the result of a service in kaf format
+     *
+     * @return the kaffed version of the input
+     */
     public String toKaf() {
         List<IlcSimpleSentence> sentences = result.getSentences();
         //System.err.println("sentences " + sentences);
@@ -110,8 +135,35 @@ public class Writer {
         return ret;
     }
 
+    /**
+     * Write the result of a service in kaf format
+     *
+     * @param ps Printstream where to write
+     */
+    public void toKaf(PrintStream ps) {
+        String message;
+        String routine = "toKaf-WithPs";
+        List<IlcSimpleSentence> sentences = result.getSentences();
+        //System.err.println("sentences " + sentences);
+        LinguisticProcessor linguisticProcessor = result.getLinguisticProcessor();
+        String ret = toKaf();// 
+        try {
+            ps.write(ret.getBytes("UTF-8"));
+        } catch (IOException e) {
+            message = String.format("IOException in routine %s writing the stream ", routine, e.getMessage());
+            Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            System.exit(-1);
+        }
+
+    }
+
     /* end to kaf */
  /* start totab */
+    /**
+     * Write the result of a service in tab format
+     *
+     * @return the tabbed version of the result
+     */
     public String toTab() {
         List<IlcSimpleSentence> sentences = result.getSentences();
         //System.err.println("sentences " + sentences);
@@ -173,15 +225,67 @@ public class Writer {
         return ret;
     }
 
+    /**
+     * Write the result of a service in tab format
+     *
+     * @param ps Printstream where to write
+     */
+    public void toTab(PrintStream ps) {
+        List<IlcSimpleSentence> sentences = result.getSentences();
+        //System.err.println("sentences " + sentences);
+        String message;
+        String routine = "toTab-WithPs";
+
+        String ret = toTab();
+
+        try {
+            ps.write(ret.getBytes("UTF-8"));
+        } catch (IOException e) {
+            message = String.format("IOException in routine %s writing the stream ", routine, e.getMessage());
+            Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
+
+            System.exit(-1);
+        }
+
+    }
+
     /* end totab */
  /* start toTcf */
-    public String toTcf() {
-        WriterTCF writerTcf = new WriterTCF(result, format);
-        writerTcf.createTempTcfFileFromInput();
-        String ret = "IMHERE ";
+    /**
+     * Write the result of a service in TCF format
+     *
+     */
+    public void toTcf() {
+        String message;
+        String routine = "toTcf";
+        try {
+            WriterTCF writerTcf = new WriterTCF(result, format);
+            writerTcf.createTcfOutputFromInput();
+        } catch (Exception e) {
+            message = String.format("IOException in routine %s writing the stream ", routine, e.getMessage());
+            Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
 
-        return ret;
+            System.exit(-1);
+        }
+    }
 
+    /**
+     * Write the result of a service in TCF format
+     *
+     * @param ps Printstream where to write
+     */
+    public void toTcf(PrintStream ps) {
+
+        String message;
+        String routine = "toTcf-WithPs";
+        try {
+            WriterTCF writerTcf = new WriterTCF(result, format);
+            writerTcf.createTcfOutputFromInput(ps);
+        } catch (Exception e) {
+            message = String.format("IOException in routine %s writing the stream ", routine, e.getMessage());
+            Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            System.exit(-1);
+        }
     }
 
     /* end to tcf */

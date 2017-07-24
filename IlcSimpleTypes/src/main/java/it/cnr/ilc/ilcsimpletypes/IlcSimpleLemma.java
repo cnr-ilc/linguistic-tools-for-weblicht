@@ -8,7 +8,7 @@ package it.cnr.ilc.ilcsimpletypes;
 import java.util.Arrays;
 
 /**
- *
+ * Basic Lemma
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class IlcSimpleLemma {
@@ -26,11 +26,19 @@ public class IlcSimpleLemma {
     private int[] wfids;
     private String thePos;
 
+    /**
+     * Constructor
+     * @param theLemma the lemma
+     * @param thePos the part of speech is a given tagset
+     */
     public IlcSimpleLemma(String theLemma, String thePos) {
         this.theLemma = theLemma;
         this.thePos = thePos;
     }
 
+    /**
+     * Constructor
+     */
     public IlcSimpleLemma() {
     }
 

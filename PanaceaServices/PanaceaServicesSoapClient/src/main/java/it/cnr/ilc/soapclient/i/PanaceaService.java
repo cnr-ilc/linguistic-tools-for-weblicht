@@ -24,7 +24,7 @@ public interface PanaceaService {
     /**
      * get the client from the soaplab endpoint
      *
-     * @param endpoint
+     * @param endpoint the endpoint of the services
      * @return the soaplab client used to access the specific service
      */
     public SoaplabBaseClient getClient(String endpoint);

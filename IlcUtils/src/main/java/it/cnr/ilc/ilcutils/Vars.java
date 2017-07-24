@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Variables. TODO: read properties from file
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class Vars {

@@ -30,16 +30,16 @@ import org.soaplab.share.SoaplabMap;
  * <br>
  * From the invoker you might:
  * <ul>
- * <li>set input("ner", &lt;value>&gt;) values: basic, none (default none)</li>
- * <li>set input("multiword", &lt;value>&gt;) values: true, false (default
+ * <li>set input("ner", &lt;value&gt;) values: basic, none (default none)</li>
+ * <li>set input("multiword", &lt;value&gt;) values: true, false (default
  * false)</li>
- * <li><li>set input("output_format", &lt;value>&gt;) values: token, tagged,
+ * <li><li>set input("output_format", &lt;value&gt;) values: token, tagged,
  * splitted, (default tagged)</li>
  * </ul>
  * Please note that the backend service DOES NOT manage multiwords = false. When
  * the output format is token, no multiword is returned; when tagged or
  * splitted, multiwords are returned even if the parameter is set to false.
- * </br>
+ * <br>
  * However, for future releases, add this parameters to your list.
  *
  *

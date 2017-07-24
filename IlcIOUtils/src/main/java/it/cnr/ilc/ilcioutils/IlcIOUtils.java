@@ -5,7 +5,6 @@
  */
 package it.cnr.ilc.ilcioutils;
 
-import static it.cnr.ilc.ilcioutils.IlcInputToString.CLASS_NAME;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
- *
+ * Set of methods to read to and from strings anf diles
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class IlcIOUtils {
@@ -128,6 +127,12 @@ public class IlcIOUtils {
         return is;
     }
     
+    /**
+     * read the content from file
+     * @param filepath a path where the file to read the content from is
+     * @return the content of the file
+     * @throws IOException 
+     */
     public static String readFileContent(String filepath) throws IOException {
         String message = "";
         File initialFile;

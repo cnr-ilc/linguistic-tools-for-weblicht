@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Basic sentence
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class IlcSimpleSentence {
@@ -21,17 +21,32 @@ public class IlcSimpleSentence {
     private int id;
     private List<IlcSimpleToken> tokens = new ArrayList<>();
 
+   
+    /**
+     * Constructor
+     * @param id the id
+     * @param theSentence  the sentence
+     */
     public IlcSimpleSentence(int id, String theSentence) {
         this.id = id;
         this.theSentence = theSentence;
     }
 
+   /**
+     * Constructor
+     * @param id the id
+     * @param theSentence  the sentence
+     * @param tokens list of tokens
+     */
     public IlcSimpleSentence(int id, String theSentence, ArrayList<IlcSimpleToken> tokens) {
         this.id = id;
         this.theSentence = theSentence;
         this.tokens = tokens;
     }
 
+   /**
+    * Constructor
+    */
     public IlcSimpleSentence() {
     }
 

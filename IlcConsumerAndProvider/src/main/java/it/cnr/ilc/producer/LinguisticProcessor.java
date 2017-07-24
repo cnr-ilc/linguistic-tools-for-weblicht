@@ -5,19 +5,20 @@
  */
 package it.cnr.ilc.producer;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * A linguistic processor is needed for KAF
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class LinguisticProcessor {
 
+    
     private String layer;
     private List<String> lps = new ArrayList<>();
-    public static String version ="1.0.1";
-
+    
     /**
      * @return the layer
      */
@@ -51,17 +52,6 @@ public class LinguisticProcessor {
         return "LnguisticProcessors{" + "layer=" + layer + ", lps=" + lps + '}';
     }
 
-    public String toKaf() {
-        String ret = "";
-
-        
-        ret = "\t\t<linguisticProcessors layer=\"" + getLayer() + "\">\n";
-        for (String lp: getLps()) {
-            ret=ret+"\t\t\t"+"<lp name=\""+lp.split("#")[0]+"\" version=\""+version+"\" timestamp=\""+lp.split("#")[1]+"\"/>\n";
-        }
-        ret=ret+"\t\t</linguisticProcessors>\n\t";
-
-        return ret;
-
-    }
+    
+    
 }
