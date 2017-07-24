@@ -8,7 +8,7 @@ package it.cnr.ilc.ilcsimpletypes;
 
 
 /**
- *
+ * Basic Token
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class IlcSimpleToken {
@@ -22,6 +22,13 @@ public class IlcSimpleToken {
     private int wfid;
     private IlcSimpleLemma lemma;
 
+    /**
+     * Constructor
+     * @param theToken the token 
+     * @param start_offset starting offset
+     * @param end_offset ending offset
+     * @param tokenlength length
+     */
     public IlcSimpleToken(String theToken, int start_offset, int end_offset, int tokenlength) {
         this.theToken = theToken;
         this.start_offset = start_offset;
@@ -29,11 +36,18 @@ public class IlcSimpleToken {
         this.tokenLength = tokenlength;
     }
 
+    /**
+     * Constructor
+     * @param theToken the token 
+     */
     public IlcSimpleToken(String theToken) {
         this.theToken = theToken;
 
     }
 
+    /**
+     * Constructor
+     */
     public IlcSimpleToken() {
     }
 
@@ -111,10 +125,7 @@ public class IlcSimpleToken {
     public String toString() {
         return "Token{" + "theToken=" + theToken + ", start_offset=" + start_offset + ", end_offset=" + end_offset + ", tokenLength=" + tokenLength + ", id=" + id + ", wfid="+wfid+ ", sid="+sid+'}';
     }
-    
-    
-    
-    
+
 
     /**
      * @return the wfid
