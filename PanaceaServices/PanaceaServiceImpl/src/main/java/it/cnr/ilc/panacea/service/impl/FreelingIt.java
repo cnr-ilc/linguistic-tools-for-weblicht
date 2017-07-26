@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.cnr.ilc.soapclient.impl;
+package it.cnr.ilc.panacea.service.impl;
 
-import it.cnr.ilc.soapclient.i.PanaceaService;
+
+import it.cnr.ilc.panacea.service.i.PanaceaService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;

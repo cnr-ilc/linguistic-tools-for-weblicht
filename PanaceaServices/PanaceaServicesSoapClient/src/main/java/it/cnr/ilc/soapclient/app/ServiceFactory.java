@@ -5,11 +5,14 @@
  */
 package it.cnr.ilc.soapclient.app;
 
-import it.cnr.ilc.ilcfillsimpletypes.basic.FillSimpleTypesFromFreelingIt;
-import it.cnr.ilc.ilcfillsimpletypes.basic.i.FillSimpleTypes;
+
 import it.cnr.ilc.ilcutils.Vars;
-import it.cnr.ilc.soapclient.i.PanaceaService;
-import it.cnr.ilc.soapclient.impl.FreelingIt;
+import it.cnr.ilc.panacea.service.filler.i.FillSimpleTypes;
+import it.cnr.ilc.panacea.service.filler.impl.FillSimpleTypesFromFreelingIt;
+import it.cnr.ilc.panacea.service.i.PanaceaService;
+import it.cnr.ilc.panacea.service.impl.FreelingIt;
+
+
 
 /**
  * Factory to instantiate the correct service according to the input

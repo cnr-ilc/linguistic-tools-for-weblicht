@@ -39,11 +39,6 @@
         <version>${project.version}</version>
     </dependency>
     <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>IlcUtils</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
         <groupId>eu.clarin.weblicht</groupId>
         <artifactId>wlfxb</artifactId>
         <version>${wlfxb.version}</version>

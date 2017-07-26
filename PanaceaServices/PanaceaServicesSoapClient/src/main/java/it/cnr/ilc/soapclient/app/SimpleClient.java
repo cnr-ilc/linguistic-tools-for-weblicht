@@ -6,14 +6,16 @@
 package it.cnr.ilc.soapclient.app;
 
 import it.cnr.ilc.consumer.Result;
-import it.cnr.ilc.ilcfillsimpletypes.basic.i.FillSimpleTypes;
+
 import it.cnr.ilc.ilcioutils.IlcIOUtils;
 import it.cnr.ilc.ilcioutils.IlcInputToFile;
 import it.cnr.ilc.ilcutils.Format;
 import it.cnr.ilc.ilcutils.Vars;
-import it.cnr.ilc.producer.LinguisticProcessor;
-import it.cnr.ilc.producer.Writer;
-import it.cnr.ilc.soapclient.i.PanaceaService;
+import it.cnr.ilc.panacea.service.filler.i.FillSimpleTypes;
+import it.cnr.ilc.panacea.service.i.PanaceaService;
+import it.cnr.ilc.provider.LinguisticProcessor;
+import it.cnr.ilc.provider.Writer;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -267,121 +269,10 @@ public class SimpleClient {
         return inputs;
     }
 
-    public static void main(String[] args) {
+    
 
-        boolean goahead = true;
-        String message, routine = "main";
-        message = String.format("Initialize class %s in routine %s", CLASS_NAME, routine);
-        //message = "IOException in closing the stream " + e.getMessage();
-        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
 
-        SimpleClient sc = new SimpleClient();
-
-        if (sc.checkArgsForHelp(args)) {
-            sc.printTheHelp();
-            System.exit(0);
-        }
-        message = String.format("Checking arguments %s in routine %s", CLASS_NAME, routine);
-        //message = "IOException in closing the stream " + e.getMessage();
-        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-        goahead = sc.checkArgs(args);
-
-        message = String.format("Starting execution %s in routine %s", CLASS_NAME, routine);
-        //message = "IOException in closing the stream " + e.getMessage();
-        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-        sc.init(goahead);
-        message = String.format("Ending execution %s in routine %s", CLASS_NAME, routine);
-        //message = "IOException in closing the stream " + e.getMessage();
-        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-        System.exit(0);
-
-    }
-
-//    public static void main1(String[] args) {
-//        /*
-//        String message;
-//        String inputType = "Hai ragione. Bisognerebbe scappare!!";
-//        //String inputType = "https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt";
-//
-//        inputType = "Ti prego, che bel fiore: pensi di meritartelo? se sì, coglimelo. Amabilmente lavoro con il Primo Ministro per promulgare delle buone leggi per le persone sulle sedie a rotelle. Avervi a cena è bello, non puoi schifarmi. E che diavolo!";
-//        inputType = "Avere a cena il Primo Ministro vale una promozione. E che diavolo.";
-//        boolean fromUrl = false;
-//        FreelingIt freelingIt = new FreelingIt();
-//        Map inputs = new HashMap();
-//        inputs = freelingIt.getInputs();
-//        
-//        freelingIt.setInputForService("false", "basic", "tagged");
-//        inputs = freelingIt.getInputs();
-//        
-//        freelingIt.setInputs(inputs);
-//        inputs = freelingIt.getInputs();
-//         */
-//        String message;
-//        //String inputType = "Hai ragione. Bisognerebbe scappare!!";
-//        String inputType = "https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt";
-//
-////        inputType = "Ti prego, che bel fiore: pensi di meritartelo? se sì, coglimelo. Amabilmente lavoro con il Primo Ministro per promulgare delle buone leggi per le persone sulle sedie a rotelle. Avervi a cena è bello, non puoi schifarmi. E che diavolo!";
-////        inputType = "Avere a cena il Primo Ministro vale una promozione. E che diavolo.";
-//        boolean fromUrl = false;
-//        FreelingIt freelingIt = new FreelingIt();
-//        
-//        FillSimpleTypesFromFreelingIt fillSimpleTypesFromFreelingIt = new FillSimpleTypesFromFreelingIt();
-//
-//        // Get an UrlValidator
-//        UrlValidator defaultValidator = new UrlValidator(); // default schemes
-//        if (defaultValidator.isValid(inputType)) {
-//            fromUrl = true;
-//            message = String.format("The inputType supplied -%s- requires to be execued reading from a URL. So fromUrl is set to %s", inputType, fromUrl);
-//            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-//            
-//        } else {
-//            fromUrl = false;
-//            message = String.format("The inputType supplied -%s- requires to be execued reading from a String. So fromUrl is set to %s", inputType, fromUrl);
-//            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-//        }
-//        
-//        Map inputs = new HashMap();
-////        inputs.put("output_format", "token");
-////        inputs.put("multiword", "false");
-//        freelingIt.setInputs(inputs);
-//        message = String.format("Calling service Freeling_It with fromUrl %s", fromUrl);
-//        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-//        
-//        freelingIt.runService(inputType, null, fromUrl);
-//        if (freelingIt.getStatus() == 0 && !freelingIt.getOutputUrl().isEmpty()) {
-//            System.err.println("Hi well done: ");
-//        }
-//        System.err.println("\t Status: " + freelingIt.getStatus());
-//        System.err.println("\t outputUrl: " + freelingIt.getOutputUrl());
-//        // System.err.println("\t Stream: " + freelingIt.getOutputStream());
-//
-////        String x = InputToString.convertInputStreamFromUrlToString(freelingIt.getOutputUrl());
-////        try {
-////            InputToString.readStramFromUrl(freelingIt.getOutputUrl());
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-////        for (String line : InputToString.readStreamAndCreateAstringFromUrl(freelingIt.getOutputUrl())) {
-////            System.err.println("line "+line);
-////        }
-////        
-//        File file = IlcInputToFile.createAndWriteTempFileFromString(freelingIt.getOutputStream());
-//
-////        for (String line : IlcIOUtils.readFromFile(file)) {
-////            System.err.println("line "+line);
-////        }
-////        for (String line : fillSimpleTypesFromFreelingIt.getLinesFromFile(file)) {
-////            System.err.println("line "+line);
-////        }
-//        //fillSimpleTypesFromFreelingIt.manageServiceOutput(fillSimpleTypesFromFreelingIt.getLinesFromFile(file), getServiceOutputFormat());
-//        //System.err.println("Tokens "+fillSimpleTypesFromFreelingIt.getTokens().toString());
-//        //System.err.println("lemmas " + fillSimpleTypesFromFreelingIt.getLemmas());
-////        for (IlcSimpleLemma lemma : fillSimpleTypesFromFreelingIt.getLemmas()) {
-////            System.err.println(lemma.toKaf());
-////        }
-//        
-//    }
-    private boolean checkArgsForHelp(String[] args) {
+    public boolean checkArgsForHelp(String[] args) {
 
         for (String arg : args) {
             switch (arg) {
@@ -415,7 +306,7 @@ public class SimpleClient {
 
     }
 
-    private boolean checkArgs(String[] args) {
+    public boolean checkArgs(String[] args) {
         boolean ret = false;
         int mandatory = 0;
         int i = 0;

@@ -8,8 +8,9 @@ Without this configuration present, some functionality in the IDE may be limited
 -->
     <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
         <configurations>
-            <configuration id="test-conf" profiles=""/>
             <configuration id="main1" profiles=""/>
+            <configuration id="test-conf" profiles=""/>
+            <configuration id="version1-conf" profiles=""/>
         </configurations>
     </config-data>
 </project-shared-configuration>

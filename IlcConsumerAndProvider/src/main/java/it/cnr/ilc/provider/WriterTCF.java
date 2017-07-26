@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.cnr.ilc.producer;
+package it.cnr.ilc.provider;
 
 import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessor;
 import eu.clarin.weblicht.wlfxb.api.TextCorpusProcessorException;
