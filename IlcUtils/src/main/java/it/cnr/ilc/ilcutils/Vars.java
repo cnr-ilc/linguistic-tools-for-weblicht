@@ -13,7 +13,7 @@ import java.util.List;
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class Vars {
-    public static String version ="0.1";
+    public static String version ="1.0";
     public static boolean debug=false;
     public static String SERVICE_DESR="desr";
     public static String SERVICE_FR2CONLL_IT="fc_freeling_text_2_conll_it";
