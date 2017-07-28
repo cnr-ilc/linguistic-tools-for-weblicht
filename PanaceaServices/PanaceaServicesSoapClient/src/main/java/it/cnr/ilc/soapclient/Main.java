@@ -5,6 +5,7 @@
  */
 package it.cnr.ilc.soapclient;
 
+import it.cnr.ilc.consumer.Result;
 import it.cnr.ilc.soapclient.app.SimpleClient;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,8 +15,11 @@ import java.util.logging.Logger;
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class Main {
+    private Result result= new Result();
 
     public static final String CLASS_NAME = Main.class.getName();
+
+    
 
     public static void main(String[] args) {
 
@@ -45,6 +49,20 @@ public class Main {
         Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
         System.exit(0);
 
+    }
+
+    /**
+     * @return the result
+     */
+    public Result getResult() {
+        return result;
+    }
+
+    /**
+     * @param result the result to set
+     */
+    public void setResult(Result result) {
+        this.result = result;
     }
 
 }
