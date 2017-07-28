@@ -241,6 +241,94 @@ public class SimpleClient {
 
     }
 
+    /**
+     * This method does the following:
+     * <ul>
+     * <li>Reads the input from a file (or a URL) if the corresponding parameter
+     * is sent to the program. Otherwise waits for an human input; </li>
+     * <li>Prepares the factory to instantiate the correct panacea service and
+     * filler;</li>
+     * <li>Sets the inputs and run the service (using the Theservice class);
+     * </li>
+     * <li>Gets the output either from a file or the the service URL;</li>
+     * <li>Executes the manageServiceOutput method to read from result and fill
+     * the basic types;</li>
+     * <li>Instantiates the writer;</li>
+     * <li>Prints the result in a specific format.</li>
+     * </ul>
+     *
+     * @param goahead if true, then run
+     */
+    public Result forservice(boolean goahead, String input) {
+        PrintStream ps = System.out;
+        BufferedReader br = null;
+
+        boolean useps = false;
+
+        String message = "", routine = "forservice";
+        ServiceFactory factory = new ServiceFactory();
+        String ts = "";
+        lp.setLayer("text");
+        Result result = new Result();
+
+        Map inputs = new HashMap();
+
+        File file;
+
+        if (goahead) {
+
+
+            //System.err.println("input " + input);
+            // actual code from here
+            PanaceaService s = factory.getService(getService());
+            FillSimpleTypes t = factory.getFillSimpleType(service);
+            //System.err.println("input in init "+s.getInputs());
+            if (!getServiceOutputFormat().isEmpty()) {
+                inputs.put("output_format", getServiceOutputFormat());
+            }
+
+            //theservice.setService(s);
+            if (!getOtherInputs().isEmpty()) {
+                inputs = fillOtherInputParams(getOtherInputs(), inputs);
+            }
+            timestamp = new Timestamp(System.currentTimeMillis());
+            ts = s.getClass().getName() + "#" + timestamp.toString().replaceAll(" ", "T") + "Z";
+
+            lp.getLps().add(ts);
+
+            theservice.setService(s, input, inputs);
+            theservice.run();
+
+            // get the output
+            if (!readOutputFromUrl) {
+                file = IlcInputToFile.createAndWriteTempFileFromString(s.getOutputStream());
+//              
+            } else { // from url
+                file = IlcInputToFile.createAndWriteTempFileFromUrl(s.getOutputUrl());
+
+//              
+            }
+
+            t.manageServiceOutput(t.getLinesFromFile(file), getServiceOutputFormat());
+            result.setLinguisticProcessor(lp);
+            result.setInput(input);
+            result.setLang(getLang());
+            result.setSentences(t.createListOfSentences());
+
+            if (!t.getLemmas().isEmpty()) {
+                result.setLemmas(t.getLemmas());
+            }
+
+        } else {
+
+            theservice.printHelp();
+            //System.err.println("EXIT");
+            System.exit(0);
+        }
+        return result;
+
+    }
+
     private Map fillOtherInputParams(String paramList, Map inputs) throws IllegalArgumentException {
         String key, value;
         String[] params;
@@ -268,9 +356,6 @@ public class SimpleClient {
         }
         return inputs;
     }
-
-    
-
 
     public boolean checkArgsForHelp(String[] args) {
 
