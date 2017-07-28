@@ -48,7 +48,6 @@ public class SimpleClient {
     private String format = Format.SERVICE_OUT_TAG;
     private String serviceOutputFormat = Format.SERVICE_OUT_TAG;
     private LinguisticProcessor lp = new LinguisticProcessor();
-    
 
     /**
      * if false the output is read from a temporary file instead that from the
@@ -242,111 +241,6 @@ public class SimpleClient {
 
     }
 
-    public Result forservice(boolean goahead, String input) {
-
-        BufferedReader br = null;
-
-        boolean useps = true;
-        
-        String message = "", routine = "forservice";
-        ServiceFactory factory = new ServiceFactory();
-        String ts = "";
-        lp.setLayer("text");
-        Result result = new Result();
-
-        Map inputs = new HashMap();
-
-        File file;
-        
-
-        if (goahead) {
-            
-            //input = IlcInputToString.convertInputStreamToString(is);
-
-            message = String.format("Reading the string -%s- in routine %s ", input, routine);
-            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
-            // actual code from here
-            PanaceaService s = factory.getService(getService());
-            FillSimpleTypes t = factory.getFillSimpleType(service);
-            //System.err.println("input in init "+s.getInputs());
-            if (!getServiceOutputFormat().isEmpty()) {
-                inputs.put("output_format", getServiceOutputFormat());
-            }
-
-            //theservice.setService(s);
-            if (!getOtherInputs().isEmpty()) {
-                inputs = fillOtherInputParams(getOtherInputs(), inputs);
-            }
-            timestamp = new Timestamp(System.currentTimeMillis());
-            ts = s.getClass().getName() + "#" + timestamp.toString().replaceAll(" ", "T") + "Z";
-
-            lp.getLps().add(ts);
-
-            theservice.setService(s, input, inputs);
-            theservice.run();
-
-            // get the output
-            if (!readOutputFromUrl) {
-                file = IlcInputToFile.createAndWriteTempFileFromString(s.getOutputStream());
-//                t.manageServiceOutput(t.getLinesFromFile(file), getServiceOutputFormat());
-//                
-//                for (String line : IlcIOUtils.readFromFile(file)) {
-//                    System.err.println("line " + line);
-//                }
-//                for (String line : t.getLinesFromFile(file)) {
-//                    System.err.println("line 1 " + line);
-//                }
-            } else { // from url
-                file = IlcInputToFile.createAndWriteTempFileFromUrl(s.getOutputUrl());
-
-//                //System.err.println("Tokens "+fillSimpleTypesFromFreelingIt.getTokens().toString());
-//                //System.err.println("lemmas " + fillSimpleTypesFromFreelingIt.getLemmas());
-//                for (IlcSimpleLemma lemma : t.getLemmas()) {
-//                    System.err.println(lemma.toKaf());
-//                }
-            }
-
-            t.manageServiceOutput(t.getLinesFromFile(file), getServiceOutputFormat());
-            result.setLinguisticProcessor(lp);
-            result.setInput(input);
-            result.setLang(getLang());
-            result.setSentences(t.createListOfSentences());
-
-            // writer
-//            Writer writer = new Writer(result);
-//            writer.setFormat(getServiceOutputFormat());
-//            if (!t.getLemmas().isEmpty()) {
-//                result.setLemmas(t.getLemmas());
-//            }
-//
-//            // set the printstream
-//            // write the result
-//            if (getFormat().equals(Format.OUT_KAF)) {
-//                writer.toKaf(ps);
-//
-//            }
-//
-//            if (getFormat().equals(Format.OUT_TAB)) {
-//                writer.toTab(ps);
-//
-//            }
-//
-//            if (getFormat().equals(Format.OUT_TCF)) {
-//                writer.toTcf(ps);
-//               
-//            }
-//
-        } else {
-
-            theservice.printHelp();
-            //System.err.println("EXIT");
-            System.exit(0);
-        }
-        
-        return result;
-
-    }
-
     private Map fillOtherInputParams(String paramList, Map inputs) throws IllegalArgumentException {
         String key, value;
         String[] params;
@@ -374,6 +268,9 @@ public class SimpleClient {
         }
         return inputs;
     }
+
+    
+
 
     public boolean checkArgsForHelp(String[] args) {
 
@@ -586,6 +483,4 @@ public class SimpleClient {
     public void setLang(String lang) {
         this.lang = lang;
     }
-
-    
 }
