@@ -258,6 +258,7 @@ public class SimpleClient {
      * </ul>
      *
      * @param goahead if true, then run
+     * @param input the string
      */
     public Result forservice(boolean goahead, String input) {
         PrintStream ps = System.out;
