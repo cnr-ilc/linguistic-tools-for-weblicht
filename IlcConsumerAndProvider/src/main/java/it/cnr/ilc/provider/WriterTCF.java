@@ -120,6 +120,7 @@ public class WriterTCF implements TextCorpusProcessor {
                 }
 
             }
+            
 
         }
         setTextCorpus((TextCorpusStored) tc);
@@ -146,9 +147,9 @@ public class WriterTCF implements TextCorpusProcessor {
             WLData wlData = new WLData(getTextCorpus());
             WLDObjector.write(wlData, ps);
         } catch (Exception e) {
-            message = String.format("Error in routine -%s- with message ", routine, e.getMessage());
+            message = String.format("Error in routine -%s- with message %s ", routine, e.getMessage());
             Logger
-                    .getLogger(CLASS_NAME).log(Level.INFO, message);
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
 
         }
 
@@ -161,7 +162,7 @@ public class WriterTCF implements TextCorpusProcessor {
 
         //OutputStream tempOutputData = null;
         String message;
-        String routine = "createTempTcfFileFromInput";
+        String routine = "createTcfOutputFromInput";
 
         TextCorpusStored textCorpusStored = null;
         try {
@@ -175,6 +176,7 @@ public class WriterTCF implements TextCorpusProcessor {
             message = String.format("Error in routine -%s- with message ", routine, e.getMessage());
             Logger
                     .getLogger(CLASS_NAME).log(Level.INFO, message);
+            e.printStackTrace();
 
         }
 
