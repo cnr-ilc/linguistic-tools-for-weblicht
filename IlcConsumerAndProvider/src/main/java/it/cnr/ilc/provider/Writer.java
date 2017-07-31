@@ -5,6 +5,7 @@
  */
 package it.cnr.ilc.provider;
 
+import eu.clarin.weblicht.wlfxb.tc.api.TextCorpus;
 import it.cnr.ilc.consumer.Result;
 
 import it.cnr.ilc.ilcsimpletypes.IlcSimpleLemma;
@@ -33,6 +34,7 @@ public class Writer {
 
     private Result result = new Result();
     private String format;
+    private String serviceFormat;
 
     /**
      * void constructor
@@ -41,6 +43,13 @@ public class Writer {
     public Writer() {
     }
 
+    public Writer(String format, String serviceFormat) {
+        this.format = format;
+        this.serviceFormat = serviceFormat;
+    }
+    
+    
+
     /**
      * Constructor
      *
@@ -48,6 +57,12 @@ public class Writer {
      */
     public Writer(Result result) {
         this.result = result;
+    }
+    
+    public Writer(Result result,String format, String serviceFormat) {
+        this.result = result;
+        this.format = format;
+        this.serviceFormat = serviceFormat;
     }
 
     /**
@@ -259,7 +274,8 @@ public class Writer {
         String message;
         String routine = "toTcf";
         try {
-            WriterTCF writerTcf = new WriterTCF(result, format);
+            WriterTCF writerTcf = new WriterTCF(result, serviceFormat);
+            writerTcf.setFormat(format);
             writerTcf.createTcfOutputFromInput();
         } catch (Exception e) {
             message = String.format("IOException in routine %s writing the stream ", routine, e.getMessage());
@@ -279,8 +295,29 @@ public class Writer {
         String message;
         String routine = "toTcf-WithPs";
         try {
-            WriterTCF writerTcf = new WriterTCF(result, format);
+            WriterTCF writerTcf = new WriterTCF(result, serviceFormat);
+            writerTcf.setFormat(format);
             writerTcf.createTcfOutputFromInput(ps);
+        } catch (Exception e) {
+            message = String.format("IOException in routine %s writing the stream ", routine, e.getMessage());
+            Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            System.exit(-1);
+        }
+    }
+    
+    /**
+     * Write the result of a service in TCF format
+     *
+     * @param ps Printstream where to write
+     */
+    public void fromTcfToTcf(TextCorpus tc, PrintStream ps) {
+
+        String message;
+        String routine = "fromTcfToTcf-WithPs";
+        try {
+            WriterTCF writerTcf = new WriterTCF(result, serviceFormat);
+            writerTcf.setFormat(format);
+            writerTcf.createTcfOutputFromTcfInput(tc, ps);
         } catch (Exception e) {
             message = String.format("IOException in routine %s writing the stream ", routine, e.getMessage());
             Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
@@ -315,5 +352,19 @@ public class Writer {
      */
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    /**
+     * @return the serviceFormat
+     */
+    public String getServiceFormat() {
+        return serviceFormat;
+    }
+
+    /**
+     * @param serviceFormat the serviceFormat to set
+     */
+    public void setServiceFormat(String serviceFormat) {
+        this.serviceFormat = serviceFormat;
     }
 }
