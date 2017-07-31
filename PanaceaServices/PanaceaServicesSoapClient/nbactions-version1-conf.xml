@@ -10,7 +10,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath it.cnr.ilc.soapclient.Main -l ita -i /tmp/test -s freeling_it -m multiword=true -sf tagged -f tcf -o /tmp/out</exec.args>
+                <exec.args>-classpath %classpath it.cnr.ilc.soapclient.Main -l ita -i /tmp/test -s freeling_it -m multiword=true -sf token -f tcf </exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

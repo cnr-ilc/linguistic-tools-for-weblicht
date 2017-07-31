@@ -38,6 +38,7 @@ public class WriterTCF implements TextCorpusProcessor {
     private static final String TEMP_FILE_PREFIX = "tcf-temp-file";
     private static final String TEMP_FILE_SUFFIX = ".xml";
     private Result result;
+    private String serviceFormat;
     private String format;
     private String CLASS_NAME = WriterTCF.class.getName();
     /**
@@ -63,7 +64,7 @@ public class WriterTCF implements TextCorpusProcessor {
      */
     public WriterTCF(Result result, String serviceFormat) {
         this.result = result;
-        this.format = serviceFormat;
+        this.serviceFormat = serviceFormat;
 
     }
 
@@ -76,7 +77,7 @@ public class WriterTCF implements TextCorpusProcessor {
     @Override
     public void process(TextCorpus tc) throws TextCorpusProcessorException {
         //String input = tc.getTextLayer().getText();
-
+        //System.err.println("SERVICEFORMAT -" + serviceFormat+ "- FORMAT -"+format +"-");
         PosTagsLayer posesLayer;
         TokensLayer tokensLayer = tc.createTokensLayer();
         SentencesLayer sentencesLayer = tc.createSentencesLayer();
@@ -94,7 +95,7 @@ public class WriterTCF implements TextCorpusProcessor {
         }
         //setTextCorpus(textCorpus);
 
-        if (format.equals(Format.SERVICE_OUT_TAG)) { // tokens, pos, lemma layers
+        if (serviceFormat.equals(Format.SERVICE_OUT_TAG)) { // tokens, pos, lemma layers
             posesLayer = tc.createPosTagsLayer("eagles");
             lemmasLayer = tc.createLemmasLayer();
             for (int i = 0; i < tc.getSentencesLayer().size(); i++) {
@@ -120,7 +121,6 @@ public class WriterTCF implements TextCorpusProcessor {
                 }
 
             }
-            
 
         }
         setTextCorpus((TextCorpusStored) tc);
@@ -154,9 +154,32 @@ public class WriterTCF implements TextCorpusProcessor {
         }
 
     }
+    
+    public void createTcfOutputFromTcfInput(TextCorpus tc, PrintStream ps) {
+
+        //OutputStream tempOutputData = null;
+        String message;
+        String routine = "createTempTcfFileFromInput";
+
+        TextCorpusStored textCorpusStored = null;
+        try {
+            textCorpusStored = new TextCorpusStored(result.getLang());
+
+            textCorpusStored.createTextLayer().addText(result.getInput());
+            process(tc);
+            WLData wlData = new WLData(getTextCorpus());
+            WLDObjector.write(wlData, ps);
+        } catch (Exception e) {
+            message = String.format("Error in routine -%s- with message %s ", routine, e.getMessage());
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+
+        }
+
+    }
 
     /**
-     * create the TCF output  
+     * create the TCF output
      */
     public void createTcfOutputFromInput() {
 
@@ -209,17 +232,17 @@ public class WriterTCF implements TextCorpusProcessor {
     }
 
     /**
-     * @return the format
+     * @return the serviceFormat
      */
-    public String getFormat() {
-        return format;
+    public String getServiceFormat() {
+        return serviceFormat;
     }
 
     /**
-     * @param format the format to set
+     * @param serviceFormat the serviceFormat to set
      */
-    public void setFormat(String format) {
-        this.format = format;
+    public void setServiceFormat(String serviceFormat) {
+        this.serviceFormat = serviceFormat;
     }
 
     /**
@@ -234,6 +257,20 @@ public class WriterTCF implements TextCorpusProcessor {
      */
     public void setTextCorpus(TextCorpusStored textCorpus) {
         this.textCorpus = textCorpus;
+    }
+
+    /**
+     * @return the format
+     */
+    public String getFormat() {
+        return format;
+    }
+
+    /**
+     * @param format the format to set
+     */
+    public void setFormat(String format) {
+        this.format = format;
     }
 
 }
