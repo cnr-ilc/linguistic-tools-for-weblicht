@@ -188,7 +188,8 @@ public class SimpleClient {
 
             // writer
             Writer writer = new Writer(result);
-            writer.setFormat(getServiceOutputFormat());
+            writer.setFormat(getFormat());
+            writer.setServiceFormat(getServiceOutputFormat());
             if (!t.getLemmas().isEmpty()) {
                 result.setLemmas(t.getLemmas());
             }
