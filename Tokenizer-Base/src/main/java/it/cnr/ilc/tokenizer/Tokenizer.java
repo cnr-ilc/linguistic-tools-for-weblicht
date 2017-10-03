@@ -130,7 +130,7 @@ public class Tokenizer {
 		$text =~ s/\'/ \' /g;
 	}
          */
-        if (lang.equalsIgnoreCase(Vars.EN)) {
+        if (lang.equalsIgnoreCase(Vars.ENG)) {
             /*
             $text =~ s/([^\p{IsAlpha}])(['|’])([^\p{IsAlpha}])/$1 $2 $3/g;
 		$text =~ s/([^\p{IsAlpha}\p{IsN}])(['|’])([\p{IsAlpha}])/$1 $2 $3/g;
@@ -145,14 +145,14 @@ public class Tokenizer {
             text = text.replaceAll("([\\p{IsAlpha}])(['|’])([\\p{IsAlpha}])", "$1 $2$3");
             // special case for "1990's"
             text = text.replaceAll("([\\p{IsN}])(['|’])([s])", "$1 $2$3");
-        } else if (lang.equalsIgnoreCase(Vars.IT)) {
+        } else if (lang.equalsIgnoreCase(Vars.ITA)) {
             text = text.replaceAll("([^\\p{IsAlpha}])(['|’])([^\\p{IsAlpha}])", "$1 $2 $3");
             text = text.replaceAll("([^\\p{IsAlpha}])(['|’])([\\p{IsAlpha}])", "$1 $2 $3");
             text = text.replaceAll("([\\p{IsAlpha}])(['|’])([^\\p{IsAlpha}])", "$1 $2 $3");
             text = text.replaceAll("([\\p{IsAlpha}])(['|’])([\\p{IsAlpha}])", "$1$2 $3");
             text = text.replaceAll("([^\\p{IsAlpha}\\p{IsN}]po) (['|’])([^\\p{IsAlpha}])", "$1$2 $3"); // rule for po'
 
-        } else if (lang.equalsIgnoreCase(Vars.FR)) {
+        } else if (lang.equalsIgnoreCase(Vars.FRA)) {
             /*
             #split contractions left
 		$text =~ s/([^\p{IsAlpha}])(['|’])([^\p{IsAlpha}])/$1 $2 $3/g;
