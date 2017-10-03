@@ -46,11 +46,17 @@
         <p>The language is provided as a parameter: </p>
         <ul>
             <li><code>wl/tokenizer/plain?lang=iso_3_codes_lang</code></li>
-            <li><code>wl/tokenizer/tcf?lang=iso_3_codes_lang</code></li>
+            
             <li></li>
             <li><code>kaf/tokenizer/plain?lang=iso_3_codes_lang</code></li>
             <li></li>
             <li><code>tab/tokenizer/plain?lang=iso_3_codes_lang</code></li>
+            
+        </ul>
+        
+         <p>PLEASE NOTE THIS CALL. For TCF when a TCF document is sent in input, NO LANGUAGE PROVIDED AS PARAMETER </p>
+        <ul>
+        <li><code>wl/tokenizer/tcf</code></li>
         </ul>
 
         <p></p>
@@ -81,7 +87,7 @@
                 <br></br>
                 <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>wl/tokenizer/plain?lang=ita</code>
                 <br></br>
-                <code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.txt -X POST <span class="url"></span>wl/tokenizer/tcf?lang=ita</code>
+                <code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.txt -X POST <span class="url"></span>wl/tokenizer/tcf</code>
                 <br></br>
                 <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>kaf/tokenizer/plain?lang=ita</code>
                 <br></br>
