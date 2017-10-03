@@ -67,6 +67,10 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
     public TokenizerBaseCore(String lang) {
         this.lang = lang;
     }
+    
+    public TokenizerBaseCore(){
+        
+    }
 
     /**
      * Required layers of the TCF document to be valid
@@ -105,6 +109,17 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
 
         boolean goahead = true;
 
+        /* FIX 3 and 2 chars languages */
+        if (lang.equalsIgnoreCase(Vars.IT))
+            lang=Vars.ITA;
+        if (lang.equalsIgnoreCase(Vars.DE))
+            lang=Vars.DEU;
+        if (lang.equalsIgnoreCase(Vars.FR))
+            lang=Vars.FRA;
+        if (lang.equalsIgnoreCase(Vars.ES))
+            lang=Vars.ESP;
+        if (lang.equalsIgnoreCase(Vars.NL))
+            lang=Vars.NLD;
         goahead = checkLanguages(lang);
 
         if (goahead) {
@@ -137,6 +152,7 @@ public class TokenizerBaseCore implements TextCorpusProcessor {
      */
     private boolean checkLanguages(String lang) {
         List<String> langs = new ArrayList<>();
+        //System.err.println("VARS "+Vars.langs);
         return Vars.langs.contains(lang);
 
     }
