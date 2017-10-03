@@ -14,6 +14,7 @@ import eu.clarin.weblicht.wlfxb.xb.WLData;
 import it.cnr.ilc.tokenizer.service.core.TokenizerBaseCore;
 import it.cnr.ilc.tokenizer.utils.InputToString;
 import it.cnr.ilc.tokenizer.utils.OutPutWriter;
+import it.cnr.ilc.tokenizer.utils.Vars;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -77,8 +78,8 @@ public class TokenizerBaseResource {
                     tempOutputData.close();
                 } catch (IOException e) {
                     message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
-            Logger
-                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
                     throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
                 }
             }
@@ -96,7 +97,7 @@ public class TokenizerBaseResource {
         // TCF can be sent as StreamingOutput from the TCF output temporary file
         return new OutPutWriter(tempOutputFile);
     }
-    
+
     /*
     starting part for managing the TCF input files
      */
@@ -104,14 +105,16 @@ public class TokenizerBaseResource {
     @POST
     @Consumes(TEXT_TCF_XML)
     @Produces(TEXT_TCF_XML)
-    public StreamingOutput tokenizeTextFromTcf(@QueryParam("lang") String lang, final InputStream input) {
+    //public StreamingOutput tokenizeTextFromTcf(@QueryParam("lang") String lang, final InputStream text) {
+    public StreamingOutput tokenizeTextFromTcf(final InputStream text) {
         OutputStream tempOutputData = null;
         String message;
         String routine = "tokenizeTextFromTcf";
         message = String.format("Executing  -%s- in context -%s-", routine, context);
+        
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
-        
+
         File tempOutputFile = null;
         try {
             tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
@@ -125,8 +128,8 @@ public class TokenizerBaseResource {
                     tempOutputData.close();
                 } catch (IOException e) {
                     message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
-            Logger
-                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
                     throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
                 }
             }
@@ -141,7 +144,7 @@ public class TokenizerBaseResource {
 
         // process incoming TCF and output resulting TCF with new annotation layer(s) added
         //process(input, tempOutputData, tool);
-        processTcf(lang, input, tempOutputData);
+        processTcf("lang", text, tempOutputData);
         return new OutPutWriter(tempOutputFile);
     }
 
@@ -166,7 +169,7 @@ public class TokenizerBaseResource {
                 + "***** FOR LRS WL -GET INVOCATION url parameter -%s- ******\n\t"
                 + "***** FOR LRS WL -GET INVOCATION END *****\n\n", lang, theUrl);
         message = String.format("-%s-\n", submessage);
-       
+
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
 
@@ -308,15 +311,20 @@ public class TokenizerBaseResource {
         return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
     }
 
-    
-
     private void processTcf(String lang, final InputStream input, OutputStream output) {
         TextCorpusStreamed textCorpus = null;
         try {
-            TokenizerBaseCore tool = new TokenizerBaseCore(lang);
+
+            TokenizerBaseCore tool = new TokenizerBaseCore();
             // create TextCorpus object from the client request input,
             // only required annotation layers will be read into the object
             textCorpus = new TextCorpusStreamed(input, tool.getRequiredLayers(), output, false);
+            lang = textCorpus.getLanguage();
+            //System.err.println("LANG " + lang);
+            if (lang.equals(Vars.ITA))
+            lang = textCorpus.getLanguage();
+            tool.setLang(lang);
+
             // process TextCorpus and create new annotation layer(s) with your tool
             tool.process(textCorpus);
         } catch (TextCorpusProcessorException ex) {
