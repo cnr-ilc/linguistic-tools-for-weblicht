@@ -111,7 +111,7 @@ public class TokenizerBaseResource {
         String message;
         String routine = "tokenizeTextFromTcf";
         message = String.format("Executing  -%s- in context -%s-", routine, context);
-        
+
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
 
@@ -321,7 +321,7 @@ public class TokenizerBaseResource {
             textCorpus = new TextCorpusStreamed(input, tool.getRequiredLayers(), output, false);
             lang = textCorpus.getLanguage();
             //System.err.println("LANG " + lang);
-            if (lang.equals(Vars.ITA))
+
             lang = textCorpus.getLanguage();
             tool.setLang(lang);
 

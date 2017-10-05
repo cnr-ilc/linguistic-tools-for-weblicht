@@ -8,15 +8,15 @@
         <h2>Linguistic services</h2>
         <p>This is the Java porting of the perl-based tokenizer developed within the opener project and available  
             <a href="https://github.com/opener-project/tokenizer-base" target="_blank">here</a></p>
-        <p>Current Software version 0.1, released on 28/06/2017</p>
+        <p>Current Software version 0.2, released on 04/10/2017</p>
         <p>ILC4CLARIN provides three sets of distinct web services to perform tokenization on texts for the following languages: 
         <ul>
-            <li>ita</li> 
-            <li>fra</li>
-            <li>deu</li>
-            <li>eng</li>
-            <li>esp</li>
-            <li>nld</li>
+            <li>ita (or it)</li> 
+            <li>fra (or fr)</li>
+            <li>deu (or deu)</li>
+            <li>eng (or en)</li>
+            <li>esp (or es)</li>
+            <li>nld (or nl)</li>
         </ul>
         The application arises an <b>Unsupported Language Exception</b> if the language provided is not in the list.
 
@@ -45,12 +45,12 @@
         </ul>
         <p>The language is provided as a parameter: </p>
         <ul>
-            <li><code>wl/tokenizer/plain?lang=iso_3_codes_lang</code></li>
+            <li><code>wl/tokenizer/plain?lang=iso_3_or_2_codes_lang</code></li>
             
             <li></li>
-            <li><code>kaf/tokenizer/plain?lang=iso_3_codes_lang</code></li>
+            <li><code>kaf/tokenizer/plain?lang=iso_3_or_2_codes_lang</code></li>
             <li></li>
-            <li><code>tab/tokenizer/plain?lang=iso_3_codes_lang</code></li>
+            <li><code>tab/tokenizer/plain?lang=iso_3_or_2_codes_lang</code></li>
             
         </ul>
         
@@ -71,11 +71,11 @@
         </ul>
         <p>Both the language and the url are provided as a parameters: </p>
         <ul>
-            <li><code>wl/tokenizer/lrs?lang=iso_3_codes_lang&amp;url=URL</code></li>
+            <li><code>wl/tokenizer/lrs?lang=iso_3_or_2_codes_lang&amp;url=URL</code></li>
             <li></li>
-            <li><code>kaf/tokenizer/lrs?lang=iso_3_codes_lang&amp;url=URL</code></li>
+            <li><code>kaf/tokenizer/lrs?lang=iso_3_or_2_codes_lang&amp;url=URL</code></li>
             <li></li>
-            <li><code>tab/tokenizer/lrs?lang=iso_3_codes_lang&amp;url=URL</code></li>
+            <li><code>tab/tokenizer/lrs?lang=iso_3_or_2_codes_lang&amp;url=URL</code></li>
         </ul>
         This because the integration of services in Language Resource Switchboard requires the URL passed as an input parameter.
         <p>You can test the service endpoints using curl or wget as follows:</p>
@@ -91,7 +91,7 @@
                 <br></br>
                 <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>kaf/tokenizer/plain?lang=ita</code>
                 <br></br>
-                <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>tab/tokenizer/plain?lang=it</code>
+                <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>tab/tokenizer/plain?lang=ita</code>
 
                 <br></br>
                 Or wget:
