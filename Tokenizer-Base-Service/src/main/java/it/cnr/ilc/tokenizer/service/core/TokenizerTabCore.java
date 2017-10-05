@@ -49,10 +49,8 @@ public class TokenizerTabCore {
      * This is &quote;injection&quote; of the standing alone tokenizer software
      */
     private TokenizerCli tokenizerCli;
-    
-    private Result result=new Result();
 
-    
+    private Result result = new Result();
 
     /**
      * Constructor
@@ -82,16 +80,30 @@ public class TokenizerTabCore {
         String input = InputToString.convertInputStreamToString(is);
         //System.err.println("input "+input);
         boolean goahead = true;
-
+        /* FIX 3 and 2 chars languages */
+        if (lang.equalsIgnoreCase(Vars.IT)) {
+            lang = Vars.ITA;
+        }
+        if (lang.equalsIgnoreCase(Vars.DE)) {
+            lang = Vars.DEU;
+        }
+        if (lang.equalsIgnoreCase(Vars.FR)) {
+            lang = Vars.FRA;
+        }
+        if (lang.equalsIgnoreCase(Vars.ES)) {
+            lang = Vars.ESP;
+        }
+        if (lang.equalsIgnoreCase(Vars.NL)) {
+            lang = Vars.NLD;
+        }
         goahead = checkLanguages(lang);
 
         if (goahead) {
-            
+
             tokenizerCli = new TokenizerCli();
             result = tokenizerCli.run(lang, input);
-            
+
             setResult(result);
-       
 
         } else {
             throw new Exception("******** Unsopported language " + lang + " *********** \n");
@@ -179,7 +191,5 @@ public class TokenizerTabCore {
     public void setResult(Result result) {
         this.result = result;
     }
-
-   
 
 }

@@ -78,6 +78,17 @@ public class TokenizerKafCore {
         //System.err.println("input "+input);
         boolean goahead = true;
 
+         /* FIX 3 and 2 chars languages */
+        if (lang.equalsIgnoreCase(Vars.IT))
+            lang=Vars.ITA;
+        if (lang.equalsIgnoreCase(Vars.DE))
+            lang=Vars.DEU;
+        if (lang.equalsIgnoreCase(Vars.FR))
+            lang=Vars.FRA;
+        if (lang.equalsIgnoreCase(Vars.ES))
+            lang=Vars.ESP;
+        if (lang.equalsIgnoreCase(Vars.NL))
+            lang=Vars.NLD;
         goahead = checkLanguages(lang);
 
         if (goahead) {
