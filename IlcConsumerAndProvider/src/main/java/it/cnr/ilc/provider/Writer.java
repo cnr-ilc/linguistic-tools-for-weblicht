@@ -95,6 +95,12 @@ public class Writer {
         return ret;
 
     }
+    
+    public String toKaf(String str) {
+        
+        return str;
+
+    }
 
     private String kafHeader() {
         String ret = "";
@@ -162,6 +168,21 @@ public class Writer {
         //System.err.println("sentences " + sentences);
         LinguisticProcessor linguisticProcessor = result.getLinguisticProcessor();
         String ret = toKaf();// 
+        try {
+            ps.write(ret.getBytes("UTF-8"));
+        } catch (IOException e) {
+            message = String.format("IOException in routine %s writing the stream ", routine, e.getMessage());
+            Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            System.exit(-1);
+        }
+
+    }
+    
+    public void toKaf(String str,PrintStream ps) {
+        String message;
+        String routine = "toKaf-str-WithPs";
+        
+        String ret = toKaf(str);// 
         try {
             ps.write(ret.getBytes("UTF-8"));
         } catch (IOException e) {
