@@ -11,13 +11,21 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
 /**
- *
+ * This POJO encodes the following json data when sent as input in a POST request
+ * {
+ *  "file":"the_file_to_read_in_either_kaf_or_raw_format",
+ *  "language":"one_in_it[a]_de[u]_fr[a]_en[g]_es[p]_nl[d]",
+ *  "iformat":"either_kaf_or_raw",
+ *  "oformat":"one_intab_tcf_kaf"
+ * }
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "file",
-    "language"
+    "language",
+    "iformat",
+    "oformat"
 
 })
 public class InputData {
@@ -29,6 +37,9 @@ public class InputData {
 
     @JsonProperty("iformat")
     private String iformat;
+    
+    @JsonProperty("oformat")
+    private String oformat;
 
     /**
      * @return the file
@@ -76,6 +87,22 @@ public class InputData {
     @JsonProperty("iformat")
     public void setIformat(String iformat) {
         this.iformat = iformat;
+    }
+
+    /**
+     * @return the oformat
+     */
+    @JsonProperty("oformat")
+    public String getOformat() {
+        return oformat;
+    }
+
+    /**
+     * @param oformat the oformat to set
+     */
+    @JsonProperty("oformat")
+    public void setOformat(String oformat) {
+        this.oformat = oformat;
     }
 
 }
