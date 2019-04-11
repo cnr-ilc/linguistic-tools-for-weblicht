@@ -95,7 +95,7 @@ public class WriterTCF implements TextCorpusProcessor {
         }
         //setTextCorpus(textCorpus);
 
-        if (serviceFormat.equals(Format.SERVICE_OUT_TAG)) { // tokens, pos, lemma layers
+        if (serviceFormat.equals(Format.PANACEA_SERVICE_OUT_TAG)) { // tokens, pos, lemma layers
             posesLayer = tc.createPosTagsLayer("eagles");
             lemmasLayer = tc.createLemmasLayer();
             for (int i = 0; i < tc.getSentencesLayer().size(); i++) {

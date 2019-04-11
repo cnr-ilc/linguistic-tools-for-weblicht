@@ -98,7 +98,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
         String[] splitted;
         ArrayList<IlcSimpleToken> toks = new ArrayList<>();
         ArrayList<IlcSimpleLemma> lems = new ArrayList<>();
-        if (serviceoutput.equals(Format.SERVICE_OUT_TAG)) { // tokens + offsets + splitted by sentences
+        if (serviceoutput.equals(Format.PANACEA_SERVICE_OUT_TAG)) { // tokens + offsets + splitted by sentences
             for (String line : lines) {
                 if (!line.isEmpty()) {
 
@@ -177,7 +177,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
                 tid++;
                 lid++;
             }
-        } else if (serviceoutput.equals(Format.SERVICE_OUT_SPLIT)) { // no lemma but empty line for sentence
+        } else if (serviceoutput.equals(Format.PANACEA_SERVICE_OUT_SPLIT)) { // no lemma but empty line for sentence
             for (String line : lines) {
                 if (!line.isEmpty()) {
                     splitted = splitLinesFromSep(line, sep);
@@ -222,7 +222,7 @@ public class FillSimpleTypesFromFreelingIt implements FillSimpleTypes {
                 //System.err.println("line " + line);
             }
 
-        } else if (serviceoutput.equals(Format.SERVICE_OUT_TOK)) { // a list of tokens in a single sentence
+        } else if (serviceoutput.equals(Format.PANACEA_SERVICE_OUT_TOK)) { // a list of tokens in a single sentence
             for (String line : lines) {
 
                 splitted = splitLinesFromSep(line, sep);

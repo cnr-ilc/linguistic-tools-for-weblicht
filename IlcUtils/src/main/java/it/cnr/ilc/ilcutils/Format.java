@@ -10,41 +10,52 @@ import java.util.List;
 
 /**
  * Some properties. TODO: read properties from file
+ *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class Format {
-    public static String OUT_KAF="kaf";
-    public static String OUT_TCF="tcf";
-    public static String OUT_TAB="tab";
-    public static String SEP="\t";
-    
-   /**
+
+    public static String SEP = "\t";
+
+// Properties for for panacea services //
+    // output formats //
+    public static String OUT_KAF = "kaf";
+    public static String OUT_TCF = "tcf";
+    public static String OUT_TAB = "tab";
+
+    // Freeling specific output formats. These are the output of the services. No connection with the output
+    /**
      * formats for output as TAB which is the default
      */
-    public static String SERVICE_OUT_TAG = "tagged"; // 
+    public static String PANACEA_SERVICE_OUT_TAG = "tagged"; // 
+
+    /**
+     * format for output as SPLIT
+     */
+    public static String PANACEA_SERVICE_OUT_SPLIT = "splitted"; // 
+
+    /**
+     * format for output as TOKEN
+     */
+    public static String PANACEA_SERVICE_OUT_TOK = "token"; // 
     
     /**
-     * formats for output as SPLIT which is the default
+     * list of freeling panacea service outputs 
      */
-    public static String SERVICE_OUT_SPLIT = "splitted"; // 
-    
+    public static List<String> serviceFormats = Arrays.asList(PANACEA_SERVICE_OUT_SPLIT, PANACEA_SERVICE_OUT_TOK, PANACEA_SERVICE_OUT_TAG);
+
+    // other properties 
+    public static String PANACEA_FIND_NER = "none"; //
+    public static String PANACEA_FIND_MW = "false"; //
+
+    // Properties for OpeNer
+    public static String OPENER_SERVICE_OUT_TAG = "kaf"; // 
+    public static String OPENER_SERVICE_IN_TAG = "kaf"; // 
+
     /**
      * formats for output as TOKEN which is the default
      */
-    public static String SERVICE_OUT_TOK = "token"; // 
-  
-   
     
-    /**
-     * formats for output as TOKEN which is the default
-     */
-    public static String FIND_NER = "none"; // 
-    
-    /**
-     * formats for output as TOKEN which is the default
-     */
-    public static String FIND_MW = "false"; // 
-    
-    public static List<String> serviceFormats = Arrays.asList(SERVICE_OUT_SPLIT, SERVICE_OUT_TOK, SERVICE_OUT_TAG);
-    
+    public static List<String> iFormats = Arrays.asList(Vars.IF_KAF, Vars.IF_RAW);
+
 }
