@@ -160,7 +160,7 @@ public class Tokenizer implements OpenerService {
             setOutputStream(output);
            
             //InputStream s = new InputStream
-            System.out.println(output);
+            //System.out.println(output);
         } catch (Exception e) {
             e.printStackTrace();
         }
