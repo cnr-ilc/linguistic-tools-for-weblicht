@@ -20,6 +20,7 @@ public class Vars {
     public static String OF_KAF = "kaf";
     public static String OF_TCF = "tcf";
     public static String OF_JSON = "json";
+    public static String OF_TAB = "tab";
 
     public static String IF_KAF = "kaf";
     public static String IF_RAW = "raw";
