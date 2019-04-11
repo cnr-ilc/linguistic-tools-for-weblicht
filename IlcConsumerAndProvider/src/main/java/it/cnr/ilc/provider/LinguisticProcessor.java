@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A linguistic processor is needed for KAF
+ * A linguistic processor is needed for KAF, when they are created from a raw text
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class LinguisticProcessor {

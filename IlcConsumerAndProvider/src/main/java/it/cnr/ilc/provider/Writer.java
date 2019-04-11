@@ -47,8 +47,6 @@ public class Writer {
         this.format = format;
         this.serviceFormat = serviceFormat;
     }
-    
-    
 
     /**
      * Constructor
@@ -58,8 +56,8 @@ public class Writer {
     public Writer(Result result) {
         this.result = result;
     }
-    
-    public Writer(Result result,String format, String serviceFormat) {
+
+    public Writer(Result result, String format, String serviceFormat) {
         this.result = result;
         this.format = format;
         this.serviceFormat = serviceFormat;
@@ -95,13 +93,28 @@ public class Writer {
         return ret;
 
     }
-    
+
+    /**
+     * This method must be used when str is already a KAF
+     * <p>
+     * It does nothing, simply returns the input as it is</p>
+     * <p>
+     * This method is necessary to have similar call in different services
+     *
+     * @param str the kaf string
+     * @return the kaf string
+     */
     public String toKaf(String str) {
-        
+
         return str;
 
     }
 
+    /**
+     * Prints the header
+     *
+     * @return the header as string
+     */
     private String kafHeader() {
         String ret = "";
         ret = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
@@ -111,6 +124,12 @@ public class Writer {
         return ret;
     }
 
+    /**
+     * Prints the linguistic processor
+     *
+     * @param linguisticprocessor
+     * @return the linguistic processor tagset as string
+     */
     private String linguisticProcessorToKaf(LinguisticProcessor linguisticprocessor) {
         String ret = "";
 
@@ -124,6 +143,12 @@ public class Writer {
 
     }
 
+    /**
+     * Prints the sentence
+     *
+     * @param sentence
+     * @return the kaffed version of the sentence, as list of tokens
+     */
     private String sentenceToKaf(IlcSimpleSentence sentence) {
         String ret = "";
 
@@ -136,6 +161,12 @@ public class Writer {
 
     }
 
+    /**
+     * Prints the word form wf element
+     *
+     * @param token the token to print
+     * @return the wf element as string
+     */
     private String tokenToKaf(IlcSimpleToken token) {
         String ret = "";
         ret = "\t\t\t<wf wid=\"w" + token.getWfid() + "\" sent=\"" + token.getSid() + "\" para=\"1\" offset=\"" + token.getStart_offset()
@@ -144,6 +175,12 @@ public class Writer {
         return ret;
     }
 
+    /**
+     * Prints the term element
+     *
+     * @param token the term to print
+     * @return the term element as string
+     */
     private String lemmaToKaf(IlcSimpleLemma lemma) {
         String ret = "";
         ret = "\t\t\t<term tid=\"t" + lemma.getId() + "\" type=\"" + lemma.getType() + "\"  lemma=\"" + lemma.getTheLemma()
@@ -177,11 +214,21 @@ public class Writer {
         }
 
     }
-    
-    public void toKaf(String str,PrintStream ps) {
+
+    /**
+     * This method must be used when str is already a KAF
+     * <p>
+     * It does nothing, simply returns the input as it is</p>
+     * <p>
+     * This method is necessary to have similar call in different services
+     *
+     * @param str the kaf string
+     * @param ps Printstream where to write
+     */
+    public void toKaf(String str, PrintStream ps) {
         String message;
         String routine = "toKaf-str-WithPs";
-        
+
         String ret = toKaf(str);// 
         try {
             ps.write(ret.getBytes("UTF-8"));
@@ -220,6 +267,11 @@ public class Writer {
 
     }
 
+    /**
+     * 
+     * @param sentence the sentence to be parsed
+     * @return the tabbed version of sentId, LemmaId
+     */
     private String sentenceWithLemmaToTab(IlcSimpleSentence sentence) {
         String ret = "";
         for (IlcSimpleToken t : sentence.getTokens()) {
@@ -229,6 +281,11 @@ public class Writer {
         return ret;
     }
 
+    /**
+     * 
+     * @param sentence the sentence to be parsed
+     * @return the tabbed version of sentId, TokenId
+     */
     private String tokenWithLemmaToTab(IlcSimpleToken token) {
         /* in tabbed format
         tokenid \t start_offset \t lenght \t token 
@@ -241,6 +298,12 @@ public class Writer {
         return ret;
     }
 
+    
+    /**
+     * Print the sentence
+     * @param sentence
+     * @return the sentence parameters in tab
+     */
     private String sentenceToTab(IlcSimpleSentence sentence) {
         String ret = "";
         for (IlcSimpleToken t : sentence.getTokens()) {
@@ -250,6 +313,11 @@ public class Writer {
         return ret;
     }
 
+    /**
+     * Print the token
+     * @param token
+     * @return return the token parameters in tab
+     */
     private String tokenToTab(IlcSimpleToken token) {
         /* in tabbed format
         tokenid \t start_offset \t lenght \t token 
@@ -325,9 +393,9 @@ public class Writer {
             System.exit(-1);
         }
     }
-    
+
     /**
-     * Write the result of a service in TCF format
+     * Reads and writes a TCF the result of a service in TCF format
      *
      * @param ps Printstream where to write
      */

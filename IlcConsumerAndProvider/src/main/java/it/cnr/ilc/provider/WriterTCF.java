@@ -74,6 +74,12 @@ public class WriterTCF implements TextCorpusProcessor {
     private static EnumSet<TextCorpusLayerTag> requiredLayers
             = EnumSet.of(TextCorpusLayerTag.TEXT);
 
+    
+    /**
+     * Processes a incoming corpus in TCF format
+     * @param tc input TCF
+     * @throws TextCorpusProcessorException 
+     */
     @Override
     public void process(TextCorpus tc) throws TextCorpusProcessorException {
         //String input = tc.getTextLayer().getText();
@@ -155,6 +161,11 @@ public class WriterTCF implements TextCorpusProcessor {
 
     }
     
+    /**
+     * Creates a TextCorpus from the incoming one
+     * @param tc The input TCF corpus
+     * @param ps The PrintStream
+     */
     public void createTcfOutputFromTcfInput(TextCorpus tc, PrintStream ps) {
 
         //OutputStream tempOutputData = null;
