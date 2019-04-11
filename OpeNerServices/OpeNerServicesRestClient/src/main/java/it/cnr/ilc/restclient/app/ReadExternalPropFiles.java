@@ -5,7 +5,6 @@
  */
 package it.cnr.ilc.restclient.app;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -26,7 +25,7 @@ public class ReadExternalPropFiles {
      *
      * @param fileprop the external file
      * @return the property file
-     * @throws IOException
+     * @throws IOException Exception
      *
      */
     public static Properties getPropertyFile(String fileprop) throws IOException {

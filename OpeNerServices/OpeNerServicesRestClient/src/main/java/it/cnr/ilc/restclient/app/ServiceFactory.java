@@ -6,7 +6,6 @@
 package it.cnr.ilc.restclient.app;
 
 
-import it.cnr.ilc.ilcutils.Vars;
 import it.cnr.ilc.opener.service.filler.i.FillSimpleTypes;
 import it.cnr.ilc.opener.service.filler.impl.FillSimpleTypesFromOpenerTokenizer;
 import it.cnr.ilc.opener.service.i.OpenerService;
@@ -22,7 +21,7 @@ import it.cnr.ilc.opener.service.impl.Tokenizer;
 public class ServiceFactory {
 
     /**
-     * Returns the panacea service
+     * Returns the opener service
      * @param service the name of the service
      * @return the instantiated service
      */

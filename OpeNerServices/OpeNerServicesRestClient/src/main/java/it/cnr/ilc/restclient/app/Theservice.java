@@ -105,6 +105,12 @@ public class Theservice {
         this.service = service;
     }
 
+    /**
+     * set the service with additional parameters
+     * @param service the service
+     * @param input the input string
+     * @param inputs other parameters
+     */
     public void setService(OpenerService service, String input, Map inputs) {
         this.setService(service);
         this.setInput(input);

@@ -41,6 +41,20 @@ import java.util.logging.Logger;
  */
 public class SimpleRestClient {
 
+    /**
+     * @return the OPENER_LANGS
+     */
+    public static List<String> getOPENER_LANGS() {
+        return OPENER_LANGS;
+    }
+
+    /**
+     * @param aOPENER_LANGS the OPENER_LANGS to set
+     */
+    public static void setOPENER_LANGS(List<String> aOPENER_LANGS) {
+        OPENER_LANGS = aOPENER_LANGS;
+    }
+
     public static final String CLASS_NAME = SimpleRestClient.class.getName();
 
     //private String find_mw = Format.FIND_MW;
@@ -57,12 +71,17 @@ public class SimpleRestClient {
     private String serviceOutputFormat = Format.OPENER_SERVICE_OUT_TAG;
     //private LinguisticProcessor lp = new LinguisticProcessor();
     private static List<String> OPENER_SERVICES = new ArrayList<String>();
+     private static List<String> OPENER_LANGS = new ArrayList<String>();
     private Theservice theservice;
     private List<String> availableServicesFromFile = null;
     private List<String> availablelanguagesFromFile = null;
     private Properties prop;
     private String outPutAsKaf;
 
+    /**
+     * Constructor 
+     * @param prop property file
+     */
     public SimpleRestClient(Properties prop) {
 
         String message, routine = "SimpleRestClient-constructor";
@@ -162,8 +181,8 @@ public class SimpleRestClient {
             //System.err.println("  getIlc4ClarinCorpora "+corporaFromFile+ " "+openCorpora);
 
             // sets available corpora. This filters out potential test corpora in the korp backend
-            setOPENER_SERVICES(availableLanguagesFromFile);
-            message = String.format("Extracted languahes %s in routine %s", availableLanguagesFromFile, routine);
+            setOPENER_LANGS(availableLanguagesFromFile);
+            message = String.format("Extracted languages %s in routine %s", availableLanguagesFromFile, routine);
             //message = "IOException in closing the stream " + e.getMessage();
             Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
 
@@ -176,7 +195,7 @@ public class SimpleRestClient {
      * <ul>
      * <li>Reads the input from a file (or a URL) if the corresponding parameter
      * is sent to the program. Otherwise waits for an human input; </li>
-     * <li>Prepares the factory to instantiate the correct panacea service and
+     * <li>Prepares the factory to instantiate the correct opener service and
      * filler;</li>
      * <li>Sets the inputs and run the service (using the Theservice class);
      * </li>
@@ -347,7 +366,7 @@ public class SimpleRestClient {
      * <ul>
      * <li>Reads the input from a file (or a URL) if the corresponding parameter
      * is sent to the program. Otherwise waits for an human input; </li>
-     * <li>Prepares the factory to instantiate the correct panacea service and
+     * <li>Prepares the factory to instantiate the correct opener service and
      * filler;</li>
      * <li>Sets the inputs and run the service (using the Theservice class);
      * </li>
@@ -359,7 +378,6 @@ public class SimpleRestClient {
      * </ul>
      *
      * @param goahead if true, then run
-     * @param inputJsonData the string
      */
     public Result forservice(boolean goahead) {
         PrintStream ps = System.out;
@@ -445,6 +463,11 @@ public class SimpleRestClient {
     
    
 
+    /**
+     * 
+     * @param args arguments
+     * @return true if -h is in the list
+     */
     public boolean checkArgsForHelp(String[] args) {
 
         for (String arg : args) {
@@ -465,6 +488,11 @@ public class SimpleRestClient {
         getTheservice().printHelp();
     }
 
+    /**
+     * 
+     * @param service the service to check
+     * @return true if service is in the list
+     */
     private boolean checkServices(String service) {
         boolean ret = getAvailableServicesFromFile().contains(service);
         //System.err.println("SERVICES RET " + ret);
@@ -472,6 +500,11 @@ public class SimpleRestClient {
 
     }
 
+    /**
+     * 
+     * @param lang the language to check
+     * @return true if the language is supported
+     */
     private boolean checklanguages(String lang) {
 
         boolean ret = false;
@@ -498,12 +531,22 @@ public class SimpleRestClient {
 
     }
 
+    /**
+     * 
+     * @param serviceformat the serviceformat to check
+     * @return true if the serviceformat is supported
+     */
     private boolean checkServiceFormat(String serviceformat) {
 
         return Format.serviceFormats.contains(serviceformat);
 
     }
 
+    /**
+     * 
+     * @param serviceformat the inputFormat to check
+     * @return true if the inputFormat is supported
+     */
     private boolean checkInputFormat(String inputFormat) {
 
         boolean ret = Format.iFormats.contains(inputFormat);
@@ -512,6 +555,11 @@ public class SimpleRestClient {
 
     }
 
+    /**
+     * Loops over args and sets values
+     * @param args the arguments list
+     * @return true if mandatory parameters are supplied
+     */
     public boolean checkArgs(String[] args) {
         boolean ret = false;
         int mandatory = 0;

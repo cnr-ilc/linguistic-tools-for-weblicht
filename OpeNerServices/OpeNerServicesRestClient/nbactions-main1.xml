@@ -10,7 +10,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath ${packageClassName} -l ita -s tokenizer -if raw -i /tmp/tok.txt  -f kaf -o /tmp/pippo.out</exec.args>
+                <exec.args>-classpath %classpath ${packageClassName} -l ita -s tokenizer -if raw -i /tmp/tok.txt  -f kaf </exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

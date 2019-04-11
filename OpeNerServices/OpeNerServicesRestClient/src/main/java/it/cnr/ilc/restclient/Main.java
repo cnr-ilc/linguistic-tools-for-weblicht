@@ -9,7 +9,6 @@ import it.cnr.ilc.restclient.app.ReadExternalPropFiles;
 import it.cnr.ilc.restclient.app.SimpleRestClient;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
