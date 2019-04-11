@@ -45,8 +45,8 @@ public class SimpleClient {
     private String otherInputs = "";
     private String iFile = "";
     private String oFile = "";
-    private String format = Format.SERVICE_OUT_TAG;
-    private String serviceOutputFormat = Format.SERVICE_OUT_TAG;
+    private String format = Format.PANACEA_SERVICE_OUT_TAG;
+    private String serviceOutputFormat = Format.PANACEA_SERVICE_OUT_TAG;
     private LinguisticProcessor lp = new LinguisticProcessor();
 
     /**
@@ -383,7 +383,7 @@ public class SimpleClient {
 
     private boolean checkServices(String service) {
 
-        return Vars.services.contains(service);
+        return Vars.panaceaServices.contains(service);
 
     }
 
@@ -428,7 +428,7 @@ public class SimpleClient {
                     if (checkServiceFormat(args[i + 1])) {
                         setServiceOutputFormat(args[i + 1]);
                     } else {
-                        setServiceOutputFormat(Format.SERVICE_OUT_TAG);
+                        setServiceOutputFormat(Format.PANACEA_SERVICE_OUT_TAG);
                     }
 
                     break;
