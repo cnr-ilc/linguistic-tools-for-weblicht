@@ -8,6 +8,7 @@ package it.cnr.ilc.openerserviceswrapper.app.resources;
 import eu.clarin.weblicht.wlfxb.io.TextCorpusStreamed;
 import eu.clarin.weblicht.wlfxb.tc.api.TextCorpus;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusLayerTag;
+import eu.kyotoproject.kaf.KafSaxParser;
 import it.cnr.ilc.ilcioutils.IlcInputToFile;
 import it.cnr.ilc.ilcioutils.IlcInputToString;
 import it.cnr.ilc.ilcutils.Format;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +51,7 @@ public class OpenerServiceTokenizerResource {
     private static final String TEXT_PLAIN = "text/plain";
     private static final String TEXT_TCF_XML = "text/tcf+xml";
     private static final String FALL_BACK_MESSAGE = "Data processing failed";
-    private static final String TEMP_FILE_PREFIX = "panaceaservice-output-";
+    private static final String TEMP_FILE_PREFIX = "openerservice-tokenizer-output-";
     private static final String TEMP_FILE_SUFFIX = ".xml";
     private String CLASS_NAME = OpenerServiceTokenizerResource.class.getName();
     private final String context = "openerservice/tokenizer";
@@ -554,7 +557,183 @@ public class OpenerServiceTokenizerResource {
         return formatProducer(id);
         //return new OutPutWriter(tempOutputFile);
     }
+    
+    /**
+     * 
+     * @param lang the input language
+     * @param format the final format
+     * @param theUrl the url where the text is
+     * @return the output of the process
+     */
+    @Path("kaf/lrs")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    /**
+     * This service extracts text from an URL.
+     */
+    public StreamingOutput analyzeKafFromUrl(@QueryParam("lang") String lang, @QueryParam("format") String format, @QueryParam("url") String theUrl) {
+        InputData id = new InputData();
+        OutputStream tempOutputData = null;
+        String message, tempFileName;
+        File tempFile;
+        KafSaxParser parser = new KafSaxParser();
+        //String lang = "ita";
+        String routine = "analyzeKafFromUrl";
+        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        String str = null;
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
 
+        File tempOutputFile = null;
+        try {
+            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
+        } catch (IOException ex) {
+            if (tempOutputData != null) {
+                try {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", ex.getMessage(), routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    tempOutputData.close();
+                } catch (IOException e) {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+                }
+            }
+            if (tempOutputFile != null) {
+                tempOutputFile.delete();
+            }
+            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+
+        // process incoming TCF and output resulting TCF with new annotation layer(s) added
+        //process(input, tempOutputData, tool);
+        parser.parseFile(getIputStreamFromUrl(theUrl));
+        str= parser.getFullText();// getIputStreamFromUrl(theUrl);
+        //
+        if (str != null) {
+
+            try {
+                tempFile = IlcInputToFile.createAndWriteTempFileFromString(str);
+                tempFileName = tempFile.getCanonicalPath();
+
+                id.setIformat("raw");
+                id.setFile(tempFileName);
+                id.setLanguage(lang);
+                id.setOformat(format);
+                
+            } catch (IOException ex) {
+                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+            }
+        }
+//        if (str != null) {
+//            if (format.equals(Format.OUT_TAB)) {
+//                return tabProducer(str);
+//            }
+//            if (format.equals(Format.OUT_KAF)) {
+//                return kafProducer(str);
+//            }
+//            if (format.equals(Format.OUT_TCF)) {
+//                return tcfProducer(str);
+//            }
+//            return null;
+//        }
+        return formatProducer(id);
+        //return new OutPutWriter(tempOutputFile);
+    }
+/**
+     * 
+     * @param lang the input language
+     * @param format the final format
+     * @param theUrl the url where the text is
+     * @return the output of the process
+     */
+    @Path("tcf/lrs")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    /**
+     * This service extracts text from an URL.
+     */
+    public StreamingOutput analyzeTcfFromUrl(@QueryParam("lang") String lang, @QueryParam("format") String format, @QueryParam("url") String theUrl) {
+        InputData id = new InputData();
+        OutputStream tempOutputData = null;
+        String message, tempFileName;
+        File tempFile;
+        KafSaxParser parser = new KafSaxParser();
+        //String lang = "ita";
+        String routine = "analyzeTcfFromUrl";
+        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        String str = null;
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        File tempOutputFile = null;
+        try {
+            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
+        } catch (IOException ex) {
+            if (tempOutputData != null) {
+                try {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", ex.getMessage(), routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    tempOutputData.close();
+                } catch (IOException e) {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+                }
+            }
+            if (tempOutputFile != null) {
+                tempOutputFile.delete();
+            }
+            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+
+        // process incoming TCF and output resulting TCF with new annotation layer(s) added
+        //process(input, tempOutputData, tool);
+       
+        id=createInputDataForTcfFromUrl(theUrl, format, lang,tempOutputData);
+        //
+//        if (id != null) {
+//
+//            try {
+//                tempFile = IlcInputToFile.createAndWriteTempFileFromString(str);
+//                tempFileName = tempFile.getCanonicalPath();
+//
+//                id.setIformat("raw");
+//                id.setFile(tempFileName);
+//                id.setLanguage(lang);
+//                id.setOformat(format);
+//                
+//            } catch (IOException ex) {
+//                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+//            }
+//        }
+////        if (str != null) {
+////            if (format.equals(Format.OUT_TAB)) {
+////                return tabProducer(str);
+////            }
+////            if (format.equals(Format.OUT_KAF)) {
+////                return kafProducer(str);
+////            }
+////            if (format.equals(Format.OUT_TCF)) {
+////                return tcfProducer(str);
+////            }
+////            return null;
+////        }
+        return formatProducer(id);
+        //return new OutPutWriter(tempOutputFile);
+    }
     /**
      * This method processes the plain text and creates a formatted document from
      * the input provided. It calls the corresponding method from the tool.
@@ -632,7 +811,7 @@ public class OpenerServiceTokenizerResource {
         File tempFile;
         TextCorpusStreamed textCorpus = null;
         String str = "";
-        String routine = "getTextFromTcf";
+        String routine = "createInputDataFromJsonData";
         String message = String.format("Executing  -%s-", routine);
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
@@ -653,6 +832,63 @@ public class OpenerServiceTokenizerResource {
             newId.setFile(tempFileName);
             newId.setLanguage(id.getLanguage());
             newId.setOformat(id.getOformat());
+
+            //System.err.println("NEWID " + newId.getFile());
+
+        } catch (Exception ex) {
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        } finally {
+            try {
+                if (textCorpus != null) {
+                    // it's important to close the TextCorpusStreamed, otherwise
+                    // the TCF XML output will not be written to the end
+                    textCorpus.close();
+                }
+            } catch (Exception ex) {
+                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+            }
+        }
+        message = message = String.format("Executed  -%s- with extracted text -%s-", routine, str);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+        return newId;
+    }
+    
+    /**
+     * Ancillary method to read from a TCF input file
+     * @param theUrl data
+     * @param output the output where to write
+     * @return the output of the process
+     */
+    private InputData createInputDataForTcfFromUrl(String theUrl, String format, String lang, OutputStream output) {
+        InputData id;
+        InputData newId = new InputData();
+
+        String tempFileName;
+        File tempFile;
+        TextCorpusStreamed textCorpus = null;
+        String str = "";
+        String routine = "createInputDataFromJsonData";
+        String message = String.format("Executing  -%s-", routine);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+        try {
+            IlcInputToFile.createAndWriteTempFileFromUrl(theUrl);
+            
+            InputStream input = new URL(theUrl).openStream();
+            textCorpus = new TextCorpusStreamed(input, requiredLayers, output, false);
+            lang = textCorpus.getLanguage();
+            //System.err.println("LANG " + lang);
+
+            str = textCorpus.getTextLayer().getText();
+            tempFile = IlcInputToFile.createAndWriteTempFileFromString(str); //createAndWriteTempFileFromUrl(theUrl);
+            tempFileName = tempFile.getCanonicalPath();//+"/"+tempFile.getName();
+
+            // create the new id
+            newId.setIformat("raw");
+            newId.setFile(tempFileName);
+            newId.setLanguage(lang);
+            newId.setOformat(format);
 
             //System.err.println("NEWID " + newId.getFile());
 
@@ -715,6 +951,35 @@ public class OpenerServiceTokenizerResource {
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
         return str;
+    }
+    
+    /**
+     *
+     * @param theUrl url
+     * @return the string from the url
+     */
+    private InputStream getIputStreamFromUrl(String theUrl) {
+
+        InputStream is = null;
+
+        String routine = "getIputStreamFromUrl";
+        String message = String.format("Executing  -%s- from url -%s-", routine, theUrl);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+        String str = "";
+        try {
+            is = new URL(theUrl).openStream();
+
+            message = message = String.format("Executed  -%s- from url -%s-", routine, theUrl);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(OpenerServiceTokenizerResource.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ioex) {
+            Logger.getLogger(OpenerServiceTokenizerResource.class.getName()).log(Level.SEVERE, null, ioex);
+        }
+        return is;
     }
 
     /**
