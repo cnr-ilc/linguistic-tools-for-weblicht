@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,6 +94,7 @@ public class PanaceaServiceFreeligItResource {
 
     /**
      * This method analyzes a plain text to produce a tabbed output document
+     *
      * @param format the output format
      * @param text the string to analyze
      * @return the output file
@@ -190,11 +193,9 @@ public class PanaceaServiceFreeligItResource {
 //        //return formatProducerFromTcf(format, input);
 //        return null;
 //    }
-    
-    
-  
     /**
      * Read from a TCF file
+     *
      * @param format the output format
      * @param input the text to analyze
      * @return the processed output
@@ -244,6 +245,7 @@ public class PanaceaServiceFreeligItResource {
 
     /**
      * Read a TCF file and produce a new one
+     *
      * @param format the output format
      * @param is the input stream
      * @return tcf from tcf
@@ -252,7 +254,7 @@ public class PanaceaServiceFreeligItResource {
     public StreamingOutput tcfProducerFromTcf(String format, InputStream is) {
         ReaderTcf reader = new ReaderTcf();
         TextCorpusStreamed tcs = null;
-       // System.err.println("TEXT TCF IN PROC" + IlcInputToString.convertInputStreamToString(is));
+        // System.err.println("TEXT TCF IN PROC" + IlcInputToString.convertInputStreamToString(is));
         String lang = "ita";
         String message;
         String routine = "tcfProducerFromTcf";
@@ -296,9 +298,9 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
-    
     /**
      * Read a TCF file and produce a new one according to format
+     *
      * @param format the output format
      * @param is the input stream
      * @return tcf from tcf
@@ -359,8 +361,8 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
-     /**
-     * 
+    /**
+     *
      * @param str the data to process
      * @return the TAB output
      */
@@ -402,8 +404,8 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
-     /**
-     * 
+    /**
+     *
      * @param str the data to process
      * @return the KAF output
      */
@@ -445,8 +447,8 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
-     /**
-     * 
+    /**
+     *
      * @param str the data to process
      * @return the TCF output
      */
@@ -490,7 +492,7 @@ public class PanaceaServiceFreeligItResource {
 
     // for language resource
     /**
-     * 
+     *
      * @param lang the input language
      * @param format the final format
      * @param theUrl the url where the text is
@@ -542,6 +544,154 @@ public class PanaceaServiceFreeligItResource {
         // process incoming TCF and output resulting TCF with new annotation layer(s) added
         //process(input, tempOutputData, tool);
         str = getTextFromUrl(theUrl);
+        if (str != null) {
+            if (format.equals(Format.OUT_TAB)) {
+                return tabProducer(str);
+            }
+            if (format.equals(Format.OUT_KAF)) {
+                return kafProducer(str);
+            }
+            if (format.equals(Format.OUT_TCF)) {
+                return tcfProducer(str);
+            }
+            return null;
+        }
+        return new OutPutWriter(tempOutputFile);
+    }
+
+    /**
+     * Input file is a KAF
+     * @param lang the input language
+     * @param format the final format
+     * @param theUrl the url where the text is
+     * @return the output of the process
+     */
+    @Path("kaf/lrs")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    /**
+     * This service extracts text from an URL.
+     */
+    public StreamingOutput analyzeKafFromUrl(@QueryParam("lang") String lang, @QueryParam("format") String format, @QueryParam("url") String theUrl) {
+        OutputStream tempOutputData = null;
+        String message;
+        KafSaxParser parser = new KafSaxParser();
+
+        //String lang = "ita";
+        String routine = "analyzeKafFromUrl";
+        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        String str = null;
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        File tempOutputFile = null;
+        try {
+            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
+        } catch (IOException ex) {
+            if (tempOutputData != null) {
+                try {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", ex.getMessage(), routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    tempOutputData.close();
+                } catch (IOException e) {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+                }
+            }
+            if (tempOutputFile != null) {
+                tempOutputFile.delete();
+            }
+            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+
+        // process incoming TCF and output resulting TCF with new annotation layer(s) added
+        //process(input, tempOutputData, tool);
+        //str = getTextFromUrl(theUrl);
+        parser.parseFile(getIputStreamFromUrl(theUrl));
+        str = parser.getFullText();
+        // str is a kaf document
+        //System.out.println("it.cnr.ilc.panaceaserviceswrapper.app.resources.PanaceaServiceFreeligItResource.analyzeKafFromUrl() str " + str);
+        if (str != null) {
+            if (format.equals(Format.OUT_TAB)) {
+                return tabProducer(str);
+            }
+            if (format.equals(Format.OUT_KAF)) {
+                return kafProducer(str);
+            }
+            if (format.equals(Format.OUT_TCF)) {
+                return tcfProducer(str);
+            }
+            return null;
+        }
+        return new OutPutWriter(tempOutputFile);
+    }
+    
+    /**
+     * Input file is a TCF
+     * @param lang the input language
+     * @param format the final format
+     * @param theUrl the url where the text is
+     * @return the output of the process
+     */
+    @Path("tcf/lrs")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    /**
+     * This service extracts text from an URL.
+     */
+    public StreamingOutput analyzeTcfFromUrl(@QueryParam("lang") String lang, @QueryParam("format") String format, @QueryParam("url") String theUrl) {
+        OutputStream tempOutputData = null;
+        String message;
+        
+
+        //String lang = "ita";
+        String routine = "analyzeTcfFromUrl";
+        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        String str = null;
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        File tempOutputFile = null;
+        try {
+            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
+        } catch (IOException ex) {
+            if (tempOutputData != null) {
+                try {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", ex.getMessage(), routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    tempOutputData.close();
+                } catch (IOException e) {
+                    message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+                    Logger
+                            .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+                    throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+                }
+            }
+            if (tempOutputFile != null) {
+                tempOutputFile.delete();
+            }
+            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+
+        // process incoming TCF and output resulting TCF with new annotation layer(s) added
+        //process(input, tempOutputData, tool);
+        //str = getTextFromUrl(theUrl);
+        str = getTextFromTcf(lang, getIputStreamFromUrl(theUrl), tempOutputData);
+        
+        // str is a kaf document
+        //System.out.println("it.cnr.ilc.panaceaserviceswrapper.app.resources.PanaceaServiceFreeligItResource.analyzeTcfFromUrl() str " + str);
         if (str != null) {
             if (format.equals(Format.OUT_TAB)) {
                 return tabProducer(str);
@@ -615,7 +765,7 @@ public class PanaceaServiceFreeligItResource {
      * @param lang the language used to load the module
      * @param input the input stream
      * @param out the output file
-     * @deprecated 
+     * @deprecated
      */
     private void processTcf1(String lang, String format, TextCorpus tc, File out) {
         String message;
@@ -663,8 +813,9 @@ public class PanaceaServiceFreeligItResource {
 
     /**
      * Read a TCF corpus and extract the text
+     *
      * @param lang language
-     * @param input input stream 
+     * @param input input stream
      * @param output output stream
      * @return the text contained in TCF
      */
@@ -704,22 +855,51 @@ public class PanaceaServiceFreeligItResource {
     }
 
     /**
-     * 
+     *
      * @param theUrl url
      * @return the string from the url
      */
     private String getTextFromUrl(String theUrl) {
 
         String routine = "getTextFromUrl";
-        String message = String.format("Executing  -%s-", routine);
+        String message = String.format("Executing  -%s- from url -%s-", routine, theUrl);
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
         String str = "";
-        str=IlcInputToString.convertInputStreamFromUrlToString(theUrl);
+        str = IlcInputToString.convertInputStreamFromUrlToString(theUrl);
         message = message = String.format("Executed  -%s- with extracted text -%s-", routine, str);
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
         return str;
+    }
+
+    /**
+     *
+     * @param theUrl url
+     * @return the string from the url
+     */
+    private InputStream getIputStreamFromUrl(String theUrl) {
+
+        InputStream is = null;
+
+        String routine = "getIputStreamFromUrl";
+        String message = String.format("Executing  -%s- from url -%s-", routine, theUrl);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+        String str = "";
+        try {
+            is = new URL(theUrl).openStream();
+
+            message = message = String.format("Executed  -%s- from url -%s-", routine, theUrl);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(PanaceaServiceFreeligItResource.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ioex) {
+            Logger.getLogger(PanaceaServiceFreeligItResource.class.getName()).log(Level.SEVERE, null, ioex);
+        }
+        return is;
     }
 
     /**
