@@ -22,9 +22,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,9 +38,10 @@ import java.util.logging.Logger;
  *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
-public class SimpleClient {
+public class SimpleSoapClient {
 
-    public static final String CLASS_NAME = SimpleClient.class.getName();
+    
+    public static final String CLASS_NAME = SimpleSoapClient.class.getName();
 
     //private String find_mw = Format.FIND_MW;
     //private String find_ner = Format.FIND_NER;
@@ -47,6 +52,8 @@ public class SimpleClient {
     private String oFile = "";
     private String format = Format.PANACEA_SERVICE_OUT_TAG;
     private String serviceOutputFormat = Format.PANACEA_SERVICE_OUT_TAG;
+    private final String AVAIL_PANACEA_SERVICES = "AVAIL_PANACEA_SERVICES";
+    private final String AVAIL_PANACEA_LANGS = "AVAIL_PANACEA_LANGS";
     private LinguisticProcessor lp = new LinguisticProcessor();
 
     /**
@@ -57,7 +64,45 @@ public class SimpleClient {
 
     Timestamp timestamp;// = new Timestamp(System.currentTimeMillis());
 
-    public Theservice theservice = new Theservice();
+    private Theservice theservice = new Theservice();
+    private List<String> availableServicesFromFile = null;
+    private List<String> availablelanguagesFromFile = null;
+    private Properties prop;
+    private static List<String> PANACEA_SERVICES = new ArrayList<String>();
+    private static List<String> PANACEA_LANGS = new ArrayList<String>();
+
+    
+    /**
+     * Constructor 
+     * @param prop property file
+     */
+    public SimpleSoapClient(Properties prop) {
+        String message, routine = "SimpleSoapClient-constructor";
+        message = String.format("Initialing class -%s- with routine -%s- ", CLASS_NAME, routine);
+        //message = "IOException in closing the stream " + e.getMessage();
+        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+        message = String.format("Getting services and languages routine -%s- ", routine);
+        //message = "IOException in closing the stream " + e.getMessage();
+        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+        availableServicesFromFile = getAvailablePanaceaServices(prop, AVAIL_PANACEA_SERVICES);
+        availablelanguagesFromFile = getAvailablePanaceaLanguages(prop, AVAIL_PANACEA_LANGS);
+        message = String.format("Got services -%s- and languages -%s- routine -%s- ", availableServicesFromFile, availablelanguagesFromFile, routine);
+        //message = "IOException in closing the stream " + e.getMessage();
+        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+        setAvailableServicesFromFile(availableServicesFromFile);
+        setAvailablelanguagesFromFile(availablelanguagesFromFile);
+
+        message = String.format("Initializing TheService routine -%s- ", routine);
+        //message = "IOException in closing the stream " + e.getMessage();
+        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+        Theservice theservice = new Theservice();
+        theservice.setListOfLanguages(availablelanguagesFromFile);
+        theservice.setListOfServices(availableServicesFromFile);
+        setTheservice(theservice);
+        setProp(prop);
+    }
+    
+    
 
     /**
      * This method does the following:
@@ -141,7 +186,8 @@ public class SimpleClient {
             //System.err.println("input " + input);
             // actual code from here
             PanaceaService s = factory.getService(getService());
-            FillSimpleTypes t = factory.getFillSimpleType(service);
+            s.setProp(prop);
+            FillSimpleTypes t = factory.getFillSimpleType(getService());
             //System.err.println("input in init "+s.getInputs());
             if (!getServiceOutputFormat().isEmpty()) {
                 inputs.put("output_format", getServiceOutputFormat());
@@ -156,8 +202,8 @@ public class SimpleClient {
 
             lp.getLps().add(ts);
 
-            theservice.setService(s, input, inputs);
-            theservice.run();
+            getTheservice().setService(s, input, inputs);
+            getTheservice().run();
 
             // get the output
             if (!readOutputFromUrl) {
@@ -235,7 +281,7 @@ public class SimpleClient {
 
         } else {
 
-            theservice.printHelp();
+            getTheservice().printHelp();
             //System.err.println("EXIT");
             System.exit(0);
         }
@@ -283,7 +329,8 @@ public class SimpleClient {
             //System.err.println("input " + input);
             // actual code from here
             PanaceaService s = factory.getService(getService());
-            FillSimpleTypes t = factory.getFillSimpleType(service);
+            s.setProp(prop);
+            FillSimpleTypes t = factory.getFillSimpleType(getService());
             //System.err.println("input in init "+s.getInputs());
             if (!getServiceOutputFormat().isEmpty()) {
                 inputs.put("output_format", getServiceOutputFormat());
@@ -298,8 +345,8 @@ public class SimpleClient {
 
             lp.getLps().add(ts);
 
-            theservice.setService(s, input, inputs);
-            theservice.run();
+            getTheservice().setService(s, input, inputs);
+            getTheservice().run();
 
             // get the output
             if (!readOutputFromUrl) {
@@ -323,7 +370,7 @@ public class SimpleClient {
 
         } else {
 
-            theservice.printHelp();
+            getTheservice().printHelp();
             //System.err.println("EXIT");
             System.exit(0);
         }
@@ -331,6 +378,13 @@ public class SimpleClient {
 
     }
 
+    /**
+     * 
+     * @param paramList The list of additional parameters
+     * @param inputs The map to be filled
+     * @return the input map with 
+     * @throws IllegalArgumentException Exception 
+     */
     private Map fillOtherInputParams(String paramList, Map inputs) throws IllegalArgumentException {
         String key, value;
         String[] params;
@@ -359,6 +413,11 @@ public class SimpleClient {
         return inputs;
     }
 
+     /**
+     * 
+     * @param args arguments
+     * @return true if -h is in the list
+     */
     public boolean checkArgsForHelp(String[] args) {
 
         for (String arg : args) {
@@ -378,9 +437,14 @@ public class SimpleClient {
     public void printTheHelp() {
         //tokenizerCli.printHelp();
         //System.err.println("PRINTHELP");
-        theservice.printHelp();
+        getTheservice().printHelp();
     }
 
+    /**
+     * 
+     * @param service the service to check
+     * @return true if service is in the list
+     */
     private boolean checkServices(String service) {
 
         return Vars.panaceaServices.contains(service);
@@ -393,6 +457,11 @@ public class SimpleClient {
 
     }
 
+     /**
+     * Loops over args and sets values
+     * @param args the arguments list
+     * @return true if mandatory parameters are supplied
+     */
     public boolean checkArgs(String[] args) {
         boolean ret = false;
         int mandatory = 0;
@@ -570,4 +639,161 @@ public class SimpleClient {
     public void setLang(String lang) {
         this.lang = lang;
     }
+    
+    /**
+     * Reads the available services from the property file
+     *
+     * @param propFile the property file
+     * @param propName the property to get
+     * @return the list of available services
+     */
+    private List<String> getAvailablePanaceaServices(Properties propFile, String propName) {
+        String message, routine = "getAvailableOpenerServices";
+        message = String.format("Executing routine %s in class %s", routine, CLASS_NAME);
+        //message = "IOException in closing the stream " + e.getMessage();
+        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        List<String> availableServicesFromFile = null;
+        String panaceaServices = propFile.getProperty(propName);
+        if (panaceaServices == null || panaceaServices.length() == 0) {
+            availableServicesFromFile = Collections.unmodifiableList(Arrays.asList(""));;
+        } else {
+
+            if (panaceaServices.split(",").length == 1) {
+                availableServicesFromFile = Collections.unmodifiableList(Arrays.asList(panaceaServices));
+            } else {
+                availableServicesFromFile = Collections.unmodifiableList(Arrays.asList(panaceaServices.split(",")));
+            }
+            //System.err.println("  getIlc4ClarinCorpora "+corporaFromFile+ " "+openCorpora);
+
+            // sets available corpora. This filters out potential test corpora in the korp backend
+            setPANACEA_SERVICES(availableServicesFromFile);
+            message = String.format("Extracted services %s in routine %s", availableServicesFromFile, routine);
+            //message = "IOException in closing the stream " + e.getMessage();
+            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        }
+        return availableServicesFromFile;
+    }
+    
+     /**
+     * Reads the available languages from the property file
+     *
+     * @param propFile the property file
+     * @param propName the property to get
+     * @return the list of available languages
+     */
+    private List<String> getAvailablePanaceaLanguages(Properties propFile, String propName) {
+        String message, routine = "getAvailableOpenerlanguages";
+        message = String.format("Executing routine %s in class %s", routine, CLASS_NAME);
+        //message = "IOException in closing the stream " + e.getMessage();
+        Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        List<String> availableLanguagesFromFile = null;
+        String panaceaLanguages = propFile.getProperty(propName);
+        if (panaceaLanguages == null || panaceaLanguages.length() == 0) {
+            availableLanguagesFromFile = Collections.unmodifiableList(Arrays.asList(""));;
+        } else {
+
+            if (panaceaLanguages.split(",").length == 1) {
+                availableLanguagesFromFile = Collections.unmodifiableList(Arrays.asList(panaceaLanguages));
+            } else {
+                availableLanguagesFromFile = Collections.unmodifiableList(Arrays.asList(panaceaLanguages.split(",")));
+            }
+            //System.err.println("  getIlc4ClarinCorpora "+corporaFromFile+ " "+openCorpora);
+
+            // sets available corpora. This filters out potential test corpora in the korp backend
+            setPANACEA_LANGS(availableLanguagesFromFile);
+            message = String.format("Extracted languages %s in routine %s", availableLanguagesFromFile, routine);
+            //message = "IOException in closing the stream " + e.getMessage();
+            Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        }
+        return availableLanguagesFromFile;
+    }
+
+    /**
+     * @return the PANACEA_LANGS
+     */
+    public static List<String> getPANACEA_LANGS() {
+        return PANACEA_LANGS;
+    }
+
+    /**
+     * @param aPANACEA_LANGS the PANACEA_LANGS to set
+     */
+    public static void setPANACEA_LANGS(List<String> aPANACEA_LANGS) {
+        PANACEA_LANGS = aPANACEA_LANGS;
+    }
+    
+    /**
+     * @return the PANACEA_SERVICES
+     */
+    public static List<String> getPANACEA_SERVICES() {
+        return PANACEA_SERVICES;
+    }
+
+    /**
+     * @param aPANACEA_SERVICES the PANACEA_SERVICES to set
+     */
+    public static void setPANACEA_SERVICES(List<String> aPANACEA_SERVICES) {
+        PANACEA_SERVICES = aPANACEA_SERVICES;
+    }
+
+    /**
+     * @return the availableServicesFromFile
+     */
+    public List<String> getAvailableServicesFromFile() {
+        return availableServicesFromFile;
+    }
+
+    /**
+     * @param availableServicesFromFile the availableServicesFromFile to set
+     */
+    public void setAvailableServicesFromFile(List<String> availableServicesFromFile) {
+        this.availableServicesFromFile = availableServicesFromFile;
+    }
+
+    /**
+     * @return the availablelanguagesFromFile
+     */
+    public List<String> getAvailablelanguagesFromFile() {
+        return availablelanguagesFromFile;
+    }
+
+    /**
+     * @param availablelanguagesFromFile the availablelanguagesFromFile to set
+     */
+    public void setAvailablelanguagesFromFile(List<String> availablelanguagesFromFile) {
+        this.availablelanguagesFromFile = availablelanguagesFromFile;
+    }
+
+    /**
+     * @return the prop
+     */
+    public Properties getProp() {
+        return prop;
+    }
+
+    /**
+     * @param prop the prop to set
+     */
+    public void setProp(Properties prop) {
+        this.prop = prop;
+    }
+
+    /**
+     * @return the theservice
+     */
+    public Theservice getTheservice() {
+        return theservice;
+    }
+
+    /**
+     * @param theservice the theservice to set
+     */
+    public void setTheservice(Theservice theservice) {
+        this.theservice = theservice;
+    }
+
 }

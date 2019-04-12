@@ -7,6 +7,7 @@ package it.cnr.ilc.soapclient.app;
 
 import it.cnr.ilc.ilcutils.Vars;
 import it.cnr.ilc.panacea.service.i.PanaceaService;
+import java.util.List;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -23,6 +24,8 @@ public class Theservice {
     private PanaceaService service;
     private Map inputs;
     private String input;
+    private List<String> listOfServices;
+    private List<String> listOfLanguages;
 
     public static final String CLASS_NAME = Theservice.class.getName();
 
@@ -30,7 +33,7 @@ public class Theservice {
      * Printhelp
      */
     public void printHelp() {
-        System.out.println("This tool wrappers the following Panacea services: " + Vars.panaceaServices + " and can process both texts and URLs");
+        System.out.println("This tool wraps the following Panacea services: " + getListOfServices() + " and can process both texts and URLs");
         System.out.println("In what follows, -sf and -m parameters depend on the service profile loaded. However, the program exits "
                 + "if supplied parameter are not correct");
         System.out.println("\n\nTexts or URLs can be provided in two ways");
@@ -38,10 +41,10 @@ public class Theservice {
         System.out.println("1) Usage echo \"text_to_analize|URL\" | java -jar <code>.jar -l lang -s <service> [-o output_file] [-f <final_output>] [-sf <service_output>] [-m inputs]");
         System.out.println("\twhere:");
         System.out.println("\t\t the -l parameter is mandatory and specifies the language (in three characthers code)");
-        System.out.println("\t\t the -s parameter is mandatory and MUST be one out of " + Vars.panaceaServices);
+        System.out.println("\t\t the -s parameter is mandatory and MUST be one out of " + getListOfServices());
         System.out.println("\t\t the -o parameter is optional  and tells the program to write the output in file");
         System.out.println("\t\t the -f parameter is optional  and tells the program to write the output in one of the following formats " + Vars.panaceaFormats
-                + " If no format is provided a tab output (which corresponds to " + Vars.OF_JSON + " is rendered. ");
+                + " If no format is provided a tab output (which corresponds to " + Vars.OF_TAB + " is rendered. ");
         System.out.println("\t\t the -sf parameter is optional  and tells the program to write the output in passed format. "
                 + "If -sf parameter is set and -f parameter is not set, then the final output will be the value passed with -sf");
         System.out.println("\t\t the -m parameter is optional  and tells the program which input parameter to use. The format is as follows:");
@@ -53,11 +56,11 @@ public class Theservice {
                 + "[-f <final_output>] [-sf <service_output>] [-m inputs] -r");
         System.out.println("\twhere:");
         System.out.println("\t\t the -l parameter is mandatory and specifies the language (in three characthers code)");
-        System.out.println("\t\t the -s parameter is mandatory and MUST be one out of " + Vars.panaceaServices);
+        System.out.println("\t\t the -s parameter is mandatory and MUST be one out of " + getListOfServices());
         System.out.println("\t\t the -i parameter is optional  and tells the program to read from the output in file");
         System.out.println("\t\t the -o parameter is optional  and tells the program to write the output in file");
         System.out.println("\t\t the -f parameter is optional  and tells the program to write the output in one of the following formats " + Vars.panaceaFormats
-                + " If no format is provided a tab output (which corresponds to " + Vars.OF_JSON + " is rendered. ");
+                + " If no format is provided a tab output (which corresponds to " + Vars.OF_TAB + " is rendered. ");
         System.out.println("\t\t the -sf parameter is optional  and tells the program to write the output in passed format. "
                 + "If -sf parameter is set and -f parameter is not set, then the final output will be the value passed with -sf");
         System.out.println("\t\t the -m parameter is optional  and tells the program which input parameter to use. The format is as follows:");
@@ -107,7 +110,8 @@ public class Theservice {
      * This method does the following:
      * <ul>
      * <li>Sets the input parameters as service inputs; </li>
-     * <li>Checks if the input string is a URL. If so then executes the corresponding methods; </li>
+     * <li>Checks if the input string is a URL. If so then executes the
+     * corresponding methods; </li>
      * <li>Executes the service. </li>
      * </ul>
      */
@@ -173,4 +177,31 @@ public class Theservice {
         this.input = input;
     }
 
+    /**
+     * @return the listOfServices
+     */
+    public List<String> getListOfServices() {
+        return listOfServices;
+    }
+
+    /**
+     * @param listOfServices the listOfServices to set
+     */
+    public void setListOfServices(List<String> listOfServices) {
+        this.listOfServices = listOfServices;
+    }
+
+    /**
+     * @return the listOfLanguages
+     */
+    public List<String> getListOfLanguages() {
+        return listOfLanguages;
+    }
+
+    /**
+     * @param listOfLanguages the listOfLanguages to set
+     */
+    public void setListOfLanguages(List<String> listOfLanguages) {
+        this.listOfLanguages = listOfLanguages;
+    }
 }
