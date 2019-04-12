@@ -68,7 +68,7 @@ public class PanaceaServiceFreeligItResource {
         String lang = "ita";
         String message;
         String str = IlcInputToString.convertInputStreamToString(input);
-        System.err.println("TEXT " + str);
+//        System.err.println("TEXT " + str);
         String routine = "analyzeTextFromPlain";
         message = String.format("Executing  -%s- in context -%s-", routine, context);
         Logger
@@ -90,6 +90,12 @@ public class PanaceaServiceFreeligItResource {
         return null;
     }
 
+    /**
+     * This method analyzes a plain text to produce a tabbed output document
+     * @param format the output format
+     * @param text the string to analyze
+     * @return the output file
+     */
     @Path("tcf/runservice")
     @POST
     @Consumes(TEXT_TCF_XML)
@@ -124,6 +130,7 @@ public class PanaceaServiceFreeligItResource {
                 }
             }
             if (tempOutputFile != null) {
+                //System.err.println("XXX DELETE");
                 tempOutputFile.delete();
             }
             message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
@@ -183,6 +190,15 @@ public class PanaceaServiceFreeligItResource {
 //        //return formatProducerFromTcf(format, input);
 //        return null;
 //    }
+    
+    
+  
+    /**
+     * Read from a TCF file
+     * @param format the output format
+     * @param input the text to analyze
+     * @return the processed output
+     */
     @Path("/kaf/runservice")
     @POST
     @Consumes(MediaType.TEXT_XML)
@@ -197,7 +213,7 @@ public class PanaceaServiceFreeligItResource {
 
         //String str = IlcInputToString.convertInputStreamToString(input);
         //InputStream is = input;
-        System.err.println("TEXT KAF XML " + str);
+        //System.err.println("TEXT KAF XML " + str);
         String routine = "analyzeTextFromKaf";
         message = String.format("Executing  -%s- in context -%s-", routine, context);
         Logger
@@ -226,11 +242,17 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
+    /**
+     * Read a TCF file and produce a new one
+     * @param format the output format
+     * @param is the input stream
+     * @return tcf from tcf
+     */
     @Produces(TEXT_TCF_XML)
     public StreamingOutput tcfProducerFromTcf(String format, InputStream is) {
         ReaderTcf reader = new ReaderTcf();
         TextCorpusStreamed tcs = null;
-        System.err.println("TEXT TCF IN PROC" + IlcInputToString.convertInputStreamToString(is));
+       // System.err.println("TEXT TCF IN PROC" + IlcInputToString.convertInputStreamToString(is));
         String lang = "ita";
         String message;
         String routine = "tcfProducerFromTcf";
@@ -274,11 +296,18 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
+    
+    /**
+     * Read a TCF file and produce a new one according to format
+     * @param format the output format
+     * @param is the input stream
+     * @return tcf from tcf
+     */
     @Produces(TEXT_TCF_XML)
     public StreamingOutput formatProducerFromTcf(String format, InputStream is) {
         ReaderTcf reader = new ReaderTcf();
         TextCorpusStreamed tcs;
-        System.err.println("TEXT TCF IN PROC" + IlcInputToString.convertInputStreamToString(is));
+        //System.err.println("TEXT TCF IN PROC" + IlcInputToString.convertInputStreamToString(is));
         String lang = "ita";
         String message;
         String routine = "formatProducerFromTcf";
@@ -295,7 +324,7 @@ public class PanaceaServiceFreeligItResource {
             tcs = reader.readTcf(is, tempOutputData);
             //tcs = new TextCorpusStreamed(is, requiredLayers);
             str = tcs.getTextLayer().getText();
-            System.err.println("TEXT " + str);
+            //System.err.println("TEXT " + str);
         } catch (IOException ex) {
             try {
                 tempOutputData.close();
@@ -330,6 +359,11 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
+     /**
+     * 
+     * @param str the data to process
+     * @return the TAB output
+     */
     @Produces(MediaType.TEXT_PLAIN)
     public StreamingOutput tabProducer(String str) {
         String lang = "ita";
@@ -368,6 +402,11 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
+     /**
+     * 
+     * @param str the data to process
+     * @return the KAF output
+     */
     @Produces(MediaType.TEXT_XML)
     public StreamingOutput kafProducer(String str) {
         String lang = "ita";
@@ -406,6 +445,11 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
+     /**
+     * 
+     * @param str the data to process
+     * @return the TCF output
+     */
     @Produces(TEXT_TCF_XML)
     public StreamingOutput tcfProducer(String str) {
         String lang = "ita";
@@ -445,13 +489,20 @@ public class PanaceaServiceFreeligItResource {
     }
 
     // for language resource
+    /**
+     * 
+     * @param lang the input language
+     * @param format the final format
+     * @param theUrl the url where the text is
+     * @return the output of the process
+     */
     @Path("lrs")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     /**
      * This service extracts text from an URL.
      */
-    public StreamingOutput analyzeTextFromUrl(@QueryParam("lang") String lang, @QueryParam("format") String format, @QueryParam("url") String theUrl, final InputStream input) {
+    public StreamingOutput analyzeTextFromUrl(@QueryParam("lang") String lang, @QueryParam("format") String format, @QueryParam("url") String theUrl) {
         OutputStream tempOutputData = null;
         String message;
         //String lang = "ita";
@@ -564,6 +615,7 @@ public class PanaceaServiceFreeligItResource {
      * @param lang the language used to load the module
      * @param input the input stream
      * @param out the output file
+     * @deprecated 
      */
     private void processTcf1(String lang, String format, TextCorpus tc, File out) {
         String message;
@@ -609,6 +661,13 @@ public class PanaceaServiceFreeligItResource {
 
     }
 
+    /**
+     * Read a TCF corpus and extract the text
+     * @param lang language
+     * @param input input stream 
+     * @param output output stream
+     * @return the text contained in TCF
+     */
     private String getTextFromTcf(String lang, final InputStream input, OutputStream output) {
         TextCorpusStreamed textCorpus = null;
         String str = "";
@@ -644,6 +703,11 @@ public class PanaceaServiceFreeligItResource {
         return str;
     }
 
+    /**
+     * 
+     * @param theUrl url
+     * @return the string from the url
+     */
     private String getTextFromUrl(String theUrl) {
 
         String routine = "getTextFromUrl";
