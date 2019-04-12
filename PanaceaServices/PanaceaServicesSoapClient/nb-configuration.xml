@@ -11,6 +11,7 @@ Without this configuration present, some functionality in the IDE may be limited
             <configuration id="main1" profiles=""/>
             <configuration id="test-conf" profiles=""/>
             <configuration id="version1-conf" profiles=""/>
+            <configuration id="mainPanacea" profiles=""/>
         </configurations>
     </config-data>
 </project-shared-configuration>

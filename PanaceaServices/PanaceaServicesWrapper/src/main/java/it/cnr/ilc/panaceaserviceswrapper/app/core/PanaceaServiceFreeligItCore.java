@@ -6,8 +6,11 @@
 package it.cnr.ilc.panaceaserviceswrapper.app.core;
 
 import it.cnr.ilc.consumer.Result;
-import it.cnr.ilc.soapclient.app.SimpleClient;
+import it.cnr.ilc.soapclient.app.ReadExternalPropFiles;
+import it.cnr.ilc.soapclient.app.SimpleSoapClient;
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  *
@@ -15,9 +18,23 @@ import java.io.File;
  */
 public class PanaceaServiceFreeligItCore {
     private Result result = new Result();
+    Properties prop;
     
+    /**
+     * Process the request
+     * @param args the list of arguments
+     * @param str the input string to process
+     * @param f the file to read
+     * @throws Exception Exception
+     */
     public synchronized void process(String[] args, String str, File f) throws Exception {
-        SimpleClient sc=new SimpleClient();
+        try {
+             prop = ReadExternalPropFiles.getPropertyFile("panacea.properties");
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        SimpleSoapClient sc=new SimpleSoapClient(prop);
         sc.checkArgs(args);
         result=sc.forservice(true, str);
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.cnr.ilc.restclient.app;
+package it.cnr.ilc.soapclient.app;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ public class ReadExternalPropFiles {
      *
      * @param fileprop the external file
      * @return the property file
-     * @throws IOException Exception
+     * @throws IOException
      *
      */
     public static Properties getPropertyFile(String fileprop) throws IOException {

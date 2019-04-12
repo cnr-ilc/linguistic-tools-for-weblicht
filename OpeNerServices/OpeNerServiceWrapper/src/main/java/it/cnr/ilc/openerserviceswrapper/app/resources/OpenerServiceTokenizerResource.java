@@ -8,8 +8,7 @@ package it.cnr.ilc.openerserviceswrapper.app.resources;
 import eu.clarin.weblicht.wlfxb.io.TextCorpusStreamed;
 import eu.clarin.weblicht.wlfxb.tc.api.TextCorpus;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusLayerTag;
-import eu.kyotoproject.kaf.KafSaxParser;
-import it.cnr.ilc.consumer.ReaderTcf;
+import it.cnr.ilc.ilcioutils.IlcInputToFile;
 import it.cnr.ilc.ilcioutils.IlcInputToString;
 import it.cnr.ilc.ilcutils.Format;
 import it.cnr.ilc.openerserviceswrapper.app.core.OpenerServiceTokenizerCore;
@@ -19,6 +18,7 @@ import it.cnr.ilc.openerserviceswrapper.utils.OutPutWriter;
 import it.cnr.ilc.provider.Writer;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,79 +58,103 @@ public class OpenerServiceTokenizerResource {
     /**
      * This method analyzes a plain text to produce a tabbed output document
      *
-     * @param format the output format
      * @param jsonData the input stream
      * @return the output file
      */
     @Path("runservice")
     @POST
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     //@Produces(MediaType.TEXT_PLAIN)
-    public StreamingOutput analyzeTextFromPlain(@QueryParam("format") String format, String jsonData) {
+    public StreamingOutput analyzeTextFromPlain(final String jsonData) {
         String lang = "ita";
         String message;
-        String data = "{\"file\":\"/tmp/riccardo.txt\",\"language\":\"ita\",\"iformat\":\"raw\"}";
-        jsonData = data;
-        System.err.println("TEXT " + data);
+        //String data = "{\"file\":\"/tmp/riccardo.txt\",\"language\":\"ita\",\"iformat\":\"raw\", \"oformat\":\"tcf\"}";
+        //jsonData = data;
+        //System.err.println("TEXT  IN INPUT " + jsonData);
 
         String routine = "analyzeTextFromPlain";
         message = String.format("Executing  -%s- in context -%s-", routine, context);
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
 
-        message = String.format("Calling  the correct producer  according to the format -%s-", format);
+        message = String.format("Calling  parseInputDataAndSwitch to get the format");
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
 
-        if (format.equals(Format.OUT_TAB)) {
-            return tabProducer(jsonData);
-        }
-        if (format.equals(Format.OUT_KAF)) {
-            return kafProducer(jsonData);
-        }
-        if (format.equals(Format.OUT_TCF)) {
-            return tcfProducer(jsonData);
-        }
-        return null;
+        return parseInputDataAndSwitch(jsonData);
     }
 
-    public StreamingOutput analyzeTextFromPlainOrig(@QueryParam("format") String format, final InputStream input) {
-        String lang = "ita";
+    /**
+     * Parse the inputdata and executes the correct producer
+     *
+     * @param jsonData
+     * @return the correct producer
+     */
+    private StreamingOutput parseInputDataAndSwitch(String jsonData) {
+        InputData id;
+
+        //String lang, iFormat, fileName, format;
         String message;
-        String str = IlcInputToString.convertInputStreamToString(input);
-        System.err.println("TEXT " + str);
-        String routine = "analyzeTextFromPlain";
-        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        String routine = "parseInputDataAndSwitch";
+        message = String.format("Executing  -%s- ", routine);
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
+        try {
+            id = parseInputData(jsonData);
+//            lang = id.getLanguage();
+//            iFormat = id.getIformat();
+//            fileName = id.getFile();
 
-        message = String.format("Calling  the correct producer  according to the format -%s-", format);
-        Logger
-                .getLogger(CLASS_NAME).log(Level.INFO, message);
+            message = String.format("Executing  -%s- in context -%s-", routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.INFO, message);
 
-        if (format.equals(Format.OUT_TAB)) {
-            return tabProducer(str);
-        }
-        if (format.equals(Format.OUT_KAF)) {
-            return kafProducer(str);
-        }
-        if (format.equals(Format.OUT_TCF)) {
-            return tcfProducer(str);
+            message = String.format("Calling  the formatProducer  according to the format -%s-", id.getOformat());
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.INFO, message);
+//            if (format.equals(Format.OUT_TAB)) {
+//                return tabProducer(jsonData);
+//            }
+//            if (format.equals(Format.OUT_KAF)) {
+//                return kafProducer(jsonData);
+//            }
+//            if (format.equals(Format.OUT_TCF)) {
+//                return tcfProducer(jsonData);
+//            }
+            if (id.getOformat().length() > 0) {
+                //return formatProducer(lang, format, fileName, iFormat);
+                return formatProducer(id);
+            }
+
+        } catch (NullPointerException npe) {
+            message = String.format("NullPointerException -%s- in -%s- with context -%s-", npe.getMessage(), routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+
+            throw new WebApplicationException(createResponse(npe, Response.Status.INTERNAL_SERVER_ERROR));
         }
         return null;
+
     }
 
+    /**
+     * Read from a TCF file
+     * @param jsonData the input jsondata
+     * @return the output of the process
+     */
     @Path("tcf/runservice")
     @POST
-    @Consumes(TEXT_TCF_XML)
+    @Consumes(MediaType.APPLICATION_JSON)
     //@Produces(TEXT_TCF_XML)
     //public StreamingOutput tokenizeTextFromTcf(@QueryParam("lang") String lang, final InputStream text) {
-    public StreamingOutput analyzeTextFromTcf(@QueryParam("format") String format, final InputStream text) {
+    public StreamingOutput analyzeTextFromTcf(final String jsonData) {
         OutputStream tempOutputData = null;
+        InputData id;
         String message;
         String lang = "ita";
         String routine = "analyzeTextFromTcf";
         message = String.format("Executing  -%s- in context -%s-", routine, context);
+        //System.err.println("TEXT TCF IN INPUT " + jsonData);
         String str = null;
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
@@ -162,204 +186,31 @@ public class OpenerServiceTokenizerResource {
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
         }
 
-        // process incoming TCF and output resulting TCF with new annotation layer(s) added
-        //process(input, tempOutputData, tool);
-        str = getTextFromTcf(lang, text, tempOutputData);
-        if (str != null) {
-            if (format.equals(Format.OUT_TAB)) {
-                return tabProducer(str);
-            }
-            if (format.equals(Format.OUT_KAF)) {
-                return kafProducer(str);
-            }
-            if (format.equals(Format.OUT_TCF)) {
-                return tcfProducer(str);
-            }
-            return null;
-        }
-        return new OutPutWriter(tempOutputFile);
-    }
+//        // process incoming TCF and output resulting TCF with new annotation layer(s) added
+//        //process(input, tempOutputData, tool);
+        id = createInputDataFromJsonData(jsonData, tempOutputData);
 
-//    @Path("/wl/runservice")
-//    @POST
-//    @Consumes(TEXT_TCF_XML)
-//    public StreamingOutput analyzeTextFromTcf1(@QueryParam("format") String format, final InputStream input) {
-//        String lang = "ita";
-//        String message;
-//        //String str = IlcInputToString.convertInputStreamToString(input);
-//        //InputStream is = input;
-//        //System.err.println("TEXT TCF -1 " + str);
-//        String routine = "analyzeTextFromTcf";
-//        message = String.format("Executing  -%s- in context -%s-", routine, context);
-//        Logger
-//                .getLogger(CLASS_NAME).log(Level.INFO, message);
-//
-//        message = String.format("Calling  the correct producer  according to the format -%s-", format);
-//        Logger
-//                .getLogger(CLASS_NAME).log(Level.INFO, message);
-//
-////        if (format.equals(Format.OUT_TAB)) {
-////            return tabProducerFromTcf(str);
-////        }
-////        if (format.equals(Format.OUT_KAF)) {
-////            return kafProducerTcf(str);
-////        }
-//        if (format.equals(Format.OUT_TCF)) {
-////            System.err.println("TEXT TCF 0 " + IlcInputToString.convertInputStreamToString(input));
-////            System.err.println("TEXT TCF 1 " + IlcInputToString.convertInputStreamToString(input));
-//            return tcfProducerFromTcf(format, input);
-//
+//        if (str != null) {
+//            if (format.equals(Format.OUT_TAB)) {
+//                return tabProducer(str);
+//            }
+//            if (format.equals(Format.OUT_KAF)) {
+//                return kafProducer(str);
+//            }
+//            if (format.equals(Format.OUT_TCF)) {
+//                return tcfProducer(str);
+//            }
+//            return null;
 //        }
-//        //return formatProducerFromTcf(format, input);
-//        return null;
-//    }
-    @Path("/kaf/runservice")
-    @POST
-    @Consumes(MediaType.TEXT_XML)
-    public StreamingOutput analyzeTextFromKaf(@QueryParam("format") String format, final InputStream input) {
-        String lang = "ita";
-        String message;
-        String str;//=input.toString();
-        KafSaxParser parser = new KafSaxParser();
-        parser.parseFile(input);
-        //parser.getFullText();
-        str = parser.getFullText();
-
-        //String str = IlcInputToString.convertInputStreamToString(input);
-        //InputStream is = input;
-        System.err.println("TEXT KAF XML " + str);
-        String routine = "analyzeTextFromKaf";
-        message = String.format("Executing  -%s- in context -%s-", routine, context);
-        Logger
-                .getLogger(CLASS_NAME).log(Level.INFO, message);
-
-        message = String.format("Calling  the correct producer  according to the format -%s-", format);
-        Logger
-                .getLogger(CLASS_NAME).log(Level.INFO, message);
-
-//        if (format.equals(Format.OUT_TAB)) {
-//            return tabProducerFromTcf(str);
-//        }
-//        if (format.equals(Format.OUT_KAF)) {
-//            return kafProducerTcf(str);
-//        }
-        if (format.equals(Format.OUT_TAB)) {
-            return tabProducer(str);
-        }
-        if (format.equals(Format.OUT_KAF)) {
-            return kafProducer(str);
-        }
-        if (format.equals(Format.OUT_TCF)) {
-            return tcfProducer(str);
-        }
-        return null;
-
+        //return new OutPutWriter(tempOutputFile);
+        return formatProducer(id);
     }
 
-    @Produces(TEXT_TCF_XML)
-    public StreamingOutput tcfProducerFromTcf(String format, InputStream is) {
-        ReaderTcf reader = new ReaderTcf();
-        TextCorpusStreamed tcs = null;
-        System.err.println("TEXT TCF IN PROC" + IlcInputToString.convertInputStreamToString(is));
-        String lang = "ita";
-        String message;
-        String routine = "tcfProducerFromTcf";
-        OutputStream tempOutputData = null;
-        File tempOutputFile = null;
-        message = String.format("Executing  -%s- ", routine);
-        Logger
-                .getLogger(CLASS_NAME).log(Level.INFO, message);
-        try {
-
-            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
-            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
-            //tcs = new TextCorpusStreamed(is, requiredLayers, tempOutputData, false);
-//            tcs = reader.readTcf(is, tempOutputData);
-
-            //System.err.println("TEXT " + tcs.getTextLayer().getText());
-        } catch (IOException ex) {
-            try {
-                tempOutputData.close();
-            } catch (IOException e) {
-                message = String.format("IOException -%s- in -%s- with context -%s-", e.getMessage(), routine, context);
-                Logger
-                        .getLogger(CLASS_NAME).log(Level.SEVERE, message);
-
-                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
-
-            }
-
-            if (tempOutputFile != null) {
-                tempOutputFile.delete();
-            }
-            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
-            Logger
-                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
-            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
-        }
-
-        //processTcf(lang, "tcf", tcs, tempOutputFile);
-        getTextFromTcf(lang, is, tempOutputData);
-        return new OutPutWriter(tempOutputFile);
-
-    }
-
-    @Produces(TEXT_TCF_XML)
-    public StreamingOutput formatProducerFromTcf(String format, InputStream is) {
-        ReaderTcf reader = new ReaderTcf();
-        TextCorpusStreamed tcs;
-        System.err.println("TEXT TCF IN PROC" + IlcInputToString.convertInputStreamToString(is));
-        String lang = "ita";
-        String message;
-        String routine = "formatProducerFromTcf";
-        OutputStream tempOutputData = null;
-        File tempOutputFile = null;
-        message = String.format("Executing  -%s- ", routine);
-        String str = "";
-        Logger
-                .getLogger(CLASS_NAME).log(Level.INFO, message);
-        try {
-
-            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
-            tempOutputData = new BufferedOutputStream(new FileOutputStream(tempOutputFile));
-            tcs = reader.readTcf(is, tempOutputData);
-            //tcs = new TextCorpusStreamed(is, requiredLayers);
-            str = tcs.getTextLayer().getText();
-            System.err.println("TEXT " + str);
-        } catch (IOException ex) {
-            try {
-                tempOutputData.close();
-            } catch (IOException e) {
-                message = String.format("IOException -%s- in -%s- with context -%s-", e.getMessage(), routine, context);
-                Logger
-                        .getLogger(CLASS_NAME).log(Level.SEVERE, message);
-
-                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
-
-            }
-
-            if (tempOutputFile != null) {
-                tempOutputFile.delete();
-            }
-            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
-            Logger
-                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
-            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
-        }
-
-        if (format.equals(Format.OUT_TAB)) {
-            return tabProducer(str);
-        }
-        if (format.equals(Format.OUT_KAF)) {
-            return kafProducer(str);
-        }
-        if (format.equals(Format.OUT_TCF)) {
-            return tcfProducer(str);
-        }
-        return null;
-
-    }
-
+    /**
+     * 
+     * @param jsonData data
+     * @return the tabbed output
+     */
     @Produces(MediaType.TEXT_PLAIN)
     public StreamingOutput tabProducer(String jsonData) {
         InputData id;
@@ -410,6 +261,111 @@ public class OpenerServiceTokenizerResource {
 
     }
 
+    
+//    @Produces({MediaType.TEXT_PLAIN, MediaType.TEXT_XML})
+//    public StreamingOutput formatProducerOrig(String lang, String format, String fileName, String iFormat) { //lang, "tab", fileName, iFormat, tempOutputFile
+//        String message;
+//        String routine = "formatProducer";
+//        OutputStream tempOutputData = null;
+//        File tempOutputFile = null;
+//        message = String.format("Executing  -%s- ", routine);
+//        Logger
+//                .getLogger(CLASS_NAME).log(Level.INFO, message);
+//        try {
+//
+//            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+//        } catch (IOException ex) {
+//            try {
+//                tempOutputData.close();
+//            } catch (IOException e) {
+//                message = String.format("IOException -%s- in -%s- with context -%s-", e.getMessage(), routine, context);
+//                Logger
+//                        .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+//
+//                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+//
+//            }
+//
+//            if (tempOutputFile != null) {
+//                tempOutputFile.delete();
+//            }
+//            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+//            Logger
+//                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+//            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+//        } catch (NullPointerException npe) {
+//            message = String.format("NullPointerException -%s- in -%s- with context -%s-", npe.getMessage(), routine, context);
+//            Logger
+//                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+//
+//            throw new WebApplicationException(createResponse(npe, Response.Status.INTERNAL_SERVER_ERROR));
+//        }
+//        // process(lang, "tab", str, tempOutputFile);
+//        process(lang, format, fileName, iFormat, tempOutputFile);
+//        return new OutPutWriter(tempOutputFile);
+//
+//    }
+
+    /**
+     * 
+     * @param id the input data pojo
+     * @return the output of the process
+     */
+    @Produces({MediaType.TEXT_PLAIN, MediaType.TEXT_XML})
+    public StreamingOutput formatProducer(InputData id) { //lang, "tab", fileName, iFormat, tempOutputFile
+        String message;
+        String lang, format, fileName, iFormat;
+        lang = id.getLanguage();
+        format = id.getOformat();
+        fileName = id.getFile();
+        iFormat = id.getIformat();
+        String routine = "formatProducer";
+        OutputStream tempOutputData = null;
+        File tempOutputFile = null;
+        message = String.format("Executing  -%s- ", routine);
+        //System.out.println("it.cnr.ilc.openerserviceswrapper.app.resources.OpenerServiceTokenizerResource.formatProducer() XXXX " + id.getFile());
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+        try {
+
+            tempOutputFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+        } catch (IOException ex) {
+            try {
+                tempOutputData.close();
+            } catch (IOException e) {
+                message = String.format("IOException -%s- in -%s- with context -%s-", e.getMessage(), routine, context);
+                Logger
+                        .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+
+                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+
+            }
+
+            if (tempOutputFile != null) {
+                tempOutputFile.delete();
+            }
+            message = String.format("IOException -%s- in -%s- with context -%s-", Response.Status.INTERNAL_SERVER_ERROR, routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+            throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        } catch (NullPointerException npe) {
+            message = String.format("NullPointerException -%s- in -%s- with context -%s-", npe.getMessage(), routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+
+            throw new WebApplicationException(createResponse(npe, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+        // process(lang, "tab", str, tempOutputFile);
+        process(lang, format, fileName, iFormat, tempOutputFile);
+        return new OutPutWriter(tempOutputFile);
+
+    }
+
+    /**
+     * 
+     * @param jsonData data
+     * @return the kaf output
+     */
     @Produces(MediaType.TEXT_XML)
     public StreamingOutput kafProducer(String jsonData) {
         InputData id;
@@ -459,6 +415,11 @@ public class OpenerServiceTokenizerResource {
 
     }
 
+    /**
+     * 
+     * @param jsonData data
+     * @return the TCF output
+     */
     @Produces(TEXT_TCF_XML)
     public StreamingOutput tcfProducer(String jsonData) {
         InputData id;
@@ -509,15 +470,24 @@ public class OpenerServiceTokenizerResource {
     }
 
     // for language resource
+    /**
+     * 
+     * @param lang the input language
+     * @param format the final format
+     * @param theUrl the url where the text is
+     * @return the output of the process
+     */
     @Path("lrs")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     /**
      * This service extracts text from an URL.
      */
-    public StreamingOutput analyzeTextFromUrl(@QueryParam("lang") String lang, @QueryParam("format") String format, @QueryParam("url") String theUrl, final InputStream input) {
+    public StreamingOutput analyzeTextFromUrl(@QueryParam("lang") String lang, @QueryParam("format") String format, @QueryParam("url") String theUrl) {
+        InputData id = new InputData();
         OutputStream tempOutputData = null;
-        String message;
+        String message, tempFileName;
+        File tempFile;
         //String lang = "ita";
         String routine = "analyzeTextFromUrl";
         message = String.format("Executing  -%s- in context -%s-", routine, context);
@@ -556,32 +526,48 @@ public class OpenerServiceTokenizerResource {
         //process(input, tempOutputData, tool);
         str = getTextFromUrl(theUrl);
         if (str != null) {
-            if (format.equals(Format.OUT_TAB)) {
-                return tabProducer(str);
+
+            try {
+                tempFile = IlcInputToFile.createAndWriteTempFileFromString(str);
+                tempFileName = tempFile.getCanonicalPath();
+
+                id.setIformat("raw");
+                id.setFile(tempFileName);
+                id.setLanguage(lang);
+                id.setOformat(format);
+            } catch (IOException ex) {
+                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
             }
-            if (format.equals(Format.OUT_KAF)) {
-                return kafProducer(str);
-            }
-            if (format.equals(Format.OUT_TCF)) {
-                return tcfProducer(str);
-            }
-            return null;
         }
-        return new OutPutWriter(tempOutputFile);
+//        if (str != null) {
+//            if (format.equals(Format.OUT_TAB)) {
+//                return tabProducer(str);
+//            }
+//            if (format.equals(Format.OUT_KAF)) {
+//                return kafProducer(str);
+//            }
+//            if (format.equals(Format.OUT_TCF)) {
+//                return tcfProducer(str);
+//            }
+//            return null;
+//        }
+        return formatProducer(id);
+        //return new OutPutWriter(tempOutputFile);
     }
 
     /**
-     * This method processes the plain text and creates a tabbed document from
+     * This method processes the plain text and creates a formatted document from
      * the input provided. It calls the corresponding method from the tool.
-     *
-     * @param lang the language used to load the module
-     * @param input the input stream
-     * @param out the output file lang, "tab", fileName, iFormat, tempOutputFile
+     * @param lang language
+     * @param format final format (kaf, tab, tcf)
+     * @param fileName the filename where data are
+     * @param iFormat input format
+     * @param out the output of the process
      */
     private void process(String lang, String format, String fileName, String iFormat, File out) {
         String message;
-        String routine = "analyzeTextFromPlain-process";
-        message = String.format("Executing  -%s- with text -%s-", routine, fileName);
+        String routine = "process"; //analyzeTextFromPlain-process";
+        message = String.format("Executing  -%s- with filename -%s-", routine, fileName);
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
         String[] args = new String[10];
@@ -614,8 +600,8 @@ public class OpenerServiceTokenizerResource {
                 writer.toTab(ps);
             }
             if (format.equals(Format.OUT_KAF)) {
-                System.out.println("it.cnr.ilc.openerserviceswrapper.app.resources.OpenerServiceTokenizerResource.process() XXXX "+tool.getOutPutAsKaf());
-                writer.toKaf(tool.getOutPutAsKaf(),ps);
+                //System.out.println("it.cnr.ilc.openerserviceswrapper.app.resources.OpenerServiceTokenizerResource.process() XXXX " + tool.getOutPutAsKaf());
+                writer.toKaf(tool.getOutPutAsKaf(), ps);
             }
             if (format.equals(Format.OUT_TCF)) {
 
@@ -630,58 +616,72 @@ public class OpenerServiceTokenizerResource {
 
     }
 
+    
+
     /**
-     * This method processes the plain text and creates a tabbed document from
-     * the input provided. It calls the corresponding method from the tool.
-     *
-     * @param lang the language used to load the module
-     * @param input the input stream
-     * @param out the output file
+     * Ancillary method to read from a TCF input file
+     * @param jsonData data
+     * @param output the output where to write
+     * @return the output of the process
      */
-    private void processTcf1(String lang, String format, TextCorpus tc, File out) {
-        String message;
-        String routine = "processTcf";
-        String str = tc.getTextLayer().getText();
-        message = String.format("Executing  -%s- with text -%s-", routine, str);
+    private InputData createInputDataFromJsonData(String jsonData, OutputStream output) {
+        InputData id;
+        InputData newId = new InputData();
+
+        String lang, iFormat, fileName, format, tempFileName;
+        File tempFile;
+        TextCorpusStreamed textCorpus = null;
+        String str = "";
+        String routine = "getTextFromTcf";
+        String message = String.format("Executing  -%s-", routine);
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
-        String[] args = new String[6];
-        args[0] = "-l";
-        args[1] = lang;
-        args[2] = "-s";
-        args[3] = "freeling_it";
-        args[4] = "-f";
-        args[5] = format;
-        args[4] = "-sf";
-        args[5] = "tagged";
         try {
-            OpenerServiceTokenizerCore tool = new OpenerServiceTokenizerCore();
-            tool.process(args, out);
-            PrintStream ps = new PrintStream(out);
+            id = parseInputData(jsonData);
+            fileName = id.getFile();
+            InputStream input = new FileInputStream(new File(fileName));
+            textCorpus = new TextCorpusStreamed(input, requiredLayers, output, false);
+            lang = textCorpus.getLanguage();
+            //System.err.println("LANG " + lang);
 
-            //Writer writer = new Writer(tool.getResult());
-            Writer writer = new Writer(tool.getResult(), format, args[5]);
-//            writer.setFormat(format);
-//            writer.setServiceFormat(args[5]);
-//            if (format.equals(Format.OUT_TAB)) {
-//                writer.toTab(ps);
-//            }
-//            if (format.equals(Format.OUT_KAF)) {
-//                writer.toKaf(ps);
-//            }
-            if (format.equals(Format.OUT_TCF)) {
+            str = textCorpus.getTextLayer().getText();
+            tempFile = IlcInputToFile.createAndWriteTempFileFromString(str);
+            tempFileName = tempFile.getCanonicalPath();//+"/"+tempFile.getName();
 
-                writer.fromTcfToTcf(tc, ps);
-            }
+            // create the new id
+            newId.setIformat("raw");
+            newId.setFile(tempFileName);
+            newId.setLanguage(id.getLanguage());
+            newId.setOformat(id.getOformat());
 
-//           
+            //System.err.println("NEWID " + newId.getFile());
+
         } catch (Exception ex) {
-
             throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+        } finally {
+            try {
+                if (textCorpus != null) {
+                    // it's important to close the TextCorpusStreamed, otherwise
+                    // the TCF XML output will not be written to the end
+                    textCorpus.close();
+                }
+            } catch (Exception ex) {
+                throw new WebApplicationException(createResponse(ex, Response.Status.INTERNAL_SERVER_ERROR));
+            }
         }
-
+        message = message = String.format("Executed  -%s- with extracted text -%s-", routine, str);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+        return newId;
     }
 
+    /**
+     * 
+     * @param lang language
+     * @param input input stream
+     * @param output output stream
+     * @return the text from TCF
+     */
     private String getTextFromTcf(String lang, final InputStream input, OutputStream output) {
         TextCorpusStreamed textCorpus = null;
         String str = "";
@@ -717,6 +717,11 @@ public class OpenerServiceTokenizerResource {
         return str;
     }
 
+    /**
+     * 
+     * @param theUrl url
+     * @return the string from the url
+     */
     private String getTextFromUrl(String theUrl) {
 
         String routine = "getTextFromUrl";
@@ -748,6 +753,11 @@ public class OpenerServiceTokenizerResource {
         return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
     }
 
+    /**
+     * Create an InputData pojo from data
+     * @param data input json data
+     * @return the Pojo
+     */
     private InputData parseInputData(String data) {
         String iFile, lang, iFormat;
         String message;
@@ -765,32 +775,7 @@ public class OpenerServiceTokenizerResource {
 //
         }
         return id;
-//        if (id != null) {
-//            lang = id.getLanguage();
-//            System.out.println("it.cnr.ilc.openerserviceswrapper.app.resources.OpenerServiceTokenizerResource.parseInputData() " + lang);
-////            checklanguages(lang);
-////            iFile=id.getFile();
-////            iFormat=id.getIformat();
-////            if (checkInputFormat(iFormat) && checklanguages(lang)){
-////                iFile=id.getFile();
-////                setiFile(iFile);
-////                setInputFormat(iFormat);
-////                ret=true;
-//        } else {
-//            ret = false;
-//        }
-//
-////        } else {
-////            message = String.format("IOException reading inputdata in routine %s from data %s", routine, data);
-////            //message = "IOException in closing the stream " + e.getMessage();
-////            Logger
-////                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
-////
-////            //theservice.printHelp();
-////            System.exit(-1);
-////
-////        }
-//        return id;
+
 //    
     }
 

@@ -5,7 +5,10 @@
  */
 package it.cnr.ilc.soapclient;
 
-import it.cnr.ilc.soapclient.app.SimpleClient;
+import it.cnr.ilc.soapclient.app.ReadExternalPropFiles;
+import it.cnr.ilc.soapclient.app.SimpleSoapClient;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,8 +27,16 @@ public class Main {
         message = String.format("Initialize class %s in routine %s", CLASS_NAME, routine);
         //message = "IOException in closing the stream " + e.getMessage();
         Logger.getLogger(CLASS_NAME).log(Level.INFO, message);
+        Properties prop=null;
 
-        SimpleClient sc = new SimpleClient();
+        try {
+             prop = ReadExternalPropFiles.getPropertyFile("panacea.properties");
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+        SimpleSoapClient sc = new SimpleSoapClient(prop);
 
         if (sc.checkArgsForHelp(args)) {
             sc.printTheHelp();

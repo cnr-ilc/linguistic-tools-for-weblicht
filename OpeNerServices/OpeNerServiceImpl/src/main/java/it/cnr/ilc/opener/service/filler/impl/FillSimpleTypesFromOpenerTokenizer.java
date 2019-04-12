@@ -6,7 +6,6 @@
 package it.cnr.ilc.opener.service.filler.impl;
 
 import eu.kyotoproject.kaf.KafSaxParser;
-import eu.kyotoproject.kaf.KafTermSaxParser;
 import eu.kyotoproject.kaf.KafWordForm;
 import eu.kyotoproject.kaf.KafWordformSaxParser;
 import it.cnr.ilc.ilcioutils.IlcIOUtils;
@@ -37,6 +36,11 @@ public class FillSimpleTypesFromOpenerTokenizer implements FillSimpleTypes {
     private String sep = "\t";
     private String mw_sep = "_";
 
+    /**
+     * Read the file each line at time
+     * @param file the file
+     * @return the list of lines
+     */
     @Override
     public List<String> getLinesFromFile(File file) {
         List<String> lines = null;
@@ -44,6 +48,11 @@ public class FillSimpleTypesFromOpenerTokenizer implements FillSimpleTypes {
         return lines;
     }
 
+    /**
+     * 
+     * @param value
+     * @return the lemma type
+     */
     private String getLemmaType(String value) {
         String type = "closed";
         if (value.charAt(0) == 'N' || value.charAt(0) == 'V' || value.charAt(0) == 'A') {
@@ -52,6 +61,12 @@ public class FillSimpleTypesFromOpenerTokenizer implements FillSimpleTypes {
         return type;
     }
 
+    /**
+     * 
+     * @param tid the token id
+     * @param value the multi word
+     * @return an array of token ids
+     */
     private int[] ifWmThenReturnIdSize(int tid, String value) {
         int[] ret;
         int l = value.split(mw_sep).length;
@@ -66,6 +81,12 @@ public class FillSimpleTypesFromOpenerTokenizer implements FillSimpleTypes {
         return ret;
     }
 
+    /**
+     * 
+     * @param line the line to split
+     * @param Sep the separator
+     * @return an array of token from sep
+     */
     private String[] splitLinesFromSep(String line, String Sep) {
         String[] values;
         //values = new String[line.split(Sep).length];
@@ -83,12 +104,16 @@ public class FillSimpleTypesFromOpenerTokenizer implements FillSimpleTypes {
         return getLemmas();
     }
 
+    /**
+     * Read the file and create a list of sentences, tokens and lemmas
+     * @param file the file to read
+     */
     @Override
     public void manageServiceOutput(File file) {
         int tokenLenght;
         int start_offset = 0, end_offset = 0;
-        int prev_start_offset = -1, prev_end_offset = -1;
-        int last_sent_end_offset;
+//        int prev_start_offset = -1, prev_end_offset = -1;
+//        int last_sent_end_offset;
         int sentId = -1;
 
         String theSentence = "";

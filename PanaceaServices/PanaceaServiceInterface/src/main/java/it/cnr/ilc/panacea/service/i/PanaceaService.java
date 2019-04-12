@@ -6,6 +6,7 @@
 package it.cnr.ilc.panacea.service.i;
 
 import java.util.Map;
+import java.util.Properties;
 import org.soaplab.clients.SoaplabBaseClient;
 
 /**
@@ -17,9 +18,7 @@ public interface PanaceaService {
     /**
      * The endpoint where services are TODO: move it to a property file
      */
-    public static final String URL_ENDPOINT = "http://langtech3.ilc.cnr.it:8080/soaplab2-axis/services";
-
-    
+    public static final String URL_ENDPOINT = "";
 
     /**
      * get the client from the soaplab endpoint
@@ -28,6 +27,10 @@ public interface PanaceaService {
      * @return the soaplab client used to access the specific service
      */
     public SoaplabBaseClient getClient(String endpoint);
+
+    public Properties getProp();
+
+    public void setProp(Properties prop);
 
     /**
      *
@@ -39,8 +42,8 @@ public interface PanaceaService {
      * Set the input type and the language.
      *
      * @param inputs the map with input parameters
-     * @param inputType Either the string to analyze or the URL
-     * where the data are.
+     * @param inputType Either the string to analyze or the URL where the data
+     * are.
      * @param fromUrl if true the input is read from URL
      */
     public void runService(String inputType, Map inputs, boolean fromUrl);

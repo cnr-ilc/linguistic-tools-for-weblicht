@@ -131,6 +131,11 @@ public class IlcSimpleLemma {
         return "Lemma{" + "theLemma=" + theLemma + ", thePos=" + thePos + ", theType=" + type + ", lemmaLength=" + lemmaLength + ", id=" + id + ", wfid=" + Arrays.toString(wfids) + '}';
     }
 
+    /**
+     * Concat Ids
+     * @param values a list of ids
+     * @return ids concatenated in a string
+     */
     public String wfids2String(int[] values) {
         String ret = "";
         for (int value : values) {

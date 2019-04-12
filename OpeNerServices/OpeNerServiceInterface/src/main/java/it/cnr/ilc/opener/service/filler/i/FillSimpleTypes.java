@@ -53,8 +53,8 @@ public interface FillSimpleTypes {
     public void manageServiceOutput(InputStream input);
     
     /**
-     * manages the output of the service which is a KAF
-     * @param input 
+     * manages the output of the service
+     * @param file 
      */
     public void manageServiceOutput(File file);
 

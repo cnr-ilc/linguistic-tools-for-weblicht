@@ -52,11 +52,11 @@
             <artifactId>PanaceaServicesSoapClient</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Tokenizer-Base</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>
@@ -286,4 +286,5 @@
             </plugin>
         </plugins>
     </build>
+    <name>PanaceaServicesWrapper</name>
 </project>

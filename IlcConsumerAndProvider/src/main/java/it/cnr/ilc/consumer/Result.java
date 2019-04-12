@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The result of a service
+ * The result of a service. 
+ * <br>
+ * Contains lemmas, tokens, sentences
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class Result {

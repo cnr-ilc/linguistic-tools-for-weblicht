@@ -5,10 +5,10 @@
  */
 package it.cnr.ilc.panacea.service.impl;
 
-
 import it.cnr.ilc.panacea.service.i.PanaceaService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.soaplab.clients.ClientConfig;
@@ -47,6 +47,8 @@ import org.soaplab.share.SoaplabMap;
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class FreelingIt implements PanaceaService {
+    
+    private Properties prop;
 
     /**
      * class name used for logging purposes
@@ -119,7 +121,11 @@ public class FreelingIt implements PanaceaService {
     /**
      * The endpoint to invoke the service from
      */
-    public final String SERVICE_ENDPOINT = URL_ENDPOINT + "/" + SERVICE_CATEGORY + "." + getSERVICE_NAME();
+    // public final String SERVICE_ENDPOINT = URL_ENDPOINT + "/" + SERVICE_CATEGORY + "." + getSERVICE_NAME();
+    public String TRANSPORT = ""; //prop.getProperty("transport");
+    public String URL_ENDPOINT = "";
+    private String OUTPUT = "";
+    public  String SERVICE_ENDPOINT ;//= URL_ENDPOINT + "/" + SERVICE_CATEGORY + "." + getSERVICE_NAME();
 
     /**
      * @return the SERVICE_NAME
@@ -157,8 +163,6 @@ public class FreelingIt implements PanaceaService {
     public FreelingIt() {
     }
 
-    
-
     /**
      * Set the input type and the language.
      *
@@ -168,7 +172,8 @@ public class FreelingIt implements PanaceaService {
      */
     @Override
     public void runService(String inputType, Map inputs, boolean fromUrl) {
-       
+         setVariablesFromProp();
+
         getInputs().put(SERVICE_LANGUAGE, SERVICE_LANGUAGE_VAL);
         if (fromUrl) {
             getInputs().put(SERVICE_INPUT_URL_DATA, inputType);
@@ -223,8 +228,18 @@ public class FreelingIt implements PanaceaService {
             setOutputFromStream("");
         }
     }
-
     
+    /**
+     * Ancillary method to set values from properties
+     */
+    private void setVariablesFromProp() {
+       // System.out.println("it.cnr.ilc.panacea.service.impl.FreelingIt.setVariablesFromProp()  "+prop);
+
+        TRANSPORT = getProp().getProperty("transport");
+        URL_ENDPOINT = getProp().getProperty("serviceUrl");// + "/" + SERVICE_CATEGORY + getSERVICE_NAME();
+        URL_ENDPOINT = TRANSPORT + "://" + URL_ENDPOINT;
+        SERVICE_ENDPOINT= URL_ENDPOINT + "/" + SERVICE_CATEGORY + "." + getSERVICE_NAME();
+    }
 
     @Override
     public SoaplabBaseClient getClient(String endpoint) {
@@ -295,6 +310,20 @@ public class FreelingIt implements PanaceaService {
      */
     public void setOutputFromStream(String outputFromStream) {
         this.outputFromStream = outputFromStream;
+    }
+
+    /**
+     * @return the prop
+     */
+    public Properties getProp() {
+        return prop;
+    }
+
+    /**
+     * @param prop the prop to set
+     */
+    public void setProp(Properties prop) {
+        this.prop = prop;
     }
 
 }

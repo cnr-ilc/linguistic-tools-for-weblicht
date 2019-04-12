@@ -14,7 +14,7 @@ import java.io.OutputStream;
 import java.util.EnumSet;
 
 /**
- * This class reads a valid tcf and add new annotations layers. This class is used by the rest services
+ * This class reads a valid tcf and adds new annotations layers. This class is used by the rest services
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 public class ReaderTcf {
@@ -49,9 +49,16 @@ public class ReaderTcf {
     private static EnumSet<TextCorpusLayerTag> requiredLayers
             = EnumSet.of(TextCorpusLayerTag.TEXT);
     
+    /**
+     * Return a TextCorpusStreamed from input
+     * @param is input stream
+     * @param os output stream
+     * @return the new TextCorpusStreamed
+     * @throws WLFormatException  FormatException
+     */
     public TextCorpusStreamed readTcf(InputStream is, OutputStream os) throws WLFormatException {
         TextCorpusStreamed tcs = new TextCorpusStreamed(is, getRequiredLayers(), os);
-        System.err.println("STR "+tcs.getTextLayer().getText());
+        //System.err.println("STR "+tcs.getTextLayer().getText());
         return tcs;
     }
     

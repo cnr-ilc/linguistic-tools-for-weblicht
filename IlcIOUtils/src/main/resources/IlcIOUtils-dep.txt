@@ -1,0 +1,2 @@
+it.cnr.ilc:IlcIOUtils:jar:1.0-SNAPSHOT
+\- commons-io:commons-io:jar:2.5:compile

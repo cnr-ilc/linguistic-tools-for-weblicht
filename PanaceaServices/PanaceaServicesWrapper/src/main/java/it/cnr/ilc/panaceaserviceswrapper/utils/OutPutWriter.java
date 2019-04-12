@@ -23,19 +23,28 @@ import java.util.logging.Logger;
 public class OutPutWriter implements StreamingOutput {
 
     private final File file;
+    private String CLASS_NAME = OutPutWriter.class.getName();
 
-    public OutPutWriter(File file) {this.file = file;}
+    public OutPutWriter(File file) {
+        this.file = file;
+    }
 
     @Override
     /**
      * write the stream
      */
     public void write(OutputStream out) throws IOException, WebApplicationException {
+        String routine = "OutPutWriter-write";
+        String message;
+        message = String.format("Executing  -%s- with file -%s-", routine, file.getCanonicalPath());
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
         FileInputStream input = null;
         byte[] buffer = new byte[256 * 1024];
         ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
         try {
             input = new FileInputStream(file);
+            
             FileChannel channel = input.getChannel();
             for (int length = 0; (length = channel.read(byteBuffer)) != -1;) {
                 out.write(buffer, 0, length);
@@ -49,9 +58,9 @@ public class OutPutWriter implements StreamingOutput {
                     Logger.getLogger(OutPutWriter.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            
             file.delete();
         }
     }
-
 
 }

@@ -22,6 +22,12 @@ public class OpenerServiceTokenizerCore {
     Properties prop;
     private String outPutAsKaf="";
     
+    /**
+     * Process the request
+     * @param args the list of arguments
+     * @param f the file to read
+     * @throws Exception Exception
+     */
     public synchronized void process(String[] args, File f) throws Exception {
         try {
              prop = ReadExternalPropFiles.getPropertyFile("opener.properties");

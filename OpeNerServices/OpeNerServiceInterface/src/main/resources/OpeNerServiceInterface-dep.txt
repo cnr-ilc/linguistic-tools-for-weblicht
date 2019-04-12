@@ -1,0 +1,6 @@
+it.cnr.ilc:OpeNerServiceInterface:jar:1.0-SNAPSHOT
++- com.github.cltl:KafSaxParser:jar:v3.1.2:compile
+|  \- ant:ant:jar:1.6.5:compile
++- it.cnr.ilc:IlcSimpleTypes:jar:1.0-SNAPSHOT:compile
+|  \- it.cnr.ilc:IlcUtils:jar:1.0-SNAPSHOT:compile
+\- commons-collections:commons-collections:jar:3.2.1:compile
