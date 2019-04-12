@@ -9,7 +9,7 @@ server:
     appenders:
       - type: file
         currentLogFilename: /tmp/log/services/panacea/access.log
-        archivedLogFilenamePattern: /tmp/log/services/access-%d.log.gz
+        archivedLogFilenamePattern: /tmp/log/services/panacea/access-%d.log.gz
         archivedFileCount: 5
 
 logging:
