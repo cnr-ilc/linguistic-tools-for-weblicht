@@ -1,138 +1,186 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>ILC4CLARIN Tokenizer services</title>
+        <title>ILC4CLARIN Panacea Freeling_It service</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h2>Linguistic services</h2>
-        <p>This is the Java porting of the perl-based tokenizer developed within the opener project and available  
-            <a href="https://github.com/opener-project/tokenizer-base" target="_blank">here</a></p>
-        <p>Current Software version 0.1, released on 28/06/2017</p>
-        <p>ILC4CLARIN provides three sets of distinct web services to perform tokenization on texts for the following languages: 
+        <h2>Freeling service</h2>
+        <p>This is the Java wrapping og the soaplab service <a href="https://ilc4clarin.ilc.cnr.it/en/services/freeling-it/" target="_blank">Freeling_it</a>, 
+            developed in <a href="www.panacea-lr.eu/" target="_blank">PANACEA</a>. 
+
+        <p>Current Software version 1.0, released on 15/04/2019. It is available at <a href="https://github.com/cnr-ilc/linguistic-tools-for-weblicht">CNR-ILC</a> github</p>
+        <p>ILC4CLARIN Freeling service is (for this version available) only for Italian:
+
         <ul>
             <li>ita</li> 
-            <li>fra</li>
-            <li>deu</li>
-            <li>eng</li>
-            <li>esp</li>
-            <li>nld</li>
         </ul>
-        The application arises an <b>Unsupported Language Exception</b> if the language provided is not in the list.
+        This parameter is hard encoded, but it might be required as input parameters, especially to operate with LRS (see below).
 
-        <p>Offered services perform the same operation (tokenization), but, according with the endpoints, valid <a href="https://weblicht.sfs.uni-tuebingen.de/weblichtwiki/index.php/The_TCF_Format" target="_blank">
-                TCF</a>, 
-            <a href="https://github.com/opener-project/kaf/wiki/KAF-structure-overview" target="_blank">KAF</a> or tabbed files 
-            can be produced.
-            <br></br>
-            The service that produces TCF can read from both a plain text or a valid TCF document. The mimetype is set accordingly. 
-        </p>
+        <p>Offered service performs the same operations (tokenization, pos tagging and lemmatization), but, according with the endpoints, 
+            a valid 
+        <ul>
+            <li>
+                <a href="https://weblicht.sfs.uni-tuebingen.de/weblichtwiki/index.php/The_TCF_Format" target="_blank">TCF</a>
+            <li>    
+                <a href="https://github.com/opener-project/kaf/wiki/KAF-structure-overview" target="_blank">KAF</a></li>
+            <li>
+                or tabbed files (TAB)
+            </li>
+        </ul>
+        can be produced.
+        <p>The service manages plain texts (TXT), TCF and KAF documents, but the incoming mimetype must be set accordingly.</p>
         <p></p>
         <p></p>
         <p></p>
         <p>This page explains how to invoke the offered services.</p>
-        <p>The endpoints are the following:</p>
+        <p>POST endpoints are the following:</p>
         <ul>
-            <li><code>wl/tokenizer/plain</code> (POST service to tokenize plain text and to produce a TCF valid document)</li>
-            <li><code>wl/tokenizer/lrs</code> (GET service to tokenize a text retrieved from URL  and to produce a TCF valid document)</li>
-            <li><code>wl/tokenizer/tcf</code> (POST service to tokenize TCF document and to produce a TCF valid document)</li>
-            <li></li>
-            <li><code>kaf/tokenizer/plain</code> (POST service to tokenize plain texts and to produce a KAF valid document)</li>
-            <li><code>kaf/tokenizer/lrs</code> (GET service to tokenize a text retrieved from URL  and to produce a KAF valid document)</li>
-            <li></li>
-            <li><code>tab/tokenizer/plain</code> (POST service to tokenize plain texts and to produce a tabbed document)</li>
-            <li><code>tab/tokenizer/lrs</code> (GET service to tokenize a text retrieved from URL  and to produce a tabbed document)</li>
+            <li><code>panaceaservice/freeling_it/runservice</code> (POST service to analyze plain texts and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+            <li><code>panaceaservice/freeling_it/tcf/runservice</code> (POST service to analyze TCF documents and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+            <li><code>panaceaservice/freeling_it/kaf/runservice</code> (POST service to analyze KAF documents and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>         
         </ul>
-        <p>The language is provided as a parameter: </p>
-        <ul>
-            <li><code>wl/tokenizer/plain?lang=iso_3_codes_lang</code></li>
-            <li><code>wl/tokenizer/tcf?lang=iso_3_codes_lang</code></li>
-            <li></li>
-            <li><code>kaf/tokenizer/plain?lang=iso_3_codes_lang</code></li>
-            <li></li>
-            <li><code>tab/tokenizer/plain?lang=iso_3_codes_lang</code></li>
+        <p>Similarly GET endpoints have been set up for eventual integration into <a href="https://www.clarin.eu/content/language-resource-switchboard" target="_blank">LRS</a></p>
+        <ul>    
+            <li><code>panaceaservice/freeling_it/lrs</code> (GET service to analyze plain texts and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+            <li><code>panaceaservice/freeling_it/kaf/lrs</code> (GET service to analyze KAF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+            <li><code>panaceaservice/freeling_it/tcf/lrs</code> (GET service to analyze TCF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
         </ul>
+        <p></p>
+        <p></p>
+        <h2>Examples</h2>
+        In each example:
+        <br>Calls in the <b>(1)</b> manage plain texts to produce a valid  TAB, TCF or KAF  document;
+        <br>Calls in the <b>(2)</b> manage TCF document to produce a valid  TAB, TCF or KAF  document;
+        <br>Calls in the <b>(3)</b> manage KAF document to produce a valid  TAB, TCF or KAF  document;
+        <h3>POST</h3>
+        <code>format</code> parameter must be supplied as parameters:
+        <ul> 
+            <li>format one in tab, tcf, kaf</li>
+        </ul>
+        <p>CURL:</p>
+        Some examples:
+
+        <ol>
+            <li>
+                <ul>
+                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tab</code></li>
+                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tcf</code></li>
+                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=kaf</code></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tab</code></li>
+                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tcf</code></li>
+                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=kaf</code></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tab</code></li>
+                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tcf</code></li>
+                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=kaf</code></li>
+                </ul>
+            </li>
+        </ol>
+
+
+        <p>WGET</p>
+        Similarly, using wget:
+        <ol>
+            <li>
+                <ul>
+                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tab</code></li>
+                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tcf</code></li>
+                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=kaf</code></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tab</code></li>
+                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tcf</code></li>
+                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=kaf</code></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tab</code></li>
+                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tcf</code></li>
+                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=kaf</code></li>
+                </ul>
+            </li>
+        </ol>
+
+       
 
         <p></p>
-        <p>For Language Resource Switchboard (please note the lrs in the path) we added three additional endpoints</p>
-        <p>The endpoints are the following:</p>
-        <ul>
-            <li><code>wl/tokenizer/lrs</code> (GET service to tokenize a text retrieved from URL  and to produce a TCF valid document)</li>
-            <li></li>
-            <li><code>kaf/tokenizer/lrs</code> (GET service to tokenize a text retrieved from URL  and to produce a KAF valid document)</li>
-            <li></li>
-            <li><code>tab/tokenizer/lrs</code> (GET service to tokenize a text retrieved from URL  and to produce a tabbed document)</li>
+
+        <h3>GET</h3>
+        GET endpoints are designed mainly for LRS purposes and can be executed in both curl and wget.
+        In both cases, the <code>url</code> parameter indicates the URL where the text to analyze is found. The <code>language</code> and the <code>format</code> must be supplied as parameters:
+        <ul> 
+            <li>lang=ita</li>
+            <li>format one in tab, tcf, kaf</li>
+            <li>url the url</li>
         </ul>
-        <p>Both the language and the url are provided as a parameters: </p>
-        <ul>
-            <li><code>wl/tokenizer/lrs?lang=iso_3_codes_lang&amp;url=URL</code></li>
-            <li></li>
-            <li><code>kaf/tokenizer/lrs?lang=iso_3_codes_lang&amp;url=URL</code></li>
-            <li></li>
-            <li><code>tab/tokenizer/lrs?lang=iso_3_codes_lang&amp;url=URL</code></li>
-        </ul>
-        This because the integration of services in Language Resource Switchboard requires the URL passed as an input parameter.
-        <p>You can test the service endpoints using curl or wget as follows:</p>
-        <ul>
 
-            <li>Send the input file to the endpoints for processing:
-                <br></br>
-                With curl:
-                <br></br>
-                <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>wl/tokenizer/plain?lang=ita</code>
-                <br></br>
-                <code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.txt -X POST <span class="url"></span>wl/tokenizer/tcf?lang=ita</code>
-                <br></br>
-                <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>kaf/tokenizer/plain?lang=ita</code>
-                <br></br>
-                <code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>tab/tokenizer/plain?lang=it</code>
-
-                <br></br>
-                Or wget:
-                <br></br>
-                <code> wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>wl/tokenizer/plain?lang=ita</code>
-                <br></br>
-                <code> wget --post-file=tcf-file.txt --header='Content-Type: text/tcf+xml' <span class="url"></span>wl/tokenizer/tcf?lang=ita</code>
-                <br></br>
-                <code> wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>kaf/tokenizer/plain?lang=ita</code>
-                <br></br>
-                <code> wget --post-file=plain-file.txt --header='Content-Type: text/plain' <span class="url"></span>tab/tokenizer/plain?lang=ita</code>
-                <br></br>
-
+        <p>CURL</p>
+        Some examples:
+        <ol>
+            <li>
+                <ul>
+                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
+                </ul>
             </li>
-
-            <li>To test the services for language Resource Switchboard:
-                <br></br>With curl:
-
-                <code> curl -X GET  &quot;<span class="url"></span>wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
-                </code>
-                <br></br>
-                <code> curl -X GET  &quot;<span class="url"></span>kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
-                </code>
-                <br></br>
-                <code> curl -X GET  &quot;<span class="url"></span>tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot;
-                </code>
-
-                <br></br>
-                Or wget:
-                <br></br>
-                <code>  wget  &quot;<span class="url"></span>wl/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]</code>
-
-                <br></br>
-                <code>  wget  &quot;<span class="url"></span>kaf/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]</code>
-
-                <br></br>
-                <code>  wget  &quot;<span class="url"></span>tab/tokenizer/lrs?lang=ita&url=https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt&quot; [-O out_file]</code>
-                <br></br>
-
+            <li>
+                <ul>
+                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
+                </ul>
             </li>
-        </ul>
-        <p><b>Please note that </b> services designed for Language Resource Switchboard clearly work by themselves invoking the commands above.</p>
+            <li>
+                <ul>
+                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
+                </ul>
+            </li>
+        </ol>
 
+        <p>WGET</p>
+        Some examples:
+        <ol>
+            <li>
+                <ul>
+                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                </ul>
+            </li>
+        </ol>
+        <h2>Example texts</h2>
 
-        As for plain text you can use <pre> Mi chiamo Riccardo. Abito a Roma</pre>
+        <p>As for plain text you can use <pre> Mi chiamo Riccardo. Abito a Roma</pre>
 
-        As for TCF text you can use <pre>
+        <p>As for TCF text you can use <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;?xml-model href=&quot;http://de.clarin.eu/images/weblicht-tutorials/resources/tcf-04/schemas/latest/d-spin_0_4.rnc&quot; type=&quot;application/relax-ng-compact-syntax&quot;?&gt;
     &lt;D-Spin xmlns=&quot;http://www.dspin.de/data&quot; version=&quot;0.4&quot;&gt;
@@ -146,6 +194,29 @@
                 &lt;/tc:text&gt;
             &lt;/tc:TextCorpus&gt;
     &lt;/D-Spin&gt;
+        </pre>
+        
+        <p>As for KAF text you can use <pre>
+            
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+&lt;KAF xml:lang=&quot;it&quot; version=&quot;1.0&quot;&gt;
+	&lt;kafHeader&gt;
+		&lt;fileDesc /&gt;
+		&lt;linguisticProcessors layer=&quot;text&quot;&gt;
+			&lt;lp name=&quot;it.cnr.ilc.panacea.service.impl.FreelingIt&quot; version=&quot;1.0&quot; timestamp=&quot;2019-04-12T15:04:32.096Z&quot;/&gt;
+		&lt;/linguisticProcessors&gt;
+	&lt;/kafHeader&gt;
+	&lt;text&gt;
+			&lt;wf wid=&quot;w1&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;0&quot; length=&quot;2&quot;&gt;&lt;![CDATA[Mi]]&gt;&lt;/wf&gt;
+			&lt;wf wid=&quot;w2&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;3&quot; length=&quot;6&quot;&gt;&lt;![CDATA[chiamo]]&gt;&lt;/wf&gt;
+			&lt;wf wid=&quot;w3&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;10&quot; length=&quot;8&quot;&gt;&lt;![CDATA[Riccardo]]&gt;&lt;/wf&gt;
+			&lt;wf wid=&quot;w4&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;18&quot; length=&quot;1&quot;&gt;&lt;![CDATA[.]]&gt;&lt;/wf&gt;
+			&lt;wf wid=&quot;w5&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;19&quot; length=&quot;5&quot;&gt;&lt;![CDATA[Abito]]&gt;&lt;/wf&gt;
+			&lt;wf wid=&quot;w6&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;25&quot; length=&quot;1&quot;&gt;&lt;![CDATA[a]]&gt;&lt;/wf&gt;
+			&lt;wf wid=&quot;w8&quot; sent=&quot;2&quot; para=&quot;1&quot; offset=&quot;27&quot; length=&quot;4&quot;&gt;&lt;![CDATA[Roma]]&gt;&lt;/wf&gt;
+	&lt;/text&gt;
+&lt;/KAF&gt;
+
         </pre>
 
         <h2>Contacts</h2>

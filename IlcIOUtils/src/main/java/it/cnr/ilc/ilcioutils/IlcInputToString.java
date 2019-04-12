@@ -65,7 +65,7 @@ public class IlcInputToString {
             IOUtils.copy(is, writer, encoding);
             theString = writer.toString();
         } catch (Exception e) {
-            message = "IOException in coverting the stream into a string " + e.getMessage();
+            message = "IOException in converting the stream into a string " + e.getMessage();
             Logger.getLogger(CLASS_NAME).log(Level.SEVERE, message);
         }
 
