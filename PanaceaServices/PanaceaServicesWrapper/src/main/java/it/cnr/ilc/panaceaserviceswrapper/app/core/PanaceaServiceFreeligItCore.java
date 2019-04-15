@@ -18,7 +18,7 @@ import java.util.Properties;
  */
 public class PanaceaServiceFreeligItCore {
     private Result result = new Result();
-    Properties prop;
+    private Properties prop;
     
     /**
      * Process the request
@@ -28,13 +28,13 @@ public class PanaceaServiceFreeligItCore {
      * @throws Exception Exception
      */
     public synchronized void process(String[] args, String str, File f) throws Exception {
-        try {
-             prop = ReadExternalPropFiles.getPropertyFile("panacea.properties");
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-        SimpleSoapClient sc=new SimpleSoapClient(prop);
+//        try {
+//             prop = ReadExternalPropFiles.getPropertyFile("panacea.properties");
+//        } catch (IOException e) {
+//
+//            e.printStackTrace();
+//        }
+        SimpleSoapClient sc=new SimpleSoapClient(getProp());
         sc.checkArgs(args);
         result=sc.forservice(true, str);
 
@@ -52,6 +52,20 @@ public class PanaceaServiceFreeligItCore {
      */
     public void setResult(Result result) {
         this.result = result;
+    }
+
+    /**
+     * @return the prop
+     */
+    public Properties getProp() {
+        return prop;
+    }
+
+    /**
+     * @param prop the prop to set
+     */
+    public void setProp(Properties prop) {
+        this.prop = prop;
     }
     
 }

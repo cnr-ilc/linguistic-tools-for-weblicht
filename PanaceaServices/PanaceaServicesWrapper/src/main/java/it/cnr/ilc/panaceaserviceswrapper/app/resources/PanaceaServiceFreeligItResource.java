@@ -25,6 +25,7 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.EnumSet;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
@@ -54,6 +55,7 @@ public class PanaceaServiceFreeligItResource {
     private final String context = "panaceaservice/freeling_it";
     private static EnumSet<TextCorpusLayerTag> requiredLayers
             = EnumSet.of(TextCorpusLayerTag.TEXT);
+    private Properties prop;
 
     /**
      * This method analyzes a plain text to produce a tabbed output document
@@ -732,6 +734,7 @@ public class PanaceaServiceFreeligItResource {
         args[5] = "tagged";
         try {
             PanaceaServiceFreeligItCore tool = new PanaceaServiceFreeligItCore();
+            tool.setProp(getProp());
             tool.process(args, str, out);
             PrintStream ps = new PrintStream(out);
 
@@ -917,6 +920,20 @@ public class PanaceaServiceFreeligItResource {
         }
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, message, ex);
         return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
+    }
+
+    /**
+     * @return the prop
+     */
+    public Properties getProp() {
+        return prop;
+    }
+
+    /**
+     * @param prop the prop to set
+     */
+    public void setProp(Properties prop) {
+        this.prop = prop;
     }
 
 }
