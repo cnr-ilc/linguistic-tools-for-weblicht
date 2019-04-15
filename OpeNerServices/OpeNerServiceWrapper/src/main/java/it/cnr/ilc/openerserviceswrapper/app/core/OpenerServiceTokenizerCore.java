@@ -19,7 +19,7 @@ import java.util.Properties;
  */
 public class OpenerServiceTokenizerCore {
     private Result result = new Result();
-    Properties prop;
+    private Properties prop;
     private String outPutAsKaf="";
     
     /**
@@ -29,13 +29,16 @@ public class OpenerServiceTokenizerCore {
      * @throws Exception Exception
      */
     public synchronized void process(String[] args, File f) throws Exception {
-        try {
-             prop = ReadExternalPropFiles.getPropertyFile("opener.properties");
-        } catch (IOException e) {
+//        try {
+//            getProp();
+//             //prop = ReadExternalPropFiles.getPropertyFile("opener.properties");
+//             
+//        } catch (IOException e) {
+//
+//            e.printStackTrace();
+//        }
 
-            e.printStackTrace();
-        }
-        SimpleRestClient sc=new SimpleRestClient(prop);
+        SimpleRestClient sc=new SimpleRestClient(getProp());
         sc.checkArgs(args);
         result=sc.forservice(true);
         setOutPutAsKaf(sc.getOutPutAsKaf());
@@ -70,6 +73,20 @@ public class OpenerServiceTokenizerCore {
      */
     public void setOutPutAsKaf(String outPutAsKaf) {
         this.outPutAsKaf = outPutAsKaf;
+    }
+
+    /**
+     * @return the prop
+     */
+    public Properties getProp() {
+        return prop;
+    }
+
+    /**
+     * @param prop the prop to set
+     */
+    public void setProp(Properties prop) {
+        this.prop = prop;
     }
     
 }
