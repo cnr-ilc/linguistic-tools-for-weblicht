@@ -53,6 +53,7 @@ public class PanaceaServiceApp extends Application<PanaceaServiceConf> {
         Logger.getLogger(CLASS_NAME).log(Level.INFO, (message + "  " + environment.getApplicationContext().toString()));
         ReadMeResource readmeResource = new ReadMeResource();
         PanaceaServiceFreeligItResource freeling_it = new PanaceaServiceFreeligItResource();
+        freeling_it.setProp(t.getProp());
         environment.jersey().register(readmeResource);
         environment.jersey().register(freeling_it);
     }

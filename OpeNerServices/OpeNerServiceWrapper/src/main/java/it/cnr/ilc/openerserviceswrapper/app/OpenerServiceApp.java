@@ -10,6 +10,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import it.cnr.ilc.openerserviceswrapper.app.resources.OpenerServiceTokenizerResource;
 import it.cnr.ilc.openerserviceswrapper.app.resources.ReadMeResource;
+import it.cnr.ilc.openerserviceswrapper.app.resources.TokenizerHelpResource;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,8 +54,11 @@ public class OpenerServiceApp extends Application<OpenerServiceConf> {
         Logger.getLogger(CLASS_NAME).log(Level.INFO, "{0}  {1}", new Object[]{message, environment.getApplicationContext().toString()});
         ReadMeResource readmeResource = new ReadMeResource();
         OpenerServiceTokenizerResource tokenizer = new OpenerServiceTokenizerResource();
+        tokenizer.setProp(t.getProp());
+        TokenizerHelpResource tokenizerhr = new TokenizerHelpResource();
         environment.jersey().register(readmeResource);
         environment.jersey().register(tokenizer);
+        environment.jersey().register(tokenizerhr);
     }
 
 }

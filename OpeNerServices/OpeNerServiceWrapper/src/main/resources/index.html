@@ -1,24 +1,34 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>ILC4CLARIN Opener tokenizer service</title>
+        <title>ILC4CLARIN Opener services</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h2>Freeling service</h2>
-        <p>This is the Java wrapping og the soaplab service <a href="https://ilc4clarin.ilc.cnr.it/en/services/freeling-it/" target="_blank">Freeling_it</a>, 
-            developed in <a href="https://www.opener-project.eu/" target="_blank">OPENER</a>. 
-
+        <h2>Offered services</h2>
+        <p>ILC4CLARIN offers the set of services provided by <a href="https://www.opener-project.eu/" target="_blank">OPENER</a>. 
         <p>Current Software version 1.0, released on 15/04/2019. It is available at <a href="https://github.com/cnr-ilc/linguistic-tools-for-weblicht">CNR-ILC</a> github</p>
-        <p>ILC4CLARIN Freeling service is (for this version available) only for Italian:
+        <p>ILC4CLARIN Opener services are available for 6 languages:
 
         <ul>
-            <li>ita</li> 
+            <li>ita</li>
+            <li>eng</li>
+            <li>fra</li>
+            <li>deu</li>
+            <li>esp</li>
+            <li>nld</li>
         </ul>
-        This parameter is hard encoded, but it might be required as input parameters, especially to operate with LRS (see below).
+        <p>Please click on the desired service to get more information.</p>
 
-        <p>Offered service performs the same operations (tokenization, pos tagging and lemmatization), but, according with the endpoints, 
-            a valid 
+        <ul>
+            <li><a href="tokenizerhr" target="_blank">Tokenizer</a></li>
+            <li>eng</li>
+            <li>fra</li>
+            <li>deu</li>
+            <li>esp</li>
+            <li>nld</li>
+        </ul>
+        <p>Offered services return one of the following output formats:
         <ul>
             <li>
                 <a href="https://weblicht.sfs.uni-tuebingen.de/weblichtwiki/index.php/The_TCF_Format" target="_blank">TCF</a>
@@ -28,196 +38,24 @@
                 or tabbed files (TAB)
             </li>
         </ul>
-        can be produced.
-        <p>The service manages plain texts (TXT), TCF and KAF documents, but the incoming mimetype must be set accordingly.</p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p>This page explains how to invoke the offered services.</p>
-        <p>POST endpoints are the following:</p>
-        <ul>
-            <li><code>panaceaservice/freeling_it/runservice</code> (POST service to analyze plain texts and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-            <li><code>panaceaservice/freeling_it/tcf/runservice</code> (POST service to analyze TCF documents and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-            <li><code>panaceaservice/freeling_it/kaf/runservice</code> (POST service to analyze KAF documents and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>         
-        </ul>
-        <p>Similarly GET endpoints have been set up for eventual integration into <a href="https://www.clarin.eu/content/language-resource-switchboard" target="_blank">LRS</a></p>
-        <ul>    
-            <li><code>panaceaservice/freeling_it/lrs</code> (GET service to analyze plain texts and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-            <li><code>panaceaservice/freeling_it/kaf/lrs</code> (GET service to analyze KAF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-            <li><code>panaceaservice/freeling_it/tcf/lrs</code> (GET service to analyze TCF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-        </ul>
-        <p></p>
-        <p></p>
-        <h2>Examples</h2>
-        In each example:
-        <br>Calls in the <b>(1)</b> manage plain texts to produce a valid  TAB, TCF or KAF  document;
-        <br>Calls in the <b>(2)</b> manage TCF document to produce a valid  TAB, TCF or KAF  document;
-        <br>Calls in the <b>(3)</b> manage KAF document to produce a valid  TAB, TCF or KAF  document;
-        <h3>POST</h3>
-        <code>format</code> parameter must be supplied as parameters:
-        <ul> 
-            <li>format one in tab, tcf, kaf</li>
-        </ul>
-        <p>CURL:</p>
-        Some examples:
 
-        <ol>
-            <li>
-                <ul>
-                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tab</code></li>
-                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tcf</code></li>
-                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=kaf</code></li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tab</code></li>
-                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tcf</code></li>
-                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=kaf</code></li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tab</code></li>
-                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tcf</code></li>
-                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=kaf</code></li>
-                </ul>
-            </li>
-        </ol>
+        <p>Each service receives a json string in input and returns the output which correspond to the selected service.</p>
+        The json string is something like the following:
+        <pre>{
+                "file":"input_file",
+                "language":"one_of_the_above_in_either_2_or_3_codes",
+                "iformat":"raw_or_kaf", 
+                "oformat":"one_of_the_above"}
+}</pre>
+
+        Where
+
+        <code>file</code> is the input file; <code>language</code> is the language; <code>iformat</code> is the input file format. 
+        Finally <code>oformat</code> is a not mandatory parameter to tell the service to return the result in <code>oformat</code>. 
+        If this parameter is not supplied, the the output is returned in KAF.
 
 
-        <p>WGET</p>
-        Similarly, using wget:
-        <ol>
-            <li>
-                <ul>
-                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tab</code></li>
-                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tcf</code></li>
-                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=kaf</code></li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tab</code></li>
-                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tcf</code></li>
-                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=kaf</code></li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tab</code></li>
-                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tcf</code></li>
-                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=kaf</code></li>
-                </ul>
-            </li>
-        </ol>
 
-       
-
-        <p></p>
-
-        <h3>GET</h3>
-        GET endpoints are designed mainly for LRS purposes and can be executed in both curl and wget.
-        In both cases, the <code>url</code> parameter indicates the URL where the text to analyze is found. The <code>language</code> and the <code>format</code> must be supplied as parameters:
-        <ul> 
-            <li>lang=ita</li>
-            <li>format one in tab, tcf, kaf</li>
-            <li>url the url</li>
-        </ul>
-
-        <p>CURL</p>
-        Some examples:
-        <ol>
-            <li>
-                <ul>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
-                </ul>
-            </li>
-        </ol>
-
-        <p>WGET</p>
-        Some examples:
-        <ol>
-            <li>
-                <ul>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                </ul>
-            </li>
-        </ol>
-        <h2>Example texts</h2>
-
-        <p>As for plain text you can use <pre> Mi chiamo Riccardo. Abito a Roma</pre>
-
-        <p>As for TCF text you can use <pre>
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;?xml-model href=&quot;http://de.clarin.eu/images/weblicht-tutorials/resources/tcf-04/schemas/latest/d-spin_0_4.rnc&quot; type=&quot;application/relax-ng-compact-syntax&quot;?&gt;
-    &lt;D-Spin xmlns=&quot;http://www.dspin.de/data&quot; version=&quot;0.4&quot;&gt;
-        &lt;md:MetaData xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:cmd=&quot;http://www.clarin.eu/cmd/&quot; 
-            xmlns:md=&quot;http://www.dspin.de/data/metadata&quot; 
-            xsi:schemaLocation=&quot;http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1320657629623/xsd&quot;&gt;
-        &lt;/md:MetaData&gt;
-            &lt;tc:TextCorpus xmlns:tc=&quot;http://www.dspin.de/data/textcorpus&quot; lang=&quot;it&quot;&gt;
-                &lt;tc:text&gt;
-                    Mi chiamo Alfredo. Abito a Roma.
-                &lt;/tc:text&gt;
-            &lt;/tc:TextCorpus&gt;
-    &lt;/D-Spin&gt;
-        </pre>
-        
-        <p>As for KAF text you can use <pre>
-            
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
-&lt;KAF xml:lang=&quot;it&quot; version=&quot;1.0&quot;&gt;
-	&lt;kafHeader&gt;
-		&lt;fileDesc /&gt;
-		&lt;linguisticProcessors layer=&quot;text&quot;&gt;
-			&lt;lp name=&quot;it.cnr.ilc.panacea.service.impl.FreelingIt&quot; version=&quot;1.0&quot; timestamp=&quot;2019-04-12T15:04:32.096Z&quot;/&gt;
-		&lt;/linguisticProcessors&gt;
-	&lt;/kafHeader&gt;
-	&lt;text&gt;
-			&lt;wf wid=&quot;w1&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;0&quot; length=&quot;2&quot;&gt;&lt;![CDATA[Mi]]&gt;&lt;/wf&gt;
-			&lt;wf wid=&quot;w2&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;3&quot; length=&quot;6&quot;&gt;&lt;![CDATA[chiamo]]&gt;&lt;/wf&gt;
-			&lt;wf wid=&quot;w3&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;10&quot; length=&quot;8&quot;&gt;&lt;![CDATA[Riccardo]]&gt;&lt;/wf&gt;
-			&lt;wf wid=&quot;w4&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;18&quot; length=&quot;1&quot;&gt;&lt;![CDATA[.]]&gt;&lt;/wf&gt;
-			&lt;wf wid=&quot;w5&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;19&quot; length=&quot;5&quot;&gt;&lt;![CDATA[Abito]]&gt;&lt;/wf&gt;
-			&lt;wf wid=&quot;w6&quot; sent=&quot;1&quot; para=&quot;1&quot; offset=&quot;25&quot; length=&quot;1&quot;&gt;&lt;![CDATA[a]]&gt;&lt;/wf&gt;
-			&lt;wf wid=&quot;w8&quot; sent=&quot;2&quot; para=&quot;1&quot; offset=&quot;27&quot; length=&quot;4&quot;&gt;&lt;![CDATA[Roma]]&gt;&lt;/wf&gt;
-	&lt;/text&gt;
-&lt;/KAF&gt;
-
-        </pre>
 
         <h2>Contacts</h2>
         In case of problems write an email 

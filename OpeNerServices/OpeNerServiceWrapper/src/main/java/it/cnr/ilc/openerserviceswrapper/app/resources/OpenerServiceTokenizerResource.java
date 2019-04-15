@@ -6,7 +6,6 @@
 package it.cnr.ilc.openerserviceswrapper.app.resources;
 
 import eu.clarin.weblicht.wlfxb.io.TextCorpusStreamed;
-import eu.clarin.weblicht.wlfxb.tc.api.TextCorpus;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusLayerTag;
 import eu.kyotoproject.kaf.KafSaxParser;
 import it.cnr.ilc.ilcioutils.IlcInputToFile;
@@ -28,6 +27,7 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.EnumSet;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
@@ -48,6 +48,20 @@ import javax.ws.rs.core.StreamingOutput;
 @Path("openerservice/tokenizer")
 public class OpenerServiceTokenizerResource {
 
+    /**
+     * @return the prop
+     */
+    public Properties getProp() {
+        return prop;
+    }
+
+    /**
+     * @param prop the prop to set
+     */
+    public void setProp(Properties prop) {
+        this.prop = prop;
+    }
+
     private static final String TEXT_PLAIN = "text/plain";
     private static final String TEXT_TCF_XML = "text/tcf+xml";
     private static final String FALL_BACK_MESSAGE = "Data processing failed";
@@ -57,6 +71,7 @@ public class OpenerServiceTokenizerResource {
     private final String context = "openerservice/tokenizer";
     private static EnumSet<TextCorpusLayerTag> requiredLayers
             = EnumSet.of(TextCorpusLayerTag.TEXT);
+    private Properties prop;
 
     /**
      * This method analyzes a plain text to produce a tabbed output document
@@ -95,6 +110,8 @@ public class OpenerServiceTokenizerResource {
      */
     private StreamingOutput parseInputDataAndSwitch(String jsonData) {
         InputData id;
+        String oFormat;
+        
 
         //String lang, iFormat, fileName, format;
         String message;
@@ -104,6 +121,12 @@ public class OpenerServiceTokenizerResource {
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
         try {
             id = parseInputData(jsonData);
+            if (id.getOformat() == null){
+                oFormat=Format.OPENER_SERVICE_OUT_TAG;
+                id.setOformat(oFormat);
+            }
+            else
+                oFormat=id.getOformat();
 //            lang = id.getLanguage();
 //            iFormat = id.getIformat();
 //            fileName = id.getFile();
@@ -112,7 +135,7 @@ public class OpenerServiceTokenizerResource {
             Logger
                     .getLogger(CLASS_NAME).log(Level.INFO, message);
 
-            message = String.format("Calling  the formatProducer  according to the format -%s-", id.getOformat());
+            message = String.format("Calling  the formatProducer  according to the format -%s-", oFormat);
             Logger
                     .getLogger(CLASS_NAME).log(Level.INFO, message);
 //            if (format.equals(Format.OUT_TAB)) {
@@ -124,7 +147,7 @@ public class OpenerServiceTokenizerResource {
 //            if (format.equals(Format.OUT_TCF)) {
 //                return tcfProducer(jsonData);
 //            }
-            if (id.getOformat().length() > 0) {
+            if (oFormat.length() > 0) {
                 //return formatProducer(lang, format, fileName, iFormat);
                 return formatProducer(id);
             }
@@ -762,6 +785,7 @@ public class OpenerServiceTokenizerResource {
         args[9] = format;
         try {
             OpenerServiceTokenizerCore tool = new OpenerServiceTokenizerCore();
+            tool.setProp(getProp());
             tool.process(args, out);
             PrintStream ps = new PrintStream(out);
 
@@ -831,7 +855,11 @@ public class OpenerServiceTokenizerResource {
             newId.setIformat("raw");
             newId.setFile(tempFileName);
             newId.setLanguage(id.getLanguage());
-            newId.setOformat(id.getOformat());
+            if (id.getOformat()==null)
+                format=Format.OPENER_SERVICE_OUT_TAG;
+            else
+                format=id.getOformat();
+            newId.setOformat(format);
 
             //System.err.println("NEWID " + newId.getFile());
 
