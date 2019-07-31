@@ -5,6 +5,7 @@
  */
 package it.cnr.ilc.openerserviceswrapper.app.resources;
 
+import com.sun.jersey.core.header.FormDataContentDisposition;
 import eu.clarin.weblicht.wlfxb.io.TextCorpusStreamed;
 import eu.clarin.weblicht.wlfxb.tc.xb.TextCorpusLayerTag;
 import eu.kyotoproject.kaf.KafSaxParser;
@@ -40,6 +41,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import com.sun.jersey.multipart.FormDataParam;
+//import com.sun.jersey.m
 
 /**
  *
@@ -79,16 +82,19 @@ public class OpenerServiceTokenizerResource {
      * @param jsonData the input stream
      * @return the output file
      */
-    @Path("runservice")
+    @Path("runservice1")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    //@Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     //@Produces(MediaType.TEXT_PLAIN)
-    public StreamingOutput analyzeTextFromPlain(final String jsonData) {
+    public StreamingOutput analyzeTextFromPlain1(final String jsonData) {
         String lang = "ita";
         String message;
         //String data = "{\"file\":\"/tmp/riccardo.txt\",\"language\":\"ita\",\"iformat\":\"raw\", \"oformat\":\"tcf\"}";
         //jsonData = data;
-        //System.err.println("TEXT  IN INPUT " + jsonData);
+        System.err.println("TEXT  IN INPUT " + jsonData);
+        
+        
 
         String routine = "analyzeTextFromPlain";
         message = String.format("Executing  -%s- in context -%s-", routine, context);
@@ -99,7 +105,51 @@ public class OpenerServiceTokenizerResource {
         Logger
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
 
-        return parseInputDataAndSwitch(jsonData);
+        return parseInputDataAndSwitch1(jsonData);
+    }
+    
+    /**
+     * This method analyzes a plain text to produce a tabbed output document
+     *
+     * @param jsonData the input stream
+     * @return the output file
+     */
+    @Path("runservice")
+    @POST
+    //@Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    //@Produces(MediaType.TEXT_PLAIN)
+    public StreamingOutput analyzeTextFromPlain(@FormDataParam("form") String jsonData,@FormDataParam("file") InputStream input, @FormDataParam("file") FormDataContentDisposition fileDetail) {
+        String lang = "ita";
+        String message,fileName="";
+        //String jsonData = "{\"file\":\"/tmp/riccardo.txt\",\"language\":\"ita\",\"iformat\":\"raw\", \"oformat\":\"tcf\"}";
+        //jsonData = data;
+        String content=IlcInputToString.convertInputStreamToString(input);
+        //System.err.println("TEXT  IN INPUT " + jsonData);
+        
+        //System.err.println("INPUT " +content );
+        //System.err.println("DETAIL " + fileDetail.getFileName());
+        
+        try {
+            File temp=IlcInputToFile.createAndWriteTempFileFromString(content);
+            fileName=temp.getCanonicalPath();
+           //System.err.println("File "+fileName);
+        } catch (IOException ex) {
+            Logger.getLogger(OpenerServiceTokenizerResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+
+        String routine = "analyzeTextFromPlain";
+        message = String.format("Executing  -%s- in context -%s-", routine, context);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+
+        message = String.format("Calling  parseInputDataAndSwitch to get the format");
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+        
+
+        return parseInputDataAndSwitch(jsonData,fileName);
     }
 
     /**
@@ -108,7 +158,7 @@ public class OpenerServiceTokenizerResource {
      * @param jsonData
      * @return the correct producer
      */
-    private StreamingOutput parseInputDataAndSwitch(String jsonData) {
+    private StreamingOutput parseInputDataAndSwitch1(String jsonData) {
         InputData id;
         String oFormat;
         
@@ -162,6 +212,68 @@ public class OpenerServiceTokenizerResource {
         return null;
 
     }
+    
+    /**
+     * Parse the inputdata and executes the correct producer
+     * @param jsonData the json string in input
+     * @param fileName the local to server file where data have been uploaded
+     * @return the correct producer
+     */
+    private StreamingOutput parseInputDataAndSwitch(String jsonData, String fileName ) {
+        InputData id;
+        String oFormat;
+        
+
+        //String lang, iFormat, fileName, format;
+        String message;
+        String routine = "parseInputDataAndSwitch";
+        message = String.format("Executing  -%s- ", routine);
+        Logger
+                .getLogger(CLASS_NAME).log(Level.INFO, message);
+        try {
+            id = parseInputData(jsonData);
+            id.setFile(fileName);
+            if (id.getOformat() == null){
+                oFormat=Format.OPENER_SERVICE_OUT_TAG;
+                id.setOformat(oFormat);
+            }
+            else
+                oFormat=id.getOformat();
+//            lang = id.getLanguage();
+//            iFormat = id.getIformat();
+//            fileName = id.getFile();
+
+            message = String.format("Executing  -%s- in context -%s-", routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.INFO, message);
+
+            message = String.format("Calling  the formatProducer  according to the format -%s-", oFormat);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.INFO, message);
+//            if (format.equals(Format.OUT_TAB)) {
+//                return tabProducer(jsonData);
+//            }
+//            if (format.equals(Format.OUT_KAF)) {
+//                return kafProducer(jsonData);
+//            }
+//            if (format.equals(Format.OUT_TCF)) {
+//                return tcfProducer(jsonData);
+//            }
+            if (oFormat.length() > 0) {
+                //return formatProducer(lang, format, fileName, iFormat);
+                return formatProducer(id);
+            }
+
+        } catch (NullPointerException npe) {
+            message = String.format("NullPointerException -%s- in -%s- with context -%s-", npe.getMessage(), routine, context);
+            Logger
+                    .getLogger(CLASS_NAME).log(Level.SEVERE, message);
+
+            throw new WebApplicationException(createResponse(npe, Response.Status.INTERNAL_SERVER_ERROR));
+        }
+        return null;
+
+    }
 
     /**
      * Read from a TCF file
@@ -170,10 +282,11 @@ public class OpenerServiceTokenizerResource {
      */
     @Path("tcf/runservice")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    //@Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     //@Produces(TEXT_TCF_XML)
     //public StreamingOutput tokenizeTextFromTcf(@QueryParam("lang") String lang, final InputStream text) {
-    public StreamingOutput analyzeTextFromTcf(final String jsonData) {
+    public StreamingOutput analyzeTextFromTcf(@FormDataParam("form") String jsonData,@FormDataParam("file") InputStream input, @FormDataParam("file") FormDataContentDisposition fileDetail)  {
         OutputStream tempOutputData = null;
         InputData id;
         String message;
@@ -214,7 +327,7 @@ public class OpenerServiceTokenizerResource {
 
 //        // process incoming TCF and output resulting TCF with new annotation layer(s) added
 //        //process(input, tempOutputData, tool);
-        id = createInputDataFromJsonData(jsonData, tempOutputData);
+        id = createInputDataFromJsonData(jsonData, tempOutputData,input);
 
 //        if (str != null) {
 //            if (format.equals(Format.OUT_TAB)) {
@@ -783,6 +896,7 @@ public class OpenerServiceTokenizerResource {
         args[7] = fileName;
         args[8] = "-f";
         args[9] = format;
+        //System.err.println("XXXX "+iFormat+ " "+fileName);
         try {
             OpenerServiceTokenizerCore tool = new OpenerServiceTokenizerCore();
             tool.setProp(getProp());
@@ -827,7 +941,7 @@ public class OpenerServiceTokenizerResource {
      * @param output the output where to write
      * @return the output of the process
      */
-    private InputData createInputDataFromJsonData(String jsonData, OutputStream output) {
+    private InputData createInputDataFromJsonData(String jsonData, OutputStream output, InputStream input) {
         InputData id;
         InputData newId = new InputData();
 
@@ -841,8 +955,8 @@ public class OpenerServiceTokenizerResource {
                 .getLogger(CLASS_NAME).log(Level.INFO, message);
         try {
             id = parseInputData(jsonData);
-            fileName = id.getFile();
-            InputStream input = new FileInputStream(new File(fileName));
+            //fileName = id.getFile();
+            //InputStream input = new FileInputStream(new File(fileName));
             textCorpus = new TextCorpusStreamed(input, requiredLayers, output, false);
             lang = textCorpus.getLanguage();
             //System.err.println("LANG " + lang);
