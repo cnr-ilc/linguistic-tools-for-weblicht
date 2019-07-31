@@ -33,7 +33,8 @@ public class InputDataParser {
             id=mapper.readValue(data, InputData.class);
 //            System.out.println("it.cnr.ilc.restclient.app.json.parser.InputDataParser.getDataFromInput() language "+ id.getLanguage());
 //            System.out.println("it.cnr.ilc.restclient.app.json.parser.InputDataParser.getDataFromInput() format "+ id.getIformat());
-//            System.out.println("it.cnr.ilc.restclient.app.json.parser.InputDataParser.getDataFromInput() file "+ id.getFile());
+//           System.out.println("it.cnr.ilc.restclient.app.json.parser.InputDataParser.getDataFromInput() file "+ id.getFile());
+//           System.out.println("it.cnr.ilc.restclient.app.json.parser.InputDataParser.getDataFromInput() fromUrl "+ id.getFromUrl());
         } catch (Exception ex) {
            
                     message = String.format("Unable to parse the pojo data -%s-", data);

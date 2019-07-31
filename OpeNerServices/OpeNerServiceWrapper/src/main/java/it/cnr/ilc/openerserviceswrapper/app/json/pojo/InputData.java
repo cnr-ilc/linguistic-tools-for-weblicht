@@ -9,15 +9,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
 /**
- * This POJO encodes the following json data when sent as input in a POST request
- * {
- *  "file":"the_file_to_read_in_either_kaf_or_raw_format",
- *  "language":"one_in_it[a]_de[u]_fr[a]_en[g]_es[p]_nl[d]",
- *  "iformat":"either_kaf_or_raw",
- *  "oformat":"one_intab_tcf_kaf"
- * }
+ * Changes made for being used with dockers: The file is read from url and
+ * locally created Added a property fromUrl in the json pojo This POJO encodes
+ * the following json data when sent as input in a POST request {
+ * "file":"the_file_to_read_in_either_kaf_or_raw_format",
+ * "language":"one_in_it[a]_de[u]_fr[a]_en[g]_es[p]_nl[d]",
+ * "iformat":"either_kaf_or_raw", "oformat":"one_intab_tcf_kaf" }
+ *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -32,12 +31,13 @@ public class InputData {
 
     @JsonProperty("file")
     private String file;
+
     @JsonProperty("language")
     private String language;
 
     @JsonProperty("iformat")
     private String iformat;
-    
+
     @JsonProperty("oformat")
     private String oformat;
 
