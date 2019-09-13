@@ -36,15 +36,15 @@
         <p>This page explains how to invoke the offered services.</p>
         <p>POST endpoints are the following:</p>
         <ul>
-            <li><code>panaceaservice/freeling_it/runservice</code> (POST service to analyze plain texts and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-            <li><code>panaceaservice/freeling_it/tcf/runservice</code> (POST service to analyze TCF documents and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-            <li><code>panaceaservice/freeling_it/kaf/runservice</code> (POST service to analyze KAF documents and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>         
+            <li><code>freeling_it/runservice</code> (POST service to analyze plain texts and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+            <li><code>freeling_it/tcf/runservice</code> (POST service to analyze TCF documents and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+            <li><code>freeling_it/kaf/runservice</code> (POST service to analyze KAF documents and to produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>         
         </ul>
         <p>Similarly GET endpoints have been set up for eventual integration into <a href="https://www.clarin.eu/content/language-resource-switchboard" target="_blank">LRS</a></p>
         <ul>    
-            <li><code>panaceaservice/freeling_it/lrs</code> (GET service to analyze plain texts and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-            <li><code>panaceaservice/freeling_it/kaf/lrs</code> (GET service to analyze KAF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-            <li><code>panaceaservice/freeling_it/tcf/lrs</code> (GET service to analyze TCF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+            <li><code>freeling_it/lrs</code> (GET service to analyze plain texts and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+            <li><code>freeling_it/kaf/lrs</code> (GET service to analyze KAF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+            <li><code>freeling_it/tcf/lrs</code> (GET service to analyze TCF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
         </ul>
         <p></p>
         <p></p>
@@ -64,23 +64,23 @@
         <ol>
             <li>
                 <ul>
-                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tab</code></li>
-                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tcf</code></li>
-                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=kaf</code></li>
+                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>freeling_it/runservice?format=tab</code></li>
+                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>freeling_it/runservice?format=tcf</code></li>
+                    <li><code> curl -H 'content-type: text/plain' --data-binary @plain-file.txt -X POST <span class="url"></span>freeling_it/runservice?format=kaf</code></li>
                 </ul>
             </li>
             <li>
                 <ul>
-                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tab</code></li>
-                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tcf</code></li>
-                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=kaf</code></li>
+                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>freeling_it/tcf/runservice?format=tab</code></li>
+                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>freeling_it/tcf/runservice?format=tcf</code></li>
+                    <li><code> curl -H 'content-type: text/tcf+xml' --data-binary @tcf-file.xml -X POST <span class="url"></span>freeling_it/tcf/runservice?format=kaf</code></li>
                 </ul>
             </li>
             <li>
                 <ul>
-                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tab</code></li>
-                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tcf</code></li>
-                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=kaf</code></li>
+                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>freeling_it/kaf/runservice?format=tab</code></li>
+                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>freeling_it/kaf/runservice?format=tcf</code></li>
+                    <li><code> curl -H 'content-type: text/xml' --data-binary @kaf-file.xml -X POST <span class="url"></span>freeling_it/kaf/runservice?format=kaf</code></li>
                 </ul>
             </li>
         </ol>
@@ -91,23 +91,23 @@
         <ol>
             <li>
                 <ul>
-                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tab</code></li>
-                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=tcf</code></li>
-                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>panaceaservice/freeling_it/runservice?format=kaf</code></li>
+                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>freeling_it/runservice?format=tab</code></li>
+                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>freeling_it/runservice?format=tcf</code></li>
+                    <li><code> wget --header 'content-type: text/plain' --post-file=plain-file.txt -X POST <span class="url"></span>freeling_it/runservice?format=kaf</code></li>
                 </ul>
             </li>
             <li>
                 <ul>
-                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tab</code></li>
-                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=tcf</code></li>
-                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/tcf/runservice?format=kaf</code></li>
+                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>freeling_it/tcf/runservice?format=tab</code></li>
+                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>freeling_it/tcf/runservice?format=tcf</code></li>
+                    <li><code> wget --header 'content-type: text/tcf+xml' --post-file=tcf-file.xml -X POST <span class="url"></span>freeling_it/tcf/runservice?format=kaf</code></li>
                 </ul>
             </li>
             <li>
                 <ul>
-                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tab</code></li>
-                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=tcf</code></li>
-                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>panaceaservice/freeling_it/kaf/runservice?format=kaf</code></li>
+                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>freeling_it/kaf/runservice?format=tab</code></li>
+                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>freeling_it/kaf/runservice?format=tcf</code></li>
+                    <li><code> wget --header 'content-type: text/xml' --post-file=kaf-file.xml -X POST <span class="url"></span>freeling_it/kaf/runservice?format=kaf</code></li>
                 </ul>
             </li>
         </ol>
@@ -130,23 +130,23 @@
         <ol>
             <li>
                 <ul>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>freeling_it/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>freeling_it/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>freeling_it/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
                 </ul>
             </li>
             <li>
                 <ul>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>freeling_it/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>freeling_it/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>freeling_it/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
                 </ul>
             </li>
             <li>
                 <ul>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
-                    <li>curl -X GET &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>freeling_it/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>freeling_it/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
+                    <li>curl -X GET &quot;<span class="url"></span>freeling_it/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
                 </ul>
             </li>
         </ol>
@@ -156,23 +156,23 @@
         <ol>
             <li>
                 <ul>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>freeling_it/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>freeling_it/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>freeling_it/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
                 </ul>
             </li>
             <li>
                 <ul>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>freeling_it/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>freeling_it/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>freeling_it/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
                 </ul>
             </li>
             <li>
                 <ul>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                    <li>wget &quot;<span class="url"></span>/panaceaservice/freeling_it/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>freeling_it/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>freeling_it/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                    <li>wget &quot;<span class="url"></span>freeling_it/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
                 </ul>
             </li>
         </ol>

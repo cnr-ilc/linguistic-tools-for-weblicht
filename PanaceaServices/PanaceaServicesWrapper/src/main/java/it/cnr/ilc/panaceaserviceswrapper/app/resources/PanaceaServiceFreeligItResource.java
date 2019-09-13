@@ -43,7 +43,8 @@ import javax.ws.rs.core.StreamingOutput;
  *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
-@Path("panaceaservice/freeling_it")
+//@Path("panaceaservice/freeling_it")
+@Path("freeling_it")
 public class PanaceaServiceFreeligItResource {
 
     private static final String TEXT_PLAIN = "text/plain";
