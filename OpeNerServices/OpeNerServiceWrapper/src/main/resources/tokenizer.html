@@ -13,7 +13,8 @@ and open the template in the editor.
     <body>
         <h2>ILC4CLARIN Opener tokenizer wrapper</h2>
         <div>
-            <p><p>Current Software version 1.0, released on 15/04/2019. It is available at <a href="https://github.com/cnr-ilc/linguistic-tools-for-weblicht">CNR-ILC</a> github</p></p>
+            <p>Current Software version 1.0, released on 15/04/2019. 
+                It is available at <a href="https://github.com/cnr-ilc/linguistic-tools-for-weblicht">CNR-ILC</a> github</p>
             <p>This page describes how to use the ILC4CLARIN opener tokenizer wrapper. 
                 Official information and description can be found <a href="http://opener.ilc4clarin.ilc.cnr.it/tokenizer" target="_blank">here</a></p>
         </div>
@@ -49,27 +50,27 @@ and open the template in the editor.
                 <li> or a   
                     <a href="https://github.com/opener-project/kaf/wiki/KAF-structure-overview" target="_blank">KAF</a>. 
                     This format is automatically selected if the corresponding parameter is not sent. </li>
-                <li>
+                
             </ul>
 
 
             <p></p>
             <p></p>
             <p></p>
-            curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.tcf' -F 'form='{"language":"it","iformat":"raw","oformat":"tab"}' http://localhost:8080/openerservice/tokenizer/runservice
+<!--            curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.tcf' -F 'form={"language":"it","iformat":"raw","oformat":"tab"}' http://localhost:8080/openerservice/tokenizer/runservice-->
 
             <p>POST endpoints are the following:</p>
             <ul>
-                <li><code>openerservice/tokenizer/runservice</code> (POST service to analyze plain and to produce  TCF, TAB, KAF valid documents, according to the input and output format parameters)</li>
-                <li><code>openerservice/tokenizer/tcf/runservice</code> (POST service to analyze TCF documents and to produce  TCF, TAB, KAF valid documents, according to the input and output format parameters)</li>
-                <li><code>openerservice/tokenizer/runservice***</code> (POST service to analyze KAF (with raw element) documents and to produce  TCF, TAB, KAF valid documents, according to the input and output format parameters)</li>
+                <li><code>tokenizer/runservice</code> (POST service to analyze plain and to produce  TCF, TAB, KAF valid documents, according to the input and output format parameters)</li>
+                <li><code>tokenizer/tcf/runservice</code> (POST service to analyze TCF documents and to produce  TCF, TAB, KAF valid documents, according to the input and output format parameters)</li>
+                <li><code>tokenizer/runservice***</code> (POST service to analyze KAF (with raw element) documents and to produce  TCF, TAB, KAF valid documents, according to the input and output format parameters)</li>
 
             </ul>
             <p>Similarly GET endpoints have been set up for eventual integration into <a href="https://www.clarin.eu/content/language-resource-switchboard" target="_blank">LRS</a></p>
             <ul>    
-                <li><code>openerservice/tokenizer/lrs</code> (GET service to analyze plain texts and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-                <li><code>openerservice/tokenizer/kaf/lrs</code> (GET service to analyze KAF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
-                <li><code>openerservice/tokenizer/tcf/lrs</code> (GET service to analyze TCF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+                <li><code>tokenizer/lrs</code> (GET service to analyze plain texts and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+                <li><code>tokenizer/kaf/lrs</code> (GET service to analyze KAF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
+                <li><code>tokenizer/tcf/lrs</code> (GET service to analyze TCF documents and to produce produce  TCF, TAB, KAF valid documents, according to the format parameter)</li>
             </ul>
             <p></p>
             <p></p>
@@ -94,23 +95,23 @@ and open the template in the editor.
             <ol>
                 <li>
                     <ul>
-                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile' -F 'form='{"language":"it","iformat":"raw","oformat":"tab"}' -X POST <span class="url"></span>openerservice/tokenizer/runservice</code></li>
-                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile' -F 'form='{"language":"it","iformat":"raw","oformat":"tcf"}' -X POST <span class="url"></span>openerservice/tokenizer/runservice</code></li>
-                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile' -F 'form='{"language":"it","iformat":"raw","oformat":"kaf"}' -X POST <span class="url"></span>openerservice/tokenizer/runservice</code></li>
+                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile' -F 'form={"language":"it","iformat":"raw","oformat":"tab"}' -X POST <span class="url"></span>tokenizer/runservice</code></li>
+                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile' -F 'form={"language":"it","iformat":"raw","oformat":"tcf"}' -X POST <span class="url"></span>tokenizer/runservice</code></li>
+                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile' -F 'form={"language":"it","iformat":"raw","oformat":"kaf"}' -X POST <span class="url"></span>tokenizer/runservice</code></li>
                     </ul>
                 </li>
                 <li>
                     <ul>
-                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.tcf' -F 'form='{"language":"it","iformat":"raw","oformat":"tab"}' -X POST <span class="url"></span>openerservice/tokenizer/tcf/runservice</code></li>
-                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.tcf' -F 'form='{"language":"it","iformat":"raw","oformat":"tcf"}' -X POST <span class="url"></span>openerservice/tokenizer/tcf/runservice</code></li>
-                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.tcf' -F 'form='{"language":"it","iformat":"raw","oformat":"kaf"}' -X POST <span class="url"></span>openerservice/tokenizer/tcf/runservice</code></li>
+                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.tcf' -F 'form={"language":"it","iformat":"raw","oformat":"tab"}' -X POST <span class="url"></span>tokenizer/tcf/runservice</code></li>
+                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.tcf' -F 'form={"language":"it","iformat":"raw","oformat":"tcf"}' -X POST <span class="url"></span>tokenizer/tcf/runservice</code></li>
+                        <li><code> curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.tcf' -F 'form={"language":"it","iformat":"raw","oformat":"kaf"}' -X POST <span class="url"></span>tokenizer/tcf/runservice</code></li>
                     </ul>
                 </li>
                 <li>
                     <ul>
-                        <li><code>*** curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.kaf' -F 'form='{"language":"it","iformat":"kaf","oformat":"tab"}' -X POST <span class="url"></span>openerservice/tokenizer/runservice</code></li>
-                        <li><code>*** curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.kaf' -F 'form='{"language":"it","iformat":"kaf","oformat":"tcf"}' -X POST <span class="url"></span>openerservice/tokenizer/runservice</code></li>
-                        <li><code>*** curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.kaf' -F 'form='{"language":"it","iformat":"kaf","oformat":"kaf"}' -X POST <span class="url"></span>openerservice/tokenizer/runservice</code></li>
+                        <li><code>*** curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.kaf' -F 'form={"language":"it","iformat":"kaf","oformat":"tab"}' -X POST <span class="url"></span>tokenizer/runservice</code></li>
+                        <li><code>*** curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.kaf' -F 'form={"language":"it","iformat":"kaf","oformat":"tcf"}' -X POST <span class="url"></span>tokenizer/runservice</code></li>
+                        <li><code>*** curl -H 'Content-Type: multipart/form-data' -F 'file=@myfile.kaf' -F 'form={"language":"it","iformat":"kaf","oformat":"kaf"}' -X POST <span class="url"></span>tokenizer/runservice</code></li>
                     </ul>
                 </li>
             </ol>
@@ -158,9 +159,9 @@ and open the template in the editor.
             The <code>language</code> and the <code>format</code> must be supplied as parameters:
 
             <ul> 
-                <li><code>/openerservice/tokenizer/lrs</code> to analyze plain text*</li>
-                <li><code>/openerservice/tokenizer/tcf/lrs</code> to analyze tcf text</li>
-                <li><code>/openerservice/tokenizer/kaf/lrs</code> to analyze kaf text** </li>
+                <li><code>tokenizer/lrs</code> to analyze plain text*</li>
+                <li><code>tokenizer/tcf/lrs</code> to analyze tcf text</li>
+                <li><code>tokenizer/kaf/lrs</code> to analyze kaf text** </li>
             </ul>
 
             <p>CURL</p>
@@ -168,23 +169,23 @@ and open the template in the editor.
             <ol>
                 <li>
                     <ul>
-                        <li>curl -X GET &quot;<span class="url"></span>openerservice/tokenizer/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
-                        <li>curl -X GET &quot;<span class="url"></span>openerservice/tokenizer/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
-                        <li>curl -X GET &quot;<span class="url"></span>openerservice/tokenizer/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
+                        <li>curl -X GET &quot;<span class="url"></span>tokenizer/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
+                        <li>curl -X GET &quot;<span class="url"></span>tokenizer/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
+                        <li>curl -X GET &quot;<span class="url"></span>tokenizer/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
                     </ul>
                 </li>
                 <li>
                     <ul>
-                        <li>curl -X GET &quot;<span class="url"></span>openerservice/tokenizer/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
-                        <li>curl -X GET &quot;<span class="url"></span>openerservice/tokenizer/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
-                        <li>curl -X GET &quot;<span class="url"></span>openerservice/tokenizer/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
+                        <li>curl -X GET &quot;<span class="url"></span>tokenizer/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
+                        <li>curl -X GET &quot;<span class="url"></span>tokenizer/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
+                        <li>curl -X GET &quot;<span class="url"></span>tokenizer/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
                     </ul>
                 </li>
                 <li>
                     <ul>
-                        <li>curl -X GET &quot;<span class="url"></span>openerservice/tokenizer/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
-                        <li>curl -X GET &quot;<span class="url"></span>openerservice/tokenizer/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
-                        <li>curl -X GET &quot;<span class="url"></span>openerservice/tokenizer/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
+                        <li>curl -X GET &quot;<span class="url"></span>tokenizer/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot;</li>
+                        <li>curl -X GET &quot;<span class="url"></span>tokenizer/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot;</li>
+                        <li>curl -X GET &quot;<span class="url"></span>tokenizer/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot;</li>
                     </ul>
                 </li>
             </ol>
@@ -194,23 +195,23 @@ and open the template in the editor.
             <ol>
                 <li>
                     <ul>
-                        <li>wget &quot;<span class="url"></span>/openerservice/tokenizer/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                        <li>wget &quot;<span class="url"></span>/openerservice/tokenizer/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                        <li>wget &quot;<span class="url"></span>/openerservice/tokenizer/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                        <li>wget &quot;<span class="url"></span>tokenizer/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                        <li>wget &quot;<span class="url"></span>tokenizer/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                        <li>wget &quot;<span class="url"></span>tokenizer/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
                     </ul>
                 </li>
                 <li>
                     <ul>
-                        <li>wget &quot;<span class="url"></span>/openerservice/tokenizer/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                        <li>wget &quot;<span class="url"></span>/openerservice/tokenizer/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                        <li>wget &quot;<span class="url"></span>/openerservice/tokenizer/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                        <li>wget &quot;<span class="url"></span>tokenizer/tcf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                        <li>wget &quot;<span class="url"></span>tokenizer/tcf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                        <li>wget &quot;<span class="url"></span>tokenizer/tcf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
                     </ul>
                 </li>
                 <li>
                     <ul>
-                        <li>wget &quot;<span class="url"></span>/openerservice/tokenizer/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                        <li>wget &quot;<span class="url"></span>/openerservice/tokenizer/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
-                        <li>wget &quot;<span class="url"></span>/openerservice/tokenizer/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                        <li>wget &quot;<span class="url"></span>tokenizer/kaf/lrs?format=tab&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                        <li>wget &quot;<span class="url"></span>tokenizer/kaf/lrs?format=kaf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
+                        <li>wget &quot;<span class="url"></span>tokenizer/kaf/lrs?format=tcf&amp;lang=ita&amp;url=my_url&quot; [-O out_file]</li>
                     </ul>
                 </li>
             </ol>
@@ -262,7 +263,7 @@ and open the template in the editor.
             <p> As URL you may use: <pre>https://raw.githubusercontent.com/clarin-eric/LRS-Hackathon/master/samples/resources/txt/hermes-it.txt</pre></div>
         Please note that:
         <ul>
-            <li><b>*</b> means that the text is really in plain text, such as I am a student. Thi smeans that no kaf tags are allowed.</li>
+            <li><b>*</b> means that the text is really in plain text, such as I am a student. This means that no kaf tags are allowed.</li>
             <li><b>**</b> means that the text is fully kaffed as in the example above. The &lt;raw&gt; element is not allowed.</li>
             <li><b>***</b> means that the text is  kaffed with the &lt;raw&gt; element only.</li>
         </ul>

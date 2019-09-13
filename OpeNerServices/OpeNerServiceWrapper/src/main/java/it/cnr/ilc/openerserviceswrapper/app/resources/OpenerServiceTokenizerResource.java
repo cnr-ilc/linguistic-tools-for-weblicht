@@ -48,7 +48,8 @@ import com.sun.jersey.multipart.FormDataParam;
  *
  * @author Riccardo Del Gratta &lt;riccardo.delgratta@ilc.cnr.it&gt;
  */
-@Path("openerservice/tokenizer")
+//@Path("openerservice/tokenizer")
+@Path("tokenizer")
 public class OpenerServiceTokenizerResource {
 
     /**
